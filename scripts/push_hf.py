@@ -32,7 +32,7 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-DEFAULT_REPO = "palaestraresearch/bcbplus"
+DEFAULT_REPO = "palaestraresearch/bigcodebench-plus"
 UPSTREAM_REPO = "bubbleresearch/bigcodebench-plus"
 
 
