@@ -12,6 +12,6 @@
     "libs": "['pandas', 'random', 'scipy']",
     "instruct_prompt": "Generate a random dataset of floating-point numbers within a specified range, truncate each value to 3 decimal places, and calculate statistical measures (mean, median, mode) of the data.\nThe function should output with:\n    dict: A dictionary with keys 'mean', 'median', 'mode' and their corresponding calculated values.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport random\nfrom scipy import stats\ndef task_func(n_data_points=5000, min_value=0.0, max_value=10.0):\n```",
     "code_prompt": "import pandas as pd\nimport random\nfrom scipy import stats\ndef task_func(n_data_points=5000, min_value=0.0, max_value=10.0):",
-    "canonical_solution": "\n    data = [round(random.uniform(min_value, max_value), 3) for _ in range(n_data_points)]\n    data_df = pd.DataFrame(data, columns=['Value'])\n\n    mean = data_df['Value'].mean()\n    median = data_df['Value'].median()\n    mode = stats.mode(data_df['Value'].values)[0][0]\n\n    return {'mean': mean, 'median': median, 'mode': mode}"
+    "canonical_solution": "\n    data = [round(random.uniform(min_value, max_value), 3) for _ in range(n_data_points)]\n    data_df = pd.DataFrame(data, columns=['Value'])\n\n    mean = data_df['Value'].mean()\n    median = data_df['Value'].median()\n    mode = stats.mode(data_df['Value'].values, keepdims=True)[0][0]\n\n    return {'mean': mean, 'median': median, 'mode': mode}"
   }
 }
