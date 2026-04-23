@@ -53,9 +53,10 @@ def run_problem(problem_path: Path, timeout: int = 60) -> tuple[int, str, str]:
         f.write(src)
         tmp = Path(f.name)
     try:
+        env = {**os.environ, "MPLBACKEND": "Agg"}
         proc = subprocess.run(
             [DEFAULT_PYTHON, str(tmp)],
-            capture_output=True, text=True, timeout=timeout,
+            capture_output=True, text=True, timeout=timeout, env=env,
         )
         return proc.returncode, proc.stdout, proc.stderr
     finally:
