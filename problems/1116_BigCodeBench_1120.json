@@ -15,7 +15,7 @@
       "requests",
       "json"
     ],
-    "instruct_prompt": "Extracts all URLs from the provided string, analyzes each URL to extract the domain, and uses the IP API to get the geolocation data for each domain.\nThe function should output with:\n    dict: A dictionary mapping domains to their geolocation data as returned by the IP API. Each entry contains fields like 'status', 'country', 'region', 'city', etc. If an API request fails, the corresponding value will be None.\nYou should write self-contained code starting with:\n```\nimport re\nimport urllib.parse\nimport requests\nimport json\ndef task_func(myString, API_KEY):\n```",
+    "instruct_prompt": "Extracts all URLs from the provided string, analyzes each URL to extract the domain, and uses the IP API to get the geolocation data for each domain.\nThe function should output with:\n    dict: A dictionary mapping domains to their geolocation data as returned by the IP API. Each entry contains fields like 'status', 'country', 'region', 'city', etc.\nYou should write self-contained code starting with:\n```\nimport re\nimport urllib.parse\nimport requests\nimport json\ndef task_func(myString, API_KEY):\n```",
     "code_prompt": "import re\nimport urllib.parse\nimport requests\nimport json\ndef task_func(myString, API_KEY):",
     "canonical_solution": "    urls = re.findall(r'(https?://[^\\s,]+)', myString)\n    geo_data = {}\n\n    for url in urls:\n        domain = urllib.parse.urlparse(url).netloc\n        response = requests.get(f\"http://ip-api.com/json/{domain}?access_key={API_KEY}\")\n        geo_data[domain] = json.loads(response.text)\n\n    return geo_data"
   }

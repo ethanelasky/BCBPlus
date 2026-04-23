@@ -15,6 +15,6 @@
     ],
     "instruct_prompt": "Divide a multi-line string into separate strings and wrap each line to a certain width.\nThe function should output with:\n    str: The wrapped string where each line is wrapped to the specified width.\nYou should write self-contained code starting with:\n```\nimport textwrap\nimport re\ndef task_func(input_string, width):\n```",
     "code_prompt": "import textwrap\nimport re\ndef task_func(input_string, width):",
-    "canonical_solution": "    lines = input_string.split('\\\\n')\n    wrapped_lines = [textwrap.fill(line, width, break_long_words=False) for line in lines]\n    # Join wrapped lines into a single string\n    wrapped_string = '\\\\n'.join(wrapped_lines)\n    \n    # Additional processing using regular expressions (re)\n    # For example, let's replace all whole-word instances of 'is' with 'was'\n    wrapped_string = re.sub(r'\\bis\\b', 'was', wrapped_string)\n    \n    return wrapped_string"
+    "canonical_solution": "    lines = input_string.split('\\n')\n    wrapped_lines = [textwrap.fill(line, width) for line in lines]\n    wrapped_string = '\\n'.join(wrapped_lines)\n    return wrapped_string"
   }
 }

@@ -13,7 +13,7 @@
       "matplotlib",
       "time"
     ],
-    "instruct_prompt": "Parses a list of time strings and plots a histogram of the seconds component.\nThe function should raise the exception for: ValueError: If any time string in 'time_strings' cannot be parsed according to 'time_format'.\nThe function should output with:\n    ax (matplotlib.axes._axes.Axes or None): An Axes object with the histogram plotted if\n    parsing is successful. Returns None if a parsing error occurs.\nYou should write self-contained code starting with:\n```\nimport time\nimport matplotlib.pyplot as plt\ndef task_func(time_strings, time_format=\"%d/%m/%Y %H:%M:%S.%f\"):\n```",
+    "instruct_prompt": "Parses a list of time strings and plots a histogram of the seconds component.\nThe function should output with:\n    ax (matplotlib.axes._axes.Axes or None): An Axes object with the histogram plotted if\n    parsing is successful. Returns None if a parsing error occurs.\nYou should write self-contained code starting with:\n```\nimport time\nimport matplotlib.pyplot as plt\ndef task_func(time_strings, time_format=\"%d/%m/%Y %H:%M:%S.%f\"):\n```",
     "code_prompt": "import time\nimport matplotlib.pyplot as plt\ndef task_func(time_strings, time_format=\"%d/%m/%Y %H:%M:%S.%f\"):",
     "canonical_solution": "    try:\n        seconds = [time.strptime(ts, time_format).tm_sec for ts in time_strings]\n        _, ax = plt.subplots()\n        ax.hist(seconds, bins=60, rwidth=0.8)\n        return ax\n    except ValueError as e:\n        print(f\"Error parsing time strings: {e}\")\n        return None"
   }
