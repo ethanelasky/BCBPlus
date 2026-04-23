@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/928",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127184410_66320c6b",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from collections import Counter\nimport itertools\nimport string\n\n\ndef task_func(word: str) -> dict:\n    \"\"\"\n    Create a dictionary containing all possible two-letter combinations of the lowercase English alphabets. \n    The dictionary values represent the frequency of these two-letter combinations in the given word.\n    If a combination does not appear in the word, its value will be 0.\n\n    Requirements:\n    - collections.Counter\n    - itertools\n    - string\n    \n    Parameters:\n    - word (str): The input string containing alphabetic characters.\n\n    Returns:\n    - dict: A dictionary with keys as two-letter alphabet combinations and values as their counts in the word.\n\n    Requirements:\n    - The function uses the `collections.Counter` library to count the occurrences of two-letter combinations.\n    - The function uses `itertools.product` to generate all two-letter combinations of alphabets (including same-letter pairs like 'aa', 'bb', etc.).\n    - The function uses the `string` library to get a string of lowercase alphabets.\n\n    Example:\n    >>> list(task_func('abcdef').items())[:5]\n    [('aa', 0), ('ab', 1), ('ac', 0), ('ad', 0), ('ae', 0)]\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func('abcdef')\n        self.assertEqual(result['ab'], 1)\n        self.assertEqual(result['ac'], 0)\n        self.assertEqual(result['bc'], 1)\n        self.assertEqual(result['cb'], 0)\n        self.assertEqual(result['zz'], 0)\n        \n    def test_case_2(self):\n        result = task_func('aabbcc')\n        self.assertEqual(result['aa'], 1)\n        self.assertEqual(result['ab'], 1)\n        self.assertEqual(result['ba'], 0)\n        self.assertEqual(result['bb'], 1)\n        self.assertEqual(result['bc'], 1)\n        \n    def test_case_3(self):\n        result = task_func('fedcba')\n        self.assertEqual(result['fe'], 1)\n        self.assertEqual(result['ef'], 0)\n        self.assertEqual(result['dc'], 1)\n        self.assertEqual(result['ba'], 1)\n        self.assertEqual(result['zz'], 0)\n    def test_case_4(self):\n        result = task_func('cadbfe')\n        self.assertEqual(result['ca'], 1)\n        self.assertEqual(result['ad'], 1)\n        self.assertEqual(result['db'], 1)\n        self.assertEqual(result['fe'], 1)\n        self.assertEqual(result['zz'], 0)\n    def test_case_5(self):\n        result = task_func('')\n        self.assertEqual(result['ab'], 0)\n        self.assertEqual(result['zz'], 0)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "itertools",
+      "string"
+    ],
+    "instruct_prompt": "Create a dictionary containing all possible two-letter combinations of the lowercase English alphabets. The dictionary values represent the frequency of these two-letter combinations in the given word. If a combination does not appear in the word, its value will be 0.\nThe function should output with:\n    dict: A dictionary with keys as two-letter alphabet combinations and values as their counts in the word.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\nimport string\ndef task_func(word: str) -> dict:\n```",
+    "code_prompt": "from collections import Counter\nimport itertools\nimport string\ndef task_func(word: str) -> dict:",
+    "canonical_solution": "    ALPHABETS = string.ascii_lowercase\n    # Generate all two-letter combinations of alphabets\n    permutations = [''.join(x) for x in itertools.permutations(ALPHABETS, 2)]\n    combinations = permutations + [x*2 for x in ALPHABETS]\n    \n    # Generate all two-letter combinations in the word\n    word_combinations = [''.join(x) for x in zip(word, word[1:])]\n    # Count the occurrences of each two-letter combination in the word\n    word_counter = Counter(word_combinations)\n\n    # Create the dictionary with the counts\n    return {key: word_counter.get(key, 0) for key in combinations}"
+  }
+}

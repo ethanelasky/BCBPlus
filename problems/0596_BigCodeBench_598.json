@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/598",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport time\n\n\ndef task_func(df, letter):\n    \"\"\"\n    The function filters rows in a dict of list in which the values of the 'Word' column begin with a specified letter.\n    It first convert the dict to Datafrome, then calculates the length of the words in the filtered column and returns\n    a dictionary of word lengths and their respective counts.\n\n    Parameters:\n    df (dict of list): A dictionary where the key 'Word' maps to a list of strings.\n    letter (str): The letter to filter the 'Word' column by. \n\n    Returns:\n    dict: A dictionary of word lengths and their counts.\n    \n    Requirements:\n    - pandas\n    - time\n\n    Example:\n    >>> df = {'Word': ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi']}\n    >>> task_func(df, 'a')\n    {5: 1}\n    \"\"\"\n",
+    "instruct_prompt": "The function filters rows in a dict of list in which the values of the 'Word' column begin with a specified letter. It first convert the dict to Datafrome, then calculates the length of the words in the filtered column and returns a dictionary of word lengths and their respective counts.\nThe function should output with:\n    dict: A dictionary of word lengths and their counts.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport time\ndef task_func(df, letter):\n```",
+    "code_prompt": "import pandas as pd\nimport time\ndef task_func(df, letter):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        df = {'Word': ['apple', 'banana', 'cherry', 'date', 'elephant', 'fig', 'grape', 'kiwi']}\n        result = task_func(df, 'a')\n        expected_result = {5: 1}\n        self.assertDictEqual(result, expected_result)\n    def test_case_2(self):\n        df = {'Word': ['cat', 'dog', 'elephant', 'fish', 'goose']}\n        result = task_func(df, 'e')\n        expected_result = {8: 1}\n        self.assertDictEqual(result, expected_result)\n    def test_case_3(self):\n        df = {'Word': ['kiwi', 'lemon', 'mango', 'nectarine', 'orange']}\n        result = task_func(df, 'm')\n        expected_result = {5: 1}\n        self.assertDictEqual(result, expected_result)\n    def test_case_4(self):\n        df = {'Word': ['apple', 'banana', 'cherry', 'date', 'elephant', 'fig', 'grape', 'kiwi']}\n        result = task_func(df, 'z')\n        expected_result = {}\n        self.assertDictEqual(result, expected_result)\n    def test_case_5(self):\n        df = {'Word': ['zebra', 'zoo', 'zucchini']}\n        result = task_func(df, 'z')\n        expected_result = {5: 1, 3: 1, 8: 1}\n        self.assertDictEqual(result, expected_result)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "time"
+    ],
+    "canonical_solution": "    start_time = time.time()\n    df = pd.DataFrame(df)\n    regex = '^' + letter\n    filtered_df = df[df['Word'].str.contains(regex, regex=True)]\n    word_lengths = filtered_df['Word'].str.len()\n    count_dict = word_lengths.value_counts().to_dict()\n    end_time = time.time()  # End timing\n    cost = f\"Operation completed in {end_time - start_time} seconds.\"\n\n    return count_dict"
+  }
+}

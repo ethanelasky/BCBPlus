@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/545",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import codecs\nimport random\nimport struct\n\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\n\ndef task_func(hex_keys=KEYS):\n    \"\"\"\n    Generate a random float number from a list of hex strings and then encode the float number in utf-8.\n\n    Parameters:\n    hex_keys (list of str): A list of hexadecimal strings to choose from.\n    \n    Returns:\n    bytes: The utf-8 encoded float number.\n\n    Requirements:\n    - struct\n    - codecs\n    - random\n\n    Example:\n    >>> random.seed(42)\n    >>> task_func()\n    b'36806.078125'\n    \"\"\"\n",
+    "instruct_prompt": "Generate a random float number from a list of hex strings and then encode the float number in utf-8.\nThe function should output with:\n    bytes: The utf-8 encoded float number.\nYou should write self-contained code starting with:\n```\nimport codecs\nimport random\nimport struct\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\ndef task_func(hex_keys=KEYS):\n```",
+    "code_prompt": "import codecs\nimport random\nimport struct\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\ndef task_func(hex_keys=KEYS):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_default_functionality(self):\n        \"\"\"Test the function with default parameters.\"\"\"\n        result = task_func()\n        self.assertIsInstance(result, bytes)  # Check if output is correctly encoded in UTF-8\n    def test_custom_hex_keys(self):\n        \"\"\"Test the function with a custom list of hexadecimal keys.\"\"\"\n        custom_keys = ['1A2FC614', '1B0FC614', '1C9FC614']\n        result = task_func(hex_keys=custom_keys)\n        self.assertIsInstance(result, bytes)\n    def test_empty_list(self):\n        \"\"\"Test the function with an empty list.\"\"\"\n        with self.assertRaises(IndexError):  # Assuming random.choice will raise IndexError on empty list\n            task_func(hex_keys=[])\n    def test_consistency_of_output(self):\n        \"\"\"Ensure that the output is consistent with a fixed seed.\"\"\"\n        random.seed(42)  # Set the seed for predictability\n        first_result = task_func()\n        random.seed(42)  # Reset seed to ensure same choice is made\n        second_result = task_func()\n        self.assertEqual(first_result, second_result)\n    def test_invalid_hex_key(self):\n        \"\"\"Test with an invalid hex key.\"\"\"\n        invalid_keys = ['ZZZZZZZZ', 'XXXX']\n        with self.assertRaises(ValueError):\n            task_func(hex_keys=invalid_keys)",
+    "entry_point": "task_func",
+    "libs": [
+      "codecs",
+      "struct",
+      "random"
+    ],
+    "canonical_solution": "    hex_key = random.choice(hex_keys)\n    float_num = struct.unpack('!f', bytes.fromhex(hex_key))[0]\n    encoded_float = codecs.encode(str(float_num), 'utf-8')\n\n    return encoded_float"
+  }
+}

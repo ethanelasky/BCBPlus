@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/261",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130101812_eba1a709",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\n\n\ndef task_func(ax, radius):\n    '''\n    Draw a circle with a given radius on the polar chart 'ax' and set radial ticks.\n    This function manipulates plot data using matplotlib.\n\n    Parameters:\n    ax (matplotlib.axes._axes.Axes): The ax to plot on. Must be a polar plot.\n    radius (float): The radius of the circle. Must be non-negative.\n\n    Returns:\n    matplotlib.axes._axes.Axes: The modified Axes object with the circle plotted.\n\n    Note:\n    - If the radius is negative this function will raise ValueError.\n    - If 'ax' is not a polar plot this function will raise TypeError.\n    - A polar plot can be detected by checking isinstance(ax, plt.PolarAxes).\n\n    Requirements:\n    - matplotlib.pyplot\n    - numpy\n\n    Example:\n    >>> import matplotlib.pyplot as plt\n    >>> fig = plt.figure()\n    >>> ax = fig.add_subplot(111, polar=True)\n    >>> result_ax = task_func(ax, 1.5)\n    >>> np.allclose(result_ax.get_lines()[0].get_ydata(), 1.5)\n    True\n    >>> plt.close()\n    '''\n",
+    "test": "import unittest\nimport matplotlib.pyplot as plt\nclass TestCases(unittest.TestCase):\n    def test_polar_plot(self):\n        '''Test if the function plots on a polar plot.'''\n        fig = plt.figure()\n        ax = fig.add_subplot(111, polar=True)\n        result_ax = task_func(ax, 1.0)\n        self.assertIsInstance(result_ax, plt.PolarAxes)\n        plt.close()\n    def test_circle_radius(self):\n        '''Test if the circle is drawn with the correct radius.'''\n        fig = plt.figure()\n        ax = fig.add_subplot(111, polar=True)\n        radius = 2.0\n        result_ax = task_func(ax, radius)\n        for line in result_ax.get_lines():\n            self.assertTrue(np.allclose(line.get_ydata(), radius))\n        plt.close()\n    def test_negative_radius(self):\n        '''Test handling of negative radius.'''\n        fig = plt.figure()\n        ax = fig.add_subplot(111, polar=True)\n        with self.assertRaises(ValueError):\n            task_func(ax, -1.0)\n        plt.close()\n    def test_non_polar_plot(self):\n        '''Test handling of non-polar plot input.'''\n        fig = plt.figure()\n        ax = fig.add_subplot(111)\n        with self.assertRaises(TypeError):\n            task_func(ax, 1.0)\n        plt.close()\n    def test_zero_radius(self):\n        '''Test handling of zero radius.'''\n        fig = plt.figure()\n        ax = fig.add_subplot(111, polar=True)\n        radius = 0.0\n        result_ax = task_func(ax, radius)\n        for line in result_ax.get_lines():\n            self.assertTrue(np.allclose(line.get_ydata(), radius))\n        plt.close()",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib"
+    ],
+    "instruct_prompt": "Draw a circle with a given radius on the polar chart 'ax' and set radial ticks. This function manipulates plot data using matplotlib.\nNote that: If the radius is negative this function will raise ValueError. If 'ax' is not a polar plot this function will raise TypeError.\nThe function should output with:\n    matplotlib.axes._axes.Axes: The modified Axes object with the circle plotted.\nYou should write self-contained code starting with:\n```\nimport matplotlib.pyplot as plt\nimport numpy as np\ndef task_func(ax, radius):\n```",
+    "code_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\ndef task_func(ax, radius):",
+    "canonical_solution": "    if radius < 0:\n        raise ValueError('Radius must be non-negative')\n    if not isinstance(ax, plt.PolarAxes):\n        raise TypeError('ax must be a polar plot')\n\n    theta = np.linspace(0, 2 * np.pi, 1000)\n    ax.plot(theta, radius * np.ones_like(theta))\n    ax.set_rlabel_position(radius * 45)\n    return ax"
+  }
+}

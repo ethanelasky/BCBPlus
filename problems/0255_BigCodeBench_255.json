@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/255",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260122172211_b4ba214b",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import matplotlib\nimport numpy as np\n\n# Constants\nFUNCTIONS = [np.sin, np.cos, np.tan]\n\ndef task_func(ax, func_index):\n    \"\"\"\n    Draw a mathematical function (sine, cosine, or tangent) on a polar diagram 'ax'.\n    The radial ticks are placed at a position corresponding to the index of the function multiplied by 45 degrees.\n\n    The function should be plotted using 1000 evenly spaced points from 0 to 2\u03c0.\n\n    Parameters:\n    ax (matplotlib.axes._axes.Axes): The ax to plot on.\n    func_index (int): The index of the function in the FUNCTIONS list (0 for sine, 1 for cosine, 2 for tangent).\n\n    Returns:\n    matplotlib.axes._axes.Axes: The modified ax with the plotted function.\n    \n    Raises:\n    - This function will raise a ValueError if the input ax is not an Axes.\n    - An IndexError will be raised if func_index is out of range.\n    \n    Requirements:\n    - matplotlib\n    - numpy\n\n    Example:\n    >>> import matplotlib.pyplot as plt\n    >>> fig = plt.figure()\n    >>> ax = fig.add_subplot(111, polar=True)\n    >>> ax_up = task_func(ax, 1)\n    <class 'matplotlib.projections.polar.PolarAxes'>\n    >>> ax_up.lines[0].get_ydata()[0]\n    1.0\n    >>> plt.close()\n    \"\"\"",
+    "test": "import unittest\nimport numpy as np\nimport matplotlib.pyplot as plt\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.fig = plt.figure()\n        self.ax = self.fig.add_subplot(111, polar=True)\n    def test_sine_function(self):\n        ax = task_func(self.ax, 0)\n        self.assertIsNotNone(ax, \"Ax should not be None\")\n        # Verify if the plotted function matches the sine function\n        x = np.linspace(0, 2 * np.pi, 1000)\n        y_expected = np.sin(x)\n        y_actual = ax.lines[0].get_ydata()\n        np.testing.assert_allclose(y_actual, y_expected, atol=1e-5)\n    def test_cosine_function(self):\n        ax = task_func(self.ax, 1)\n        self.assertIsNotNone(ax, \"Ax should not be None\")\n    def test_tangent_function(self):\n        ax = task_func(self.ax, 2)\n        self.assertIsNotNone(ax, \"Ax should not be None\")\n    def test_invalid_index(self):\n        with self.assertRaises(IndexError):\n            task_func(self.ax, 3)\n    def test_rlabel_position(self):\n        ax = task_func(self.ax, 1)\n        self.assertEqual(ax.get_rlabel_position(), 45, \"Rlabel position should be 45 for index 1\")\n    def test_case_non_ax(self):\n        with self.assertRaises(ValueError):\n            task_func(\"non_ax\", 1)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib"
+    ],
+    "instruct_prompt": "Draw a mathematical function (sine, cosine, or tangent) on a polar diagram 'ax'. The radial ticks are placed at a position corresponding to the index of the function multiplied by 45 degrees.\nThe function should raise the exception for: This function will raise a ValueError if the input ax is not and Axes.\nThe function should output with:\n    matplotlib.axes._axes.Axes: The modified ax with the plotted function.\nYou should write self-contained code starting with:\n```\nimport matplotlib\nimport numpy as np\n# Constants\nFUNCTIONS = [np.sin, np.cos, np.tan]\ndef task_func(ax, func_index):\n```",
+    "code_prompt": "import matplotlib\nimport numpy as np\n# Constants\nFUNCTIONS = [np.sin, np.cos, np.tan]\ndef task_func(ax, func_index):",
+    "canonical_solution": "    print(type(ax))\n    if not isinstance(ax, matplotlib.axes.Axes):\n        raise ValueError(\"The input is not an axes\")\n    x = np.linspace(0, 2 * np.pi, 1000)\n    y = FUNCTIONS[func_index](x)\n\n    ax.plot(x, y)\n    ax.set_rlabel_position(func_index * 45)\n    return ax"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/312",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import random\nimport matplotlib.pyplot as plt\n\n# Constants\nDISTRIBUTION_SIZE = 1000\n\ndef task_func(bins=30):\n    \"\"\"\n    Generate a Gaussian distribution and plot its histogram.\n\n    Parameters:\n    - bins (int, optional): Number of bins for the histogram. Default is 30.\n\n    Returns:\n    - tuple: A tuple containing the distribution list and the Axes patch object of the histogram plot.\n\n    Requirements:\n    - random\n    - matplotlib.pyplot\n\n    Example:\n    >>> random.seed(0)\n    >>> distribution, ax = task_func()\n    >>> len(ax.patches) == 30\n    True\n    >>> len(distribution)\n    1000\n    >>> plt.close()\n    \"\"\"\n",
+    "instruct_prompt": "Generate a Gaussian distribution and plot its histogram.\nThe function should output with:\n    tuple: A tuple containing the distribution list and the Axes patch object of the histogram plot.\nYou should write self-contained code starting with:\n```\nimport random\nimport matplotlib.pyplot as plt\n# Constants\nDISTRIBUTION_SIZE = 1000\ndef task_func(bins=30):\n```",
+    "code_prompt": "import random\nimport matplotlib.pyplot as plt\n# Constants\nDISTRIBUTION_SIZE = 1000\ndef task_func(bins=30):\n",
+    "test": "import unittest\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport random\nclass TestCases(unittest.TestCase):\n    def test_histogram_axes_type(self):\n        random.seed(0)\n        _, ax = task_func()\n        self.assertTrue(ax, plt.Axes)\n        plt.close()\n    def test_distribution_length(self):\n        random.seed(0)\n        distribution, _ = task_func()\n        self.assertEqual(len(distribution), 1000)\n        plt.close()\n    def test_distribution_type(self):\n        random.seed(0)\n        distribution, _ = task_func()\n        self.assertIsInstance(distribution, list, \"Distribution should be a list\")\n        self.assertTrue(all(isinstance(x, float) for x in distribution))\n        plt.close()\n    def test_histogram_bin_count(self):\n        random.seed(0)\n        _, ax = task_func(bins=20)\n        self.assertEqual(len(ax.patches), 20)\n        plt.close()\n    def test_default_bin_count(self):\n        random.seed(0)\n        _, ax = task_func()\n        self.assertEqual(len(ax.patches), 30)\n        plt.close()\n    \n    def test_plot_distribution(self):\n        random.seed(0)\n        distribution, ax = task_func()\n        heights, bins, _ = plt.hist(distribution)\n        expected_heights, _ = np.histogram(distribution, bins=bins)\n        np.testing.assert_allclose(heights, expected_heights, rtol=0.1, err_msg=\"Distribution not plotted correctly\")\n        plt.close()",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "matplotlib"
+    ],
+    "canonical_solution": "\n    distribution = [random.gauss(0, 1) for _ in range(DISTRIBUTION_SIZE)]\n    ax = plt.hist(distribution, bins=bins, edgecolor='black')[2]\n    return distribution, ax"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/405",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129143642_2046615f",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import random\nimport matplotlib.pyplot as plt\n\n\ndef task_func(points: int):\n    \"\"\"\n    Generate a plot of random numbers such that indices are on the x-axis and generated numbers are on the y-axis.\n\n    Parameters:\n    - points (int): Number of random points to generate.\n\n    Returns:\n    - Returns a tuple containing:\n        - A list of generated random numbers.\n        - A matplotlib Axes object representing the plot.\n\n    Raises:\n    - TypeError: If points is not an integer.\n\n    Requirements:\n    - random\n    - matplotlib.pyplot\n\n    Example:\n    >>> import random\n    >>> random.seed(0)\n    >>> task_func(5)\n    ([0.8444218515250481, 0.7579544029403025, 0.420571580830845, 0.25891675029296335, 0.5112747213686085], <Axes: >)\n    >>> task_func(3)\n    ([0.4049341374504143, 0.7837985890347726, 0.30331272607892745], <Axes: >)\n    \"\"\"\n",
+    "test": "import unittest\nimport random\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        random.seed(0)\n        y, _ = task_func(5)\n        # Test correct number of points are generated\n        self.assertEqual(len(y), 5)\n    def test_case_2(self):\n        random.seed(0)\n        y, _ = task_func(5)\n        # Test expected values\n        self.assertTrue(all(0 <= num <= 1 for num in y))\n        self.assertAlmostEqual(\n            y,\n            [\n                0.8444218515250481,\n                0.7579544029403025,\n                0.420571580830845,\n                0.25891675029296335,\n                0.5112747213686085,\n            ],\n        )\n    def test_case_3(self):\n        random.seed(0)\n        # Test incorrect data types\n        with self.assertRaises(TypeError):\n            task_func(\"5\")\n        with self.assertRaises(TypeError):\n            task_func([])\n        with self.assertRaises(TypeError):\n            task_func(None)\n    def test_case_4(self):\n        random.seed(0)\n        # Test handling 1 number\n        y, ax = task_func(1)\n        # Assert that 1 random number is generated\n        self.assertEqual(len(y), 1)\n        # Assert that the plot has the correct x and y data\n        self.assertEqual(list(ax.lines[0].get_xdata()), [0])\n        self.assertEqual(list(ax.lines[0].get_ydata()), y)\n    def test_case_5(self):\n        random.seed(0)\n        # Test handling no random numbers\n        y, ax = task_func(0)\n        self.assertEqual(len(y), 0)\n        # Assert that the plot has no data\n        self.assertEqual(list(ax.lines[0].get_xdata()), [])\n        self.assertEqual(list(ax.lines[0].get_ydata()), [])\n    def tearDown(self):\n        plt.close(\"all\")",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "matplotlib"
+    ],
+    "instruct_prompt": "Generate a plot of random numbers such that indices are on the x-axis and generated numbers are on the y-axis.\nThe function should output with:\n    Returns a tuple containing:\n    A list of generated random numbers.\n    A matplotlib Axes object representing the plot.\nYou should write self-contained code starting with:\n```\nimport random\nimport matplotlib.pyplot as plt\ndef task_func(points: int):\n```",
+    "code_prompt": "import random\nimport matplotlib.pyplot as plt\ndef task_func(points: int):",
+    "canonical_solution": "    x = list(range(points))\n    y = [random.random() for _ in range(points)]\n\n    _, ax = plt.subplots()\n    ax.plot(x, y)\n\n    return y, ax"
+  }
+}

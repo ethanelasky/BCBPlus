@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/727",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import re\nfrom sklearn.feature_extraction.text import CountVectorizer\nimport numpy as np\n\n# Constants\nSENTENCES = ['This is a sentence', 'Another sentence here', 'More sentences']\n\ndef task_func(s: str) -> np.ndarray:\n    \"\"\"\n    Vectorize a string using the Bag-of-Words model. The string is split into words and each word is treated as an attribute. The value of each attribute is the number of occurrences of the word in the string. The function also uses some predefined sentences (SENTENCES constant) for vectorization.\n\n    Parameters:\n    - s (str): The string to vectorize.\n\n    Returns:\n    - np.ndarray: A numpy array with the vectorized string.\n\n    Requirements:\n    - re\n    - sklearn.feature_extraction.text.CountVectorizer\n    - numpy\n\n    Example:\n    >>> s = 'This is a test string.'\n    >>> vec = task_func(s)\n    >>> print(vec)\n    [0 0 1 0 0 0 1 1 1]\n    \"\"\"\n",
+    "instruct_prompt": "Vectorize a string using the Bag-of-Words model. The string is split into words and each word is treated as an attribute. The value of each attribute is the number of occurrences of the word in the string. The function also uses some predefined sentences (SENTENCES constant) for vectorization.\nThe function should output with:\n    np.ndarray: A numpy array with the vectorized string.\nYou should write self-contained code starting with:\n```\nimport re\nfrom sklearn.feature_extraction.text import CountVectorizer\nimport numpy as np\n# Constants\nSENTENCES = ['This is a sentence', 'Another sentence here', 'More sentences']\ndef task_func(s: str) -> np.ndarray:\n```",
+    "code_prompt": "import re\nfrom sklearn.feature_extraction.text import CountVectorizer\nimport numpy as np\n# Constants\nSENTENCES = ['This is a sentence', 'Another sentence here', 'More sentences']\ndef task_func(s: str) -> np.ndarray:\n",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def test_basic_string(self):\n        s = \"This is a test string.\"\n        result = task_func(s)\n        self.assertIsInstance(result, np.ndarray)\n        self.assertTrue(np.sum(result) > 0)  # At least one word should be counted\n    def test_empty_string(self):\n        s = \"\"\n        result = task_func(s)\n        self.assertIsInstance(result, np.ndarray)\n        self.assertEqual(np.sum(result), 0)  # No words to be counted\n    def test_string_with_special_characters(self):\n        s = \"Hello! How's the test going? Good?\"\n        result = task_func(s)\n        self.assertIsInstance(result, np.ndarray)\n        self.assertTrue(np.sum(result) > 0)\n    def test_string_with_numbers(self):\n        s = \"I have 2 apples and 3 bananas.\"\n        result = task_func(s)\n        self.assertIsInstance(result, np.ndarray)\n        self.assertTrue(np.sum(result) > 0)\n    def test_long_string(self):\n        s = \"This is a really long string with many words that are repeated multiple times. Words like string, words, and times appear more than once.\"\n        result = task_func(s)\n        self.assertIsInstance(result, np.ndarray)\n        self.assertTrue(np.sum(result) > 0)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "re",
+      "sklearn"
+    ],
+    "canonical_solution": "    s = re.sub(r'\\W+', ' ', s)\n    vectorizer = CountVectorizer()\n    X = vectorizer.fit_transform([s] + SENTENCES)\n    return X.toarray()[0]"
+  }
+}

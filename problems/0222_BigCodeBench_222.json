@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/222",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import math\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n\ndef task_func(list_input):\n    \"\"\"\n    Sort the given list in ascending order based on the degree value of its elements, calculate the cumulative sum of \n    the sorted list, and draw a line chart of the cumulative sum.\n\n    Parameters:\n    list_input (list): The list to be sorted.\n\n    Returns:\n    tuple: A tuple containing:\n           - numpy array: The cumulative sum of the sorted list.\n           - matplotlib.axes._axes.Axes: The Axes object of the plotted line chart.\n\n    Requirements:\n    - math\n    - numpy\n    - matplotlib.pyplot\n\n    Example:\n    >>> cumsum, ax = task_func([10, 20, 30])\n    >>> print(cumsum)\n    [10 30 60]\n    >>> ax.get_title()\n    'Cumulative Sum Plot'\n    \"\"\"\n",
+    "instruct_prompt": "Sort the given list in ascending order based on the degree value of its elements, calculate the cumulative sum of the sorted list, and draw a line chart of the cumulative sum.\nThe function should output with:\n    tuple: A tuple containing:\n    numpy array: The cumulative sum of the sorted list.\n    matplotlib.axes._axes.Axes: The Axes object of the plotted line chart.\nYou should write self-contained code starting with:\n```\nimport math\nimport numpy as np\nimport matplotlib.pyplot as plt\ndef task_func(list_input):\n```",
+    "code_prompt": "import math\nimport numpy as np\nimport matplotlib.pyplot as plt\ndef task_func(list_input):\n",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        cumsum, ax = task_func([10, 20, 30])\n        self.assertListEqual(list(cumsum), [10, 30, 60])\n        self.assertEqual(ax.get_title(), 'Cumulative Sum Plot')\n        self.assertEqual(ax.get_xlabel(), 'Index')\n        self.assertEqual(ax.get_ylabel(), 'Cumulative Sum')\n    def test_case_2(self):\n        cumsum, ax = task_func([5, 15, 25])\n        self.assertListEqual(list(cumsum), [5, 20, 45])\n        self.assertEqual(ax.get_title(), 'Cumulative Sum Plot')\n        self.assertEqual(ax.get_xlabel(), 'Index')\n        self.assertEqual(ax.get_ylabel(), 'Cumulative Sum')\n    def test_case_3(self):\n        cumsum, ax = task_func([])\n        self.assertListEqual(list(cumsum), [])\n        self.assertEqual(ax.get_title(), 'Cumulative Sum Plot')\n        self.assertEqual(ax.get_xlabel(), 'Index')\n        self.assertEqual(ax.get_ylabel(), 'Cumulative Sum')\n    def test_case_4(self):\n        cumsum, ax = task_func([1, 2, 3, 4, 5])\n        self.assertListEqual(list(cumsum), [1, 3, 6, 10, 15])\n        self.assertEqual(ax.get_title(), 'Cumulative Sum Plot')\n        self.assertEqual(ax.get_xlabel(), 'Index')\n        self.assertEqual(ax.get_ylabel(), 'Cumulative Sum')\n    def test_case_5(self):\n        cumsum, ax = task_func([5])\n        self.assertListEqual(list(cumsum), [5])\n        self.assertEqual(ax.get_title(), 'Cumulative Sum Plot')\n        self.assertEqual(ax.get_xlabel(), 'Index')\n        self.assertEqual(ax.get_ylabel(), 'Cumulative Sum')",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "numpy",
+      "matplotlib"
+    ],
+    "canonical_solution": "    sorted_list = sorted(list_input, key=lambda x: (math.degrees(x), x))\n    cumsum = np.cumsum(sorted_list)\n    \n    # Plotting the line chart\n    ax = plt.plot(cumsum)[0].axes\n    ax.set_title(\"Cumulative Sum Plot\")\n    ax.set_xlabel(\"Index\")\n    ax.set_ylabel(\"Cumulative Sum\")\n    \n    return cumsum, ax"
+  }
+}

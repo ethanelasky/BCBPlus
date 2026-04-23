@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/314",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130102049_5c15ae88",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import socket\nimport ssl\nimport http.client\n\ndef task_func(SERVER_NAME, SERVER_PORT, path):\n    \"\"\"\n    Makes an HTTPS GET request to a specified server and path, and retrieves the response.\n\n    Parameters:\n        SERVER_NAME (str): The name of the server to which the request is made.\n        SERVER_PORT (int): The port number of the server to which the request is made.\n        path (str): The path for the HTTP request.\n\n    Returns:\n        str: The response body from the server as a string.\n\n    Raises:\n        ssl.SSLError: If there is an SSL handshake error.\n\n    Requirements:\n    - socket\n    - ssl\n    - http.client\n\n    Examples:\n    >>> response = task_func('www.example.com', 443, '/path/to/request')\n    >>> isinstance(response, str)\n    True\n    \"\"\"",
+    "test": "import unittest\nfrom unittest.mock import patch, MagicMock\nimport http.client\nimport ssl\nimport socket\nclass TestCases(unittest.TestCase):\n    @patch('http.client.HTTPSConnection')\n    def test_return_type(self, mock_conn):\n        \"\"\" Test that the function returns a string. \"\"\"\n        mock_conn.return_value.getresponse.return_value.read.return_value = b'Server Response'\n        result = task_func('www.example.com', 443, '/test/path')\n        self.assertIsInstance(result, str)\n    @patch('http.client.HTTPSConnection')\n    def test_different_paths(self, mock_conn):\n        \"\"\" Test the function with different request paths. \"\"\"\n        mock_conn.return_value.getresponse.return_value.read.return_value = b'Server Response'\n        result = task_func('www.example.com', 443, '/another/path')\n        self.assertIsInstance(result, str)\n    @patch('http.client.HTTPSConnection')\n    def test_connection_error_handling(self, mock_conn):\n        \"\"\" Test handling of connection errors. \"\"\"\n        mock_conn.side_effect = http.client.HTTPException('Connection error')\n        with self.assertRaises(http.client.HTTPException):\n            task_func('www.example.com', 443, '/error/path')\n    @patch('http.client.HTTPSConnection')\n    def test_response_content(self, mock_conn):\n        \"\"\" Test the content of the response. \"\"\"\n        mock_conn.return_value.getresponse.return_value.read.return_value = b'Expected Content'\n        result = task_func('www.example.com', 443, '/content/path')\n        self.assertEqual(result, 'Expected Content')\n    @patch('http.client.HTTPSConnection')\n    def test_ssl_handshake_error_handling(self, mock_conn):\n        \"\"\" Test handling of SSL handshake errors. \"\"\"\n        # Configure HTTPSConnection to raise ssl.SSLError when request() is called\n        # This simulates an SSL handshake failure during connection establishment\n        mock_conn.return_value.request.side_effect = ssl.SSLError('SSL handshake failed')\n        with self.assertRaises(ssl.SSLError):\n            task_func('badssl.com', 443, '/test/path')\n",
+    "entry_point": "task_func",
+    "libs": [
+      "http",
+      "socket",
+      "ssl"
+    ],
+    "instruct_prompt": "Makes an HTTPS GET request to a specified server and path, and retrieves the response.\nThe function should raise the exception for: ssl.SSLError: If there is an SSL handshake error.\nThe function should output with:\n    str: The response body from the server as a string.\nYou should write self-contained code starting with:\n```\nimport socket\nimport ssl\nimport http.client\ndef task_func(SERVER_NAME, SERVER_PORT, path):\n```",
+    "code_prompt": "import socket\nimport ssl\nimport http.client\ndef task_func(SERVER_NAME, SERVER_PORT, path):",
+    "canonical_solution": "    context = ssl.create_default_context()\n\n    with socket.create_connection((SERVER_NAME, SERVER_PORT)) as sock:\n        with context.wrap_socket(sock, server_hostname=SERVER_NAME) as ssock:\n            conn = http.client.HTTPSConnection(SERVER_NAME, SERVER_PORT, context=context)\n            conn.request('GET', path)\n            response = conn.getresponse()\n            return response.read().decode()"
+  }
+}

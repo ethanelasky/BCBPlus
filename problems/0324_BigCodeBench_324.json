@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/324",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260126213902_5f19b437",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import subprocess\nimport time\nimport threading\n\n\ndef task_func(file_list):\n    \"\"\"\n    Run files from list of files as subprocesses at the same time.\n    \n    Parameters:\n    - file_list (list of str): List of files name to run.\n\n    Returns:\n    list: The exit codes of the subprocesses.\n\n    Requirements:\n    - subprocess\n    - time\n    - threading\n\n    Example:\n    >>> task_func([\"task_func_data/file1.bat\", \"task_func_data/file2.bat\"])\n    [0, 0]\n    \"\"\"",
+    "test": "import unittest\nfrom unittest.mock import patch, MagicMock\n\nclass TestCases(unittest.TestCase):\n    @patch('subprocess.Popen')\n    def test_empty_file_list(self, mock_popen):\n        directory = \"some_directory\"\n        file_list = []\n        result = task_func(file_list)\n        self.assertEqual(result, [])\n        mock_popen.assert_not_called()\n\n    @patch('subprocess.Popen')\n    def test_valid_files(self, mock_popen):\n        file_list = [\"task_func_data/file1.bat\", \"task_func_data/file2.bat\"]\n        mock_proc = MagicMock()\n        mock_proc.poll.return_value = 0\n        mock_proc.wait.return_value = 0\n        mock_proc.returncode = 0\n        mock_popen.return_value = mock_proc\n        result = task_func(file_list)\n        self.assertEqual(result, [0, 0])\n        self.assertEqual(mock_popen.call_count, 2)\n\n    @patch('subprocess.Popen')\n    def test_valid_directory_and_files(self, mock_popen):\n        file_list = [\"task_func_data/file1.bat\", \"task_func_data/file2.bat\"]\n        mock_proc = MagicMock()\n        mock_proc.poll.return_value = 0\n        mock_proc.wait.return_value = 0\n        mock_proc.returncode = 0\n        mock_popen.return_value = mock_proc\n        result = task_func(file_list)\n        self.assertEqual(result, [0, 0])\n        self.assertEqual(mock_popen.call_count, 2)\n\n    @patch('subprocess.Popen')\n    def test_process_still_running(self, mock_popen):\n        file_list = [\"task_func_data/file1.bat\"]\n        mock_proc = MagicMock()\n        mock_proc.poll.return_value = None\n        mock_proc.wait.return_value = None\n        mock_proc.returncode = None\n        mock_popen.return_value = mock_proc\n        result = task_func(file_list)\n        self.assertEqual(result, [None])\n\n    @patch('subprocess.Popen')\n    def test_multiple_processes_with_different_exit_codes(self, mock_popen):\n        file_list = [\"task_func_datan/file1.bat\", \"task_func_data/file2.bat\", \"task_func_data/file3.bat\"]\n        mock_procs = []\n        for code in [0, 1, None]:\n            mock_proc = MagicMock()\n            mock_proc.poll.return_value = code\n            mock_proc.wait.return_value = code\n            mock_proc.returncode = code\n            mock_procs.append(mock_proc)\n        mock_popen.side_effect = mock_procs\n        result = task_func(file_list)\n        self.assertEqual(result, [0, 1, None])\n",
+    "entry_point": "task_func",
+    "libs": [
+      "subprocess",
+      "threading",
+      "time"
+    ],
+    "instruct_prompt": "Run files from list of files as subprocesses at the same time.\nThe function should output with:\n    list: The exit codes of the subprocesses.\nYou should write self-contained code starting with:\n```\nimport subprocess\nimport time\nimport threading\ndef task_func(file_list):\n```",
+    "code_prompt": "import subprocess\nimport time\nimport threading\ndef task_func(file_list):",
+    "canonical_solution": "\n    exit_codes = []\n\n    def execute_file(file):\n        file_path = file\n        process = subprocess.Popen(file_path)\n        time.sleep(1)  # wait for the process to start\n        exit_codes.append(process.poll())  # store the exit code\n\n    # Start a thread for each file\n    threads = [threading.Thread(target=execute_file, args=(file,)) for file in file_list]\n    for thread in threads:\n        thread.start()\n\n    # Wait for all threads to finish\n    for thread in threads:\n        thread.join()\n\n    return exit_codes"
+  }
+}

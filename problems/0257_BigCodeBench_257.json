@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/257",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127172406_4644bbf7",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nimport math\n\ndef task_func(ax, num_turns):\n    \"\"\"\n    Draws a spiral on the polar diagram 'ax' with the specified number of turns 'num_turns'.\n    The spiral starts at the center and expands outward with each turn.\n    The radial ticks on the plot are positioned at intervals corresponding to the number of turns multiplied by 45 degrees.\n\n    Parameters:\n    ax (matplotlib.axes._axes.Axes): The Axes object for plotting the spiral.\n    num_turns (int or float): The number of turns for the spiral. May be zero, negative, or fractional.\n\n    Returns:\n    matplotlib.axes._axes.Axes: The modified Axes object with the spiral plot.\n\n    Requirements:\n    - numpy\n    - math\n\n    Example:\n    >>> import matplotlib.pyplot as plt\n    >>> fig, ax = plt.subplots(subplot_kw={'polar': True})\n    >>> ax = task_func(ax, 3)\n    >>> ax.get_rlabel_position()\n    135.0\n    \"\"\"\n",
+    "test": "import unittest\nimport matplotlib.pyplot as plt\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.fig, self.ax = plt.subplots(subplot_kw={'polar': True})\n    def test_positive_turns(self):\n        \"\"\" Test the function with positive number of turns \"\"\"\n        num_turns = 3\n        ax_modified = task_func(self.ax, num_turns)\n        self.assertEqual(len(ax_modified.lines), 1)  # Checking if a spiral is plotted\n        self.assertEqual(ax_modified.get_rlabel_position(), num_turns * 45)  # Radial label position\n    def test_zero_turns(self):\n        \"\"\" Test the function with zero turns \"\"\"\n        ax_modified = task_func(self.ax, 0)\n        self.assertEqual(len(ax_modified.lines), 1)  # A line should still be plotted\n    def test_negative_turns(self):\n        \"\"\" Test the function with negative number of turns \"\"\"\n        ax_modified = task_func(self.ax, -3)\n        self.assertEqual(len(ax_modified.lines), 1)  # A line should still be plotted\n    def test_large_number_of_turns(self):\n        \"\"\" Test the function with a large number of turns \"\"\"\n        ax_modified = task_func(self.ax, 100)\n        self.assertEqual(len(ax_modified.lines), 1)  # A line should still be plotted\n    def test_fractional_turns(self):\n        \"\"\" Test the function with fractional number of turns \"\"\"\n        ax_modified = task_func(self.ax, 2.5)\n        self.assertEqual(len(ax_modified.lines), 1)  # A line should still be plotted",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "numpy"
+    ],
+    "instruct_prompt": "Draws a spiral on the polar diagram 'ax' with the specified number of turns 'num_turns'. The spiral starts at the center and expands outward with each turn. The radial ticks on the plot are positioned at intervals corresponding to the number of turns multiplied by 45 degrees.\nThe function should output with:\n    matplotlib.axes._axes.Axes: The modified Axes object with the spiral plot.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport math\ndef task_func(ax, num_turns):\n```",
+    "code_prompt": "import numpy as np\nimport math\ndef task_func(ax, num_turns):",
+    "canonical_solution": "\n    r = np.linspace(0, num_turns * 2 * math.pi, 1000)\n    theta = r\n\n    ax.plot(theta, r)\n    ax.set_rlabel_position(num_turns * 45)\n\n    return ax"
+  }
+}

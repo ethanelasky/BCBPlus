@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/332",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127153649_a4f65aad",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nfrom collections import Counter\nfrom nltk.corpus import stopwords\n\n\ndef task_func(text: str) -> dict:\n    \"\"\"\n    Count the number of non-stop words in a given text.\n    \n    Parameters:\n    - text (str): The input text for word counting.\n    \n    Returns:\n    dict: A dictionary with the words (as keys) and their counts (as values).\n    \n    Note:\n    - Words are extracted using alphabetic characters only (a-z, A-Z).\n    - Word counting is case-sensitive: 'Word' and 'word' are counted separately.\n    - Stopword filtering is case-insensitive: both 'The' and 'the' are filtered as stopwords.\n    \n    Requirements:\n    - re\n    - collections.Counter\n    \n    Example:\n    >>> count = task_func(\"Python is great. Python programming is fun.\")\n    >>> print(count)\n    {'Python': 2, 'great': 1, 'programming': 1, 'fun': 1}\n    \"\"\"\n",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Simple sentence with some stopwords\n        input_text = \"This is a simple test.\"\n        expected_output = {'simple': 1, 'test': 1}\n        self.assertDictEqual(task_func(input_text), expected_output)\n    def test_case_2(self):\n        # Longer sentence with repeated words\n        input_text = \"Some words are repeated more than once. Repeated words are common.\"\n        expected_output = {'words': 2, 'repeated': 1, 'Repeated': 1, 'common': 1}\n        self.assertDictEqual(task_func(input_text), expected_output)\n        \n    def test_case_3(self):\n        # Text with no stopwords\n        input_text = \"Python programming language.\"\n        expected_output = {'Python': 1, 'programming': 1, 'language': 1}\n        self.assertDictEqual(task_func(input_text), expected_output)\n        \n    def test_case_4(self):\n        # Text with all stopwords\n        input_text = \"This is an and the with\"\n        expected_output = {}\n        self.assertDictEqual(task_func(input_text), expected_output)\n        \n    def test_case_5(self):\n        # Empty text\n        input_text = \"\"\n        expected_output = {}\n        self.assertDictEqual(task_func(input_text), expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "nltk",
+      "collections",
+      "re"
+    ],
+    "instruct_prompt": "Count the number of non-stop words in a given text.\nThe function should output with:\n    dict: A dictionary with the words (as keys) and their counts (as values).\nYou should write self-contained code starting with:\n```\nimport re\nfrom collections import Counter\nfrom nltk.corpus import stopwords\ndef task_func(text: str) -> dict:\n```",
+    "code_prompt": "import re\nfrom collections import Counter\nfrom nltk.corpus import stopwords\ndef task_func(text: str) -> dict:",
+    "canonical_solution": "    words = re.findall(r'\\b\\w+\\b', text)\n    non_stopwords = [word for word in words if word.lower() not in set(stopwords.words('english'))]\n    count = dict(Counter(non_stopwords))\n\n    return count"
+  }
+}

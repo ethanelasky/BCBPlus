@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/899",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127160700_807e624d",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nimport random\n\ndef task_func(length=10000, seed=0):\n    \"\"\"\n    Generates a random walk of a specified length. A random walk is a path that consists of a series of random steps\n    on some mathematical space. In this case, the steps are either +1 or -1, chosen with equal probability.\n\n    Parameters:\n    - length (int): The number of steps in the random walk. Must be a non-negative integer. Default is 10000.\n    - seed (int, optional): An optional seed value to initialize the random number generator. Use this for reproducible results.\n    \n    Requirements:\n    - numpy\n    - random\n    \n    Returns:\n    - np.array: A numpy array representing the positions of the walk at each step. Starts at 0.\n\n    Raises:\n    - ValueError: If `length` is negative.\n    \n    Example:\n    >>> random.seed(0)     # For reproducibility in doctest\n    >>> walk = task_func(5)\n    >>> walk.tolist()\n    [0, 1, 2, 1, 0, 1]\n    \"\"\"",
+    "test": "import unittest\nimport numpy as np\nimport random\n\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        random.seed(42)  # Setting seed for reproducibility\n    def test_default_length(self):\n        walk = task_func(seed=42)\n        self.assertEqual(len(walk), 10001)  # Includes starting point\n    def test_custom_length(self):\n        walk = task_func(5000, seed=42)\n        self.assertEqual(len(walk), 5001)  # Includes starting point\n    def test_first_step_zero(self):\n        walk = task_func(1, seed=42)\n        self.assertEqual(walk[0], 0)  # First position should be 0\n    def test_negative_length(self):\n        with self.assertRaises(ValueError):\n            task_func(-1)\n    def test_output_type(self):\n        walk = task_func(5, seed=42)\n        # Check it's a numpy array\n        self.assertIsInstance(walk, np.ndarray)\n        # Check correct length (5 steps + starting position)\n        self.assertEqual(len(walk), 6)\n        # Check starts at 0\n        self.assertEqual(walk[0], 0)\n        # Check all steps are \u00b11\n        steps = np.diff(walk)\n        self.assertTrue(all(s in [1, -1] for s in steps))\n    def test_reproducibility(self):\n        # Same seed should produce same output\n        walk1 = task_func(100, seed=42)\n        walk2 = task_func(100, seed=42)\n        self.assertTrue(np.array_equal(walk1, walk2))\n    def test_different_seeds_different_output(self):\n        # Different seeds should (almost certainly) produce different output\n        walk1 = task_func(100, seed=42)\n        walk2 = task_func(100, seed=123)\n        self.assertFalse(np.array_equal(walk1, walk2))",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "random"
+    ],
+    "instruct_prompt": "Generates a random walk of a specified length. A random walk is a path that consists of a series of random steps on some mathematical space. In this case, the steps are either +1 or -1, chosen with equal probability.\nThe function should raise the exception for: ValueError: If `length` is negative.\nThe function should output with:\n    np.array: A numpy array representing the positions of the walk at each step. Starts at 0.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport random\ndef task_func(length=10000, seed=0):\n```",
+    "code_prompt": "import numpy as np\nimport random\ndef task_func(length=10000, seed=0):",
+    "canonical_solution": "    if length < 0:\n        raise ValueError(\"length must be a non-negative integer\")\n    random.seed(seed)\n    steps = [1 if random.random() > 0.5 else -1 for _ in range(length)]\n    walk = np.cumsum([0] + steps)  # Starts at 0\n    return walk"
+  }
+}

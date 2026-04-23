@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/305",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127172451_47a158be",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from collections import Counter\nimport itertools\nimport random\n\n\n# Constants\nALPHABET = 'abcdefghijklmnopqrstuvwxyz'\n\ndef task_func(list_of_lists, seed=0):\n    \"\"\"\n    Count the frequency of each letter in a list of lists. If a list is empty, \n    fill it with a random sample of 10 distinct letters from the alphabet, and then count the letters.\n    \n    Parameters:\n    list_of_lists (list): The list of lists.\n    seed (int): The seed for the random number generator. Defaults to 0.\n    \n    Returns:\n    Counter: A Counter object with the frequency of each letter.\n    \n    Requirements:\n    - collections.Counter\n    - itertools\n    - random.sample\n    \n    Example:\n    >>> dict(task_func([['a', 'b', 'c'], [], ['d', 'e', 'f']]))\n    {'a': 1, 'b': 2, 'c': 1, 'd': 1, 'e': 1, 'f': 1, 'm': 1, 'y': 1, 'n': 1, 'i': 1, 'q': 1, 'p': 1, 'z': 1, 'j': 1, 't': 1}\n    \"\"\"",
+    "test": "import unittest\nfrom collections import Counter\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func([['a', 'b', 'c'], ['d', 'e', 'f']])\n        expected = Counter({'a': 1, 'b': 1, 'c': 1, 'd': 1, 'e': 1, 'f': 1})\n        self.assertEqual(result, expected)\n    def test_case_2(self):\n        result = task_func([['a', 'b', 'c'], [], ['d', 'e', 'f']])\n        # Since the function can add random letters, we'll ensure that the known letters are counted correctly\n        self.assertEqual(sum(result.values()), 16)  # 6 known letters + 10 random letters\n    def test_case_3(self):\n        result = task_func([[], [], []])\n        # Here, the function should add 30 random letters (10 for each empty list)\n        self.assertEqual(sum(result.values()), 30)\n    def test_case_4(self):\n        result = task_func([])\n        # For an entirely empty input list, the result should also be an empty Counter\n        self.assertEqual(result, Counter())\n    def test_case_5(self):\n        result = task_func([['x', 'y', 'z'], ['a', 'b', 'c']])\n        expected = Counter({'x': 1, 'y': 1, 'z': 1, 'a': 1, 'b': 1, 'c': 1})\n        self.assertEqual(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "random",
+      "itertools"
+    ],
+    "instruct_prompt": "Count the frequency of each letter in a list of lists. If a list is empty, fill it with a random sample from the alphabet, and then count the letters.\nThe function should output with:\n    Counter: A Counter object with the frequency of each letter.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\nimport random\n# Constants\nALPHABET = 'abcdefghijklmnopqrstuvwxyz'\ndef task_func(list_of_lists, seed=0):\n```",
+    "code_prompt": "from collections import Counter\nimport itertools\nimport random\n# Constants\nALPHABET = 'abcdefghijklmnopqrstuvwxyz'\ndef task_func(list_of_lists, seed=0):",
+    "canonical_solution": "    random.seed(seed)\n    flattened_list = list(itertools.chain(*list_of_lists))\n\n    for list_item in list_of_lists:\n        if list_item == []:\n            flattened_list += random.sample(ALPHABET, 10)\n\n    counter = Counter(flattened_list)\n    \n    return counter"
+  }
+}

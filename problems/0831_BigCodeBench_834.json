@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/834",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import binascii\nimport io\nimport gzip\n\ndef task_func(compressed_hex):\n    \"\"\"\n    Uncompress a gzip-compressed hexadecimal string and decrypt the result to UTF-8.\n    \n    Parameters:\n    - compressed_hex (str): The gzip-compressed hexadecimal string.\n    \n    Returns:\n    - decoded_string (str): The decoded and decompressed string in UTF-8 format, or an error message.\n    \n    Requirements:\n    - binascii\n    - io\n    - gzip\n    \n    Example:\n    >>> task_func('1f8b08000000000002ff0b49494e55560304000000ffff8b202d0b000000')\n    'Error during decompression: CRC check failed 0xff000000 != 0x41449975'\n    \"\"\"\n",
+    "instruct_prompt": "Uncompress a gzip-compressed hexadecimal string and decrypt the result to UTF-8.\nThe function should output with:\n    decoded_string (str): The decoded and decompressed string in UTF-8 format, or an error message.\nYou should write self-contained code starting with:\n```\nimport binascii\nimport io\nimport gzip\ndef task_func(compressed_hex):\n```",
+    "code_prompt": "import binascii\nimport io\nimport gzip\ndef task_func(compressed_hex):\n",
+    "test": "import unittest\nimport binascii\nimport io\nimport gzip\ndef generate_compressed_hex(original_string):\n    \"\"\"\n    Helper function to generate a gzip-compressed hexadecimal string from an original string.\n    \"\"\"\n    compressed_bytes = gzip.compress(original_string.encode('utf-8'))\n    compressed_hex = binascii.hexlify(compressed_bytes).decode('utf-8')\n    return compressed_hex\nclass TestCases(unittest.TestCase):\n    def test_1(self):\n        # Test with the word \"HELLO\"\n        compressed_hex = generate_compressed_hex(\"HELLO\")\n        self.assertEqual(task_func(compressed_hex), \"HELLO\")\n    def test_2(self):\n        # Test with a single character \"A\"\n        compressed_hex = generate_compressed_hex(\"A\")\n        self.assertEqual(task_func(compressed_hex), \"A\")\n    def test_3(self):\n        # Test with numbers \"12345\"\n        compressed_hex = generate_compressed_hex(\"12345\")\n        self.assertEqual(task_func(compressed_hex), \"12345\")\n    def test_4(self):\n        # Test with special characters \"!@#\"\n        compressed_hex = generate_compressed_hex(\"!@#\")\n        self.assertEqual(task_func(compressed_hex), \"!@#\")\n    def test_5(self):\n        # Test with an empty string\n        compressed_hex = generate_compressed_hex(\"\")\n        self.assertEqual(task_func(compressed_hex), \"\")",
+    "entry_point": "task_func",
+    "libs": [
+      "io",
+      "gzip",
+      "binascii"
+    ],
+    "canonical_solution": "    try:\n        compressed_bytes = binascii.unhexlify(compressed_hex)\n        decompressed_bytes = gzip.GzipFile(fileobj=io.BytesIO(compressed_bytes)).read()\n        decoded_string = decompressed_bytes.decode('utf-8')\n        return decoded_string\n    except gzip.BadGzipFile as e:\n        return \"Error during decompression: \" + str(e)"
+  }
+}

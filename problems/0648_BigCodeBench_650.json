@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/650",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260422132803_d2f933cd",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from datetime import datetime\nimport pytz\nfrom dateutil.parser import parse\n\n\ndef task_func(date_str, tz_str):\n    \"\"\"\n    Determine the time in seconds until the next turn of the year in a certain time zone from a given date string.\n\n    Parameters:\n    - date_str (str): The date string in \"yyyy-mm-dd hh:mm:ss\" format. This string represents a naive datetime.\n    - tz_str (str): The IANA timezone string (e.g., 'America/Chicago').\n\n    Returns:\n    - int: The time in seconds until the next New Year in the specified timezone.\n\n    Requirements:\n    - datetime\n    - dateutil.parser\n    - pytz\n\n    Note:\n    When localizing the naive date string or the target New Year's datetime using `pytz.timezone.localize()`, if the time falls into an ambiguous period (e.g., during 'fall back' DST transition), resolve by choosing the standard time (`is_dst=False`). If the time falls into a non-existent period (e.g., during 'spring forward' DST transition), resolve by choosing the Daylight Saving Time (`is_dst=True`).\n\n    Example:\n    >>> type(task_func('2022-10-22 11:59:59', 'America/Chicago'))\n    <class 'int'>\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_time_until_new_year(self):\n        # Test with a specific date and timezone\n        self.assertIsInstance(task_func('2023-12-31 23:59:59', 'UTC'), int)\n    def test_start_of_year(self):\n        # Test exactly at the start of a year\n        self.assertIsInstance(task_func('2023-01-01 00:00:00', 'UTC'), int)\n    def test_leap_year(self):\n        # Test a date in a leap year\n        self.assertIsInstance(task_func('2024-02-29 00:00:00', 'UTC'), int)\n    def test_different_timezone(self):\n        # Test with a non-UTC timezone\n        self.assertIsInstance(task_func('2023-12-31 23:59:59', 'America/New_York'), int)\n    def test_midyear(self):\n        # Test a date in the middle of the year\n        self.assertIsInstance(task_func('2023-06-15 12:00:00', 'UTC'), int)\n",
+    "entry_point": "task_func",
+    "libs": "['pytz', 'dateutil', 'datetime']",
+    "instruct_prompt": "Determine the time in seconds until the next turn of the year in a certain time zone from a given date string.\nThe function should output with:\n    int: The time in seconds until the next New Year in the specified timezone.\nYou should write self-contained code starting with:\n```\nfrom datetime import datetime\nimport pytz\nfrom dateutil.parser import parse\ndef task_func(date_str, tz_str):\n```",
+    "code_prompt": "from datetime import datetime\nimport pytz\nfrom dateutil.parser import parse\ndef task_func(date_str, tz_str):",
+    "canonical_solution": "    tz = pytz.timezone(tz_str)\n    given_date = parse(date_str).astimezone(tz)  # Correctly handle timezone conversion\n\n    next_year = given_date.year + 1\n    new_year = tz.localize(datetime(next_year, 1, 1, 0, 0, 0))  # Correctly create the New Year moment in the specified timezone\n\n    time_until_new_year = new_year - given_date\n\n    return int(time_until_new_year.total_seconds())"
+  }
+}

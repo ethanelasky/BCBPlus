@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/733",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import re\nimport string\n\ndef task_func(content):\n    \"\"\"Count the non-stop words in a sentence without the last word.\n\n    Parameters:\n    - content (str): The sentence to count non-stopwords from.\n\n    Returns:\n    - count (int): The count of non-stopwords.\n\n    Requirements:\n    - re\n    - string\n\n    Example:\n    >>> task_func('this is an example content')\n    1\n    \"\"\"\n",
+    "instruct_prompt": "Count the non-stop words in a sentence without the last word.\nThe function should output with:\n    count (int): The count of non-stopwords.\nYou should write self-contained code starting with:\n```\nimport re\nimport string\ndef task_func(content):\n```",
+    "code_prompt": "import re\nimport string\ndef task_func(content):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Test with a mix of stopwords and non-stopwords\n        self.assertEqual(task_func('this is an example content'), 1)\n    def test_case_2(self):\n        # Test with all stopwords except the last word\n        self.assertEqual(task_func('this is an the of'), 0)\n    def test_case_3(self):\n        # Test with no stopwords\n        self.assertEqual(task_func('example content programming'), 2)\n    def test_case_4(self):\n        # Test with punctuation\n        self.assertEqual(task_func('example, content; programming, python.'), 3)\n    def test_case_5(self):\n        # Test with an empty string\n        self.assertEqual(task_func(''), 0)\n    def test_case_6(self):\n        # Test with a single non-stopword\n        self.assertEqual(task_func('content'), 0)\n    def test_case_7(self):\n        # Test with a single stopword\n        self.assertEqual(task_func('the'), 0)\n    def test_case_8(self):\n        # Test with a mix and uppercase letters\n        self.assertEqual(task_func('This IS an Example Content'), 1)",
+    "entry_point": "task_func",
+    "libs": [
+      "string",
+      "re"
+    ],
+    "canonical_solution": "    STOPWORDS = set([\n        \"i\", \"me\", \"my\", \"myself\", \"we\", \"our\", \"ours\", \"ourselves\", \"you\", \"your\", \n        \"yours\", \"yourself\", \"yourselves\", \"he\", \"him\", \"his\", \"himself\", \"she\", \n        \"her\", \"hers\", \"herself\", \"it\", \"its\", \"itself\", \"they\", \"them\", \"their\", \n        \"theirs\", \"themselves\", \"what\", \"which\", \"who\", \"whom\", \"this\", \"that\", \n        \"these\", \"those\", \"is\", \"are\", \"was\", \"were\", \"be\", \"been\", \"being\", \"have\", \n        \"has\", \"had\", \"having\", \"do\", \"does\", \"did\", \"doing\", \"an\", \"the\", \"and\", \n        \"but\", \"if\", \"or\", \"because\", \"as\", \"until\", \"while\", \"of\", \"at\", \"by\", \n        \"for\", \"with\", \"about\", \"against\", \"between\", \"into\", \"through\", \"during\", \n        \"before\", \"after\", \"above\", \"below\", \"to\", \"from\", \"up\", \"down\", \"in\", \"out\", \n        \"on\", \"off\", \"over\", \"under\", \"again\", \"further\", \"then\", \"once\"\n    ])\n\n    content = content.split(' ')\n    if len(content) > 1:\n        content = content[:-1]\n    else:\n        content = []\n    words = [word.strip(string.punctuation).lower() for word in re.split(r'\\W+', ' '.join(content)) if word]\n    non_stopwords = [word for word in words if word not in STOPWORDS]\n    count = len(non_stopwords)\n\n    return count"
+  }
+}

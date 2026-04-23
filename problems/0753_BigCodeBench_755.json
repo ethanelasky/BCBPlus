@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/755",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import os\nimport glob\n\ndef task_func(directory_path):\n    \"\"\"\n    Reverse the order of words in all the filenames of a directory, where words are separated by periods.\n    \n    Parameters:\n    - directory_path (str): The path to the directory.\n\n    Returns:\n    - new_filenames (list[str]): A list of new filenames after renaming.\n\n    Requirements:\n    - os\n    - glob\n\n    Example:\n    Given filenames in directory: [\"hello.world.txt\", \"sample.data.csv\"]\n    >>> task_func('/path/to/directory')\n    [\"txt.world.hello\", \"csv.data.sample\"]\n    \"\"\"\n",
+    "instruct_prompt": "Reverse the order of words in all the filenames of a directory, where words are separated by periods.\nThe function should output with:\n    new_filenames (list[str]): A list of new filenames after renaming.\nYou should write self-contained code starting with:\n```\nimport os\nimport glob\ndef task_func(directory_path):\n```",
+    "code_prompt": "import os\nimport glob\ndef task_func(directory_path):\n",
+    "test": "import unittest\nimport shutil\nimport tempfile\nclass TestCases(unittest.TestCase):\n    \n    def setUp(self):\n        self.test_dir = tempfile.mkdtemp()\n    def tearDown(self):\n        shutil.rmtree(self.test_dir)\n    def test_single_file(self):\n        open(os.path.join(self.test_dir, \"hello.world.txt\"), 'a').close()\n        new_filenames = task_func(self.test_dir)\n        self.assertEqual(new_filenames, [\"txt.world.hello\"])\n    def test_multiple_files(self):\n        open(os.path.join(self.test_dir, \"sample.data.csv\"), 'a').close()\n        open(os.path.join(self.test_dir, \"test.file.name.jpg\"), 'a').close()\n        new_filenames = task_func(self.test_dir)\n        expected_filenames = [\"csv.data.sample\", \"jpg.name.file.test\"]\n        self.assertCountEqual(new_filenames, expected_filenames)\n    def test_empty_directory(self):\n        new_filenames = task_func(self.test_dir)\n        self.assertEqual(new_filenames, [])\n    def test_files_without_extension(self):\n        open(os.path.join(self.test_dir, \"file1\"), 'a').close()\n        open(os.path.join(self.test_dir, \"file2.txt\"), 'a').close()\n        new_filenames = task_func(self.test_dir)\n        expected_filenames = [\"file1\", \"txt.file2\"]\n        self.assertCountEqual(new_filenames, expected_filenames)\n    def test_files_with_multiple_extensions(self):\n        open(os.path.join(self.test_dir, \"file.tar.gz\"), 'a').close()\n        open(os.path.join(self.test_dir, \"archive.zip.001\"), 'a').close()\n        new_filenames = task_func(self.test_dir)\n        expected_filenames = [\"gz.tar.file\", \"001.zip.archive\"]\n        self.assertCountEqual(new_filenames, expected_filenames)",
+    "entry_point": "task_func",
+    "libs": [
+      "glob",
+      "os"
+    ],
+    "canonical_solution": "    new_filenames = []\n    for filename in glob.glob(os.path.join(directory_path, '*')):\n        base_name = os.path.basename(filename)\n        new_base_name = '.'.join(base_name.split('.')[::-1])\n        os.rename(filename, os.path.join(directory_path, new_base_name))\n        new_filenames.append(new_base_name)\n    return new_filenames"
+  }
+}

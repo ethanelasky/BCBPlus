@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/307",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260413033053_de9636a1",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import seaborn as sns\nimport matplotlib.pyplot as plt\nimport random\n\n\ndef task_func(list_of_lists, seed=0):\n    \"\"\"\n    Create a histogram from the data in a list of lists. If any sublist is empty, \n    it will be filled with 5 random integers ranging from 0 to 100 (both inclusive)\n    The histogram will then be constructed using the combined data from all sublists.\n    \n    Parameters:\n    list_of_lists (list): A list containing multiple sublists with integers.\n    seed (int, Optional): Seed value for random number generation. Default is 0.\n    \n    Returns:\n    matplotlib.axes._axes.Axes: The histogram plot object.\n    \n    Requirements:\n    - random\n    - seaborn\n    - matplotlib.pyplot\n    \n    Example:\n    >>> plot = task_func([[1, 2, 3], [], [4, 5, 6]])\n    >>> type(plot)\n    <class 'matplotlib.axes._axes.Axes'>\n    \"\"\"",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Input: Two non-empty sublists and one empty sublist\n        plot = task_func([[1, 2, 3], [], [4, 5, 6]])\n        self.assertEqual(str(type(plot)), \"<class 'matplotlib.axes._axes.Axes'>\")\n        # Removed assertion on len(plot.patches) as it's an arbitrary implementation detail.\n    def test_case_2(self):\n        # Input: All empty sublists\n        plot = task_func([[], [], []])\n        self.assertEqual(str(type(plot)), \"<class 'matplotlib.axes._axes.Axes'>\")\n    def test_case_3(self):\n        # Input: Single non-empty sublist\n        plot = task_func([[1, 2, 3, 4, 5]], 77)\n        self.assertEqual(str(type(plot)), \"<class 'matplotlib.axes._axes.Axes'>\")\n        # Removed assertion on len(plot.patches) as it's an arbitrary implementation detail.\n    def test_case_4(self):\n        # Input: Single empty sublist\n        plot = task_func([[]])\n        self.assertEqual(str(type(plot)), \"<class 'matplotlib.axes._axes.Axes'>\")\n    def test_case_5(self):\n        # Input: Mixed empty and non-empty sublists\n        plot = task_func([[10, 20], [], [30, 40, 50], []])\n        self.assertEqual(str(type(plot)), \"<class 'matplotlib.axes._axes.Axes'>\")",
+    "entry_point": "task_func",
+    "libs": "['random', 'matplotlib', 'seaborn']",
+    "instruct_prompt": "Create a histogram from the data in a list of lists. If any sublist is empty, it will be filled with 5 random integers ranging from 0 to 100 (both inclusive) The histogram will then be constructed using the combined data from all sublists.\nThe function should output with:\n    matplotlib.axes._axes.Axes: The histogram plot object.\nYou should write self-contained code starting with:\n```\nimport seaborn as sns\nimport matplotlib.pyplot as plt\nimport random\ndef task_func(list_of_lists, seed=0):\n```",
+    "code_prompt": "import seaborn as sns\nimport matplotlib.pyplot as plt\nimport random\ndef task_func(list_of_lists, seed=0):",
+    "canonical_solution": "    random.seed(seed)\n    data = []\n    # Initialize a fresh plot\n    plt.figure()\n    for list_ in list_of_lists:\n        if list_:\n            data += list_\n        else:\n            data += [random.randint(0, 100) for _ in range(5)]\n\n    plot = sns.histplot(data)\n    return plot"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/25",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import base64\nimport json\nimport zlib\n\ndef task_func(data_dict):\n    \"\"\"\n    Serializes a dictionary to a JSON string, compresses it using zlib, and then encodes the compressed\n    data with base64.\n\n    Parameters:\n    data_dict (dict): The dictionary to be compressed and encoded. The dictionary should only contain\n                      data that can be serialized to JSON.\n\n    Returns:\n    str: A base64 encoded string that represents the zlib-compressed JSON string of the dictionary.\n\n    Requirements:\n    - base64\n    - zlib\n    - json\n    \n    Example:\n    >>> data = {'key1': 'value1', 'key2': 'value2'}\n    >>> encoded_data = task_func(data)\n    >>> print(encoded_data)\n    eJyrVspOrTRUslJQKkvMKU01VNJRAIkYwUWMlGoBw5sKmw==\n    \"\"\"\n",
+    "instruct_prompt": "Serializes a dictionary to a JSON string, compresses it using zlib, and then encodes the compressed data with base64.\nThe function should output with:\n    str: A base64 encoded string that represents the zlib-compressed JSON string of the dictionary.\nYou should write self-contained code starting with:\n```\nimport base64\nimport json\nimport zlib\ndef task_func(data_dict):\n```",
+    "code_prompt": "import base64\nimport json\nimport zlib\ndef task_func(data_dict):\n",
+    "test": "import unittest\nimport json\nimport zlib\nimport base64\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Test with a simple dictionary containing string values.\n        data = {'key1': 'value1', 'key2': 'value2'}\n        result = task_func(data)\n        self.assertIsInstance(result, str)\n        decompressed_data = json.loads(zlib.decompress(base64.b64decode(result)).decode())\n        self.assertEqual(decompressed_data, data)\n    def test_case_2(self):\n        # Test with an empty dictionary.\n        data = {}\n        result = task_func(data)\n        self.assertIsInstance(result, str)\n        decompressed_data = json.loads(zlib.decompress(base64.b64decode(result)).decode())\n        self.assertEqual(decompressed_data, data)\n    def test_case_3(self):\n        # Test with a dictionary containing mixed types (string and integers).\n        data = {'name': 'John', 'age': 30, 'city': 'New York'}\n        result = task_func(data)\n        self.assertIsInstance(result, str)\n        decompressed_data = json.loads(zlib.decompress(base64.b64decode(result)).decode())\n        self.assertEqual(decompressed_data, data)\n    def test_case_4(self):\n        # Test with a nested dictionary containing lists of dictionaries.\n        data = {'users': [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}]}\n        result = task_func(data)\n        self.assertIsInstance(result, str)\n        decompressed_data = json.loads(zlib.decompress(base64.b64decode(result)).decode())\n        self.assertEqual(decompressed_data, data)\n    def test_case_5(self):\n        # Test with a dictionary containing multiple integer values.\n        data = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5}\n        result = task_func(data)\n        self.assertIsInstance(result, str)\n        decompressed_data = json.loads(zlib.decompress(base64.b64decode(result)).decode())\n        self.assertEqual(decompressed_data, data)",
+    "entry_point": "task_func",
+    "libs": [
+      "zlib",
+      "base64",
+      "json"
+    ],
+    "canonical_solution": "    json_str = json.dumps(data_dict)\n    compressed = zlib.compress(json_str.encode())\n    return base64.b64encode(compressed).decode()"
+  }
+}

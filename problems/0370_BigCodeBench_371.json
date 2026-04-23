@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/371",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from sklearn.preprocessing import MinMaxScaler\nimport pandas as pd\n\ndef task_func(l):\n    \"\"\"\n    Scale the input field to the range [0, 1] and display it as a DataFrame.\n\n    Parameters:\n    l (numpy array): The input array.\n\n    Returns:\n    DataFrame: A pandas DataFrame of the scaled array.\n\n    Requirements:\n    - numpy\n    - sklearn.preprocessing\n    - pandas\n\n    Note:\n    - The return DataFrame use 'Scaled Values' as the column name.\n\n    Example:\n    >>> import numpy as np\n    >>> l = np.array([10, 20, 30, 40, 50])\n    >>> df = task_func(l)\n    >>> print(int(df.iloc[0]['Scaled Values']))\n    0\n    \"\"\"\n",
+    "instruct_prompt": "Scale the input field to the range [0, 1] and display it as a DataFrame.\nNote that: The return DataFrame use 'Scaled Values' as the column name.\nThe function should output with:\n    DataFrame: A pandas DataFrame of the scaled array.\nYou should write self-contained code starting with:\n```\nfrom sklearn.preprocessing import MinMaxScaler\nimport pandas as pd\ndef task_func(l):\n```",
+    "code_prompt": "from sklearn.preprocessing import MinMaxScaler\nimport pandas as pd\ndef task_func(l):\n",
+    "test": "import unittest\nimport numpy as np\nimport pandas as pd\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        l1 = np.array([10, 20, 30, 40, 50])\n        expected_df1 = pd.DataFrame({'Scaled Values': [0.0, 0.25, 0.5, 0.75, 1.0]})\n        self.assertTrue(task_func(l1).equals(expected_df1))\n    \n    def test_case_2(self):\n        l2 = np.array([-10, 0, 10])\n        expected_df2 = pd.DataFrame({'Scaled Values': [0.0, 0.5, 1.0]})\n        self.assertTrue(task_func(l2).equals(expected_df2))\n    \n    def test_case_3(self):\n        l3 = np.array([5, 5, 5])\n        expected_df3 = pd.DataFrame({'Scaled Values': [0.0, 0.0, 0.0]})\n        self.assertTrue(task_func(l3).equals(expected_df3))\n        \n    def test_case_4(self):\n        l4 = np.array([100])\n        expected_df4 = pd.DataFrame({'Scaled Values': [0.0]})\n        self.assertTrue(task_func(l4).equals(expected_df4))\n    \n    def test_case_5(self):\n        l5 = np.array([10, 50, 30, 40, 20])\n        expected_df5 = pd.DataFrame({'Scaled Values': [0.0, 1.0, 0.5, 0.75, 0.25]})\n        self.assertTrue(task_func(l5).equals(expected_df5))",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "\n    scaler = MinMaxScaler()\n    l_scaled = scaler.fit_transform(l.reshape(-1, 1))\n    df = pd.DataFrame(l_scaled, columns=['Scaled Values'])\n    return df"
+  }
+}

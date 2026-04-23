@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/687",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130101735_fcf61285",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom scipy.stats import mode\n\ndef task_func(list_of_lists):\n    \"\"\"\n    Merges a predefined set of lists into a list and finds the mode of the elements in the list.\n\n    Parameters:\n    - list_of_lists (list): The list to be processed.\n\n    Returns:\n    - tuple: The mode and count of the mode in the merged list.\n        - mode_value: The value that appears most frequently in the merged array.\n        - mode_count: The frequency count of the mode_value within the merged array.\n\n    Requirements:\n    - numpy\n    - scipy\n\n    Example:\n    >>> task_func([[1, 1, 3], [4, 5, 6], [7, 8, 9]])\n    (1, 2)\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        self.assertEqual(task_func([[1, 1, 3], [4, 5, 6], [7, 8, 9]]), (1, 2))\n    def test_case_2(self):\n        self.assertEqual(task_func([[1, 1, 3], [4, 5, 6], [7, 8, 9], [1, 1, 1]]), (1, 5))\n    def test_case_3(self):\n        self.assertEqual(task_func([[1, 1, 3], [4, 5, 6], [7, 8, 9], [1, 1, 1], [2, 2, 2]]), (1, 5))\n    def test_case_4(self):\n        self.assertEqual(task_func([[1, 1, 3], [4, 5, 6], [7, 8, 9], [1, 1, 1], [2, 2, 2], [3, 3, 3]]), (1, 5))\n    def test_case_5(self):\n        self.assertEqual(task_func([[1, 1, 3], [4, 5, 6], [7, 8, 9], [1, 1, 1], [2, 2, 2], [3, 3, 3], [4, 4, 4]]), (1, 5))",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "scipy"
+    ],
+    "instruct_prompt": "Merges a predefined set of lists into a list and finds the mode of the elements in the list.\nThe function should output with:\n    tuple: The mode and count of the mode in the merged list.\n    mode_value (np.array): The value that appears most frequently in the merged array.\n    mode_count (int): The frequency count of the mode_value within the merged array.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom scipy.stats import mode\ndef task_func(list_of_lists):\n```",
+    "code_prompt": "import numpy as np\nfrom scipy.stats import mode\ndef task_func(list_of_lists):",
+    "canonical_solution": "    merged_list = np.array([item for sublist in list_of_lists for item in sublist])\n    mode_value, mode_count = mode(merged_list)\n    return mode_value, mode_count"
+  }
+}

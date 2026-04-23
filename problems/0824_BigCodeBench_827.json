@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/827",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import math\nfrom sympy import isprime\n\n\ndef task_func(input_list):\n    \"\"\"\n    Filter the prime numbers from the specified list, sort the prime numbers \n    ascending based on their radian value converted to degrees, and return the sorted list.\n    \n    The function uses the isprime function from the sympy library to determine prime numbers \n    and the degrees function from the math library to sort the numbers based on their degree value.\n\n    Parameters:\n    input_list (list[int]): A list of integers to be filtered and sorted.\n\n    Returns:\n    list[int]: A sorted list of prime numbers based on their degree value.\n\n    Requirements:\n    - math\n    - sympy\n\n    Examples:\n    >>> task_func([4, 5, 2, 7, 89, 90])\n    [2, 5, 7, 89]\n    \n    >>> task_func([101, 102, 103, 104])\n    [101, 103]\n    \"\"\"\n",
+    "instruct_prompt": "Filter the prime numbers from the specified list, sort the prime numbers ascending based on their radian value converted to degrees, and return the sorted list. The function uses the isprime function from the sympy library to determine prime numbers and the degrees function from the math library to sort the numbers based on their degree value. >>> task_func([101, 102, 103, 104]) [101, 103]\nThe function should output with:\n    list[int]: A sorted list of prime numbers based on their degree value.\nYou should write self-contained code starting with:\n```\nimport math\nfrom sympy import isprime\ndef task_func(input_list):\n```",
+    "code_prompt": "import math\nfrom sympy import isprime\ndef task_func(input_list):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        input_data = [2, 3, 4, 5, 6, 7, 8, 9, 10]\n        expected_output = [2, 3, 5, 7]\n        self.assertEqual(task_func(input_data), expected_output)\n    def test_case_2(self):\n        input_data = [2, 3, 5, 7, 11, 13, 17, 19]\n        expected_output = [2, 3, 5, 7, 11, 13, 17, 19]\n        self.assertEqual(task_func(input_data), expected_output)\n    def test_case_3(self):\n        input_data = [4, 6, 8, 9, 10, 12, 14, 15, 16]\n        expected_output = []\n        self.assertEqual(task_func(input_data), expected_output)\n    def test_case_4(self):\n        input_data = []\n        expected_output = []\n        self.assertEqual(task_func(input_data), expected_output)\n    def test_case_5(self):\n        input_data = [89, 90, 91, 97, 98, 99, 100]\n        expected_output = [89, 97]\n        self.assertEqual(task_func(input_data), expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "sympy"
+    ],
+    "canonical_solution": "    primes = [i for i in input_list if isprime(i)]\n    sorted_primes = sorted(primes, key=lambda x: (math.degrees(x), x))\n    return sorted_primes"
+  }
+}

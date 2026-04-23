@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/665",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import shutil\nimport os\nimport fnmatch\nimport itertools\n\ndef task_func(src_dir, dst_dir):\n    \"\"\"\n    Copy all files from 'src_dir' to 'dst_dir' that match any pattern in ['*.txt', '*.docx'].\n\n    Parameters:\n    - src_dir (str): The source directory.\n    - dst_dir (str): The destination directory.\n\n    Returns:\n    - str: The destination directory.\n    \n    Requirements:\n    - shutil\n    - os\n    - fnmatch\n    - itertools\n\n    Example:\n    >>> task_func('./source', './destination')\n    >>> './destination'\n    \"\"\"\n",
+    "instruct_prompt": "Copy all files from 'src_dir' to 'dst_dir' that match any pattern in ['*.txt', '*.docx'].\nThe function should output with:\n    str: The destination directory.\nYou should write self-contained code starting with:\n```\nimport shutil\nimport os\nimport fnmatch\nimport itertools\ndef task_func(src_dir, dst_dir):\n```",
+    "code_prompt": "import shutil\nimport os\nimport fnmatch\nimport itertools\ndef task_func(src_dir, dst_dir):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def base(self, src_dir, dst_dir):\n        if os.path.exists(src_dir):\n            shutil.rmtree(src_dir)\n        # Create source directory\n        os.mkdir(src_dir)\n        # Create destination directory\n        os.mkdir(dst_dir)\n        # Create files\n        for filename in ['a.txt', 'b.txt', 'c.docx', 'd.docx', 'e.txt', 'a.pdf', 'a.doc']:\n            with open(os.path.join(src_dir, filename), 'w') as f:\n                f.write('test')\n        # Run function\n        task_func(src_dir, dst_dir)\n        # Check files\n        for d in [src_dir, dst_dir]:\n            self.assertTrue(os.path.exists(os.path.join(d, 'a.txt')))\n            self.assertTrue(os.path.exists(os.path.join(d, 'b.txt')))\n            self.assertTrue(os.path.exists(os.path.join(d, 'c.docx')))\n            self.assertTrue(os.path.exists(os.path.join(d, 'd.docx')))\n            self.assertTrue(os.path.exists(os.path.join(d, 'e.txt')))\n            self.assertFalse(os.path.exists(os.path.join(d, 'f.txt')))\n            if d == src_dir:\n                self.assertTrue(os.path.exists(os.path.join(d, 'a.pdf')))\n                self.assertTrue(os.path.exists(os.path.join(d, 'a.doc')))\n            else:\n                self.assertFalse(os.path.exists(os.path.join(d, 'a.pdf')))\n                self.assertFalse(os.path.exists(os.path.join(d, 'a.doc')))\n    \n    def tearDown(self):\n        for d in ['./source', './destination', './src', './dst', './s', './d']:\n            if os.path.exists(d):\n                shutil.rmtree(d)\n    def test_case_1(self):\n        self.base('./source', './destination')\n    \n    def test_case_2(self):\n        self.base('./src', './dst')\n    \n    def test_case_3(self):\n        self.base('./s', './d')\n    \n    def test_case_4(self):\n        self.base('./s', './destination')\n    def test_case_5(self):\n        self.base('./source', './d')",
+    "entry_point": "task_func",
+    "libs": [
+      "shutil",
+      "itertools",
+      "fnmatch",
+      "os"
+    ],
+    "canonical_solution": "    FILE_PATTERNS = ['*.txt', '*.docx']\n    # Find all matching files\n    matching_files = list(itertools.chain.from_iterable(\n        fnmatch.filter(os.listdir(src_dir), pattern) for pattern in FILE_PATTERNS))\n\n    for filename in matching_files:\n        shutil.copy2(os.path.join(src_dir, filename), dst_dir)\n\n    return dst_dir"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/719",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260121101619_ba5694c9",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nimport os\nimport glob\n\ndef task_func(directory, word):\n    \"\"\"\n    Count the number of files in a directory that contain a specific word.\n    The search is case-insensitive.\n    \n    Parameters:\n    - directory (str): The directory path.\n    - word (str): The word to search for.\n    \n    Returns:\n    - count (int): The number of files that contain the given word.\n    \n    Requirements:\n    - re\n    - os\n    - glob\n    \n    Example:\n    >>> task_func('./documents', 'word')\n    2\n    >>> task_func('./documents', 'apple')\n    3\n    \"\"\"",
+    "test": "import unittest\nfrom pyfakefs.fake_filesystem_unittest import TestCase\nclass TestCases(TestCase):\n    def setUp(self):\n        self.setUpPyfakefs()\n        self.directory = '/mnt/data/documents'\n        self.fs.create_dir(self.directory)\n        self.fs.create_file('/mnt/data/documents/apple.txt', contents='Apple is great.')\n        self.fs.create_file('/mnt/data/documents/word.txt', contents='This file contains the word. Word is important. Word up!')\n        self.fs.create_file('/mnt/data/documents/banana.txt', contents='Banana is yellow.')\n        self.fs.create_file('/mnt/data/documents/orange.txt', contents='Orange is sweet.')\n        self.fs.create_file('/mnt/data/documents/grape.txt', contents='I like grapes. Grapes are nice.')\n    def test_1(self):\n        result = task_func(self.directory, 'apple')\n        self.assertEqual(result, 1) \n    def test_2(self):\n        result = task_func(self.directory, 'word')\n        self.assertEqual(result, 1)  # Ensuring 3 files contain the word \"word\" \n    def test_3(self):\n        result = task_func(self.directory, 'banana')\n        self.assertEqual(result, 1)  # Should be 1 file that contains \"banana\" multiple times\n    def test_4(self):\n        result = task_func(self.directory, 'orange')\n        self.assertEqual(result, 1)  # 1 file contains the word \"orange\"\n    def test_5(self):\n        result = task_func(self.directory, 'grapes')\n        self.assertEqual(result, 1)  # Ensuring 1 file contains the word \"grape\"",
+    "entry_point": "task_func",
+    "libs": [
+      "glob",
+      "re",
+      "os"
+    ],
+    "instruct_prompt": "Count the number of files in a directory that contain a specific word.\nThe function should output with:\n    count (int): The number of files that contain the given word.\nYou should write self-contained code starting with:\n```\nimport re\nimport os\nimport glob\ndef task_func(directory, word):\n```",
+    "code_prompt": "import re\nimport os\nimport glob\ndef task_func(directory, word):",
+    "canonical_solution": "    count = 0\n    # Pattern to match word boundaries and ignore case, handling punctuation\n    pattern = re.compile(r'\\b' + re.escape(word) + r'\\b', re.IGNORECASE)\n    for filename in glob.glob(os.path.join(directory, '*.*')):\n        with open(filename, 'r', encoding='utf-8') as f:\n            text = f.read()\n            if pattern.search(text):\n                count += 1\n    return count"
+  }
+}

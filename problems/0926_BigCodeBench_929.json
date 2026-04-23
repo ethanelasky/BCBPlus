@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/929",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom scipy import stats\ndef task_func(word: str) -> np.ndarray:\n    \"\"\"\n    Calculate the difference between the ASCII values of each pair of adjacent letters in the input word.\n    After calculating the difference, calculate the entropy of the differences.\n    \n    Requirements:\n    - numpy\n    - scipy.stats\n    \n    Parameters:\n    - word (str): The input word as a string.\n    \n    Returns:\n    - np.ndarray: A numpy array containing the difference between the ASCII values of each pair of adjacent letters in the word.\n    - float: The entropy of the differences.\n    \n    Examples:\n    >>> task_func('abcdef')\n    (array([1, 1, 1, 1, 1]), 1.6094379124341005)\n    >>> task_func('hello')\n    (array([-3,  7,  0,  3]), -inf)\n    \"\"\"\n",
+    "instruct_prompt": "Calculate the difference between the ASCII values of each pair of adjacent letters in the input word. After calculating the difference, calculate the entropy of the differences.\nThe function should output with:\n    np.ndarray: A numpy array containing the difference between the ASCII values of each pair of adjacent letters in the word.\n    float: The entropy of the differences.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom scipy import stats\ndef task_func(word: str) -> np.ndarray:\n```",
+    "code_prompt": "import numpy as np\nfrom scipy import stats\ndef task_func(word: str) -> np.ndarray:\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func('abcdef')\n        expected_diff = np.array([1, 1, 1, 1, 1])\n        np.testing.assert_array_equal(result[0], expected_diff)\n        self.assertEqual(result[1], 1.6094379124341005)\n        \n    def test_case_2(self):\n        result = task_func('hell')\n        expected_diff = np.array([-3, 7, 0])\n        np.testing.assert_array_equal(result[0], expected_diff)\n        self.assertEqual(result[1], -np.inf)\n        \n    def test_case_3(self):\n        result = task_func('az')\n        expected_diff = np.array([25])\n        np.testing.assert_array_equal(result[0], expected_diff)\n        self.assertEqual(result[1], 0.0)\n        \n    def test_case_4(self):\n        result = task_func('a')\n        expected_diff = np.array([])\n        np.testing.assert_array_equal(result[0], expected_diff)\n        self.assertEqual(result[1], 0.0)\n        \n    def test_case_5(self):\n        result = task_func('i love Python')\n        expected_diff = np.array([-73,  76,   3,   7, -17, -69,  48,  41,  -5, -12,   7,  -1])\n        np.testing.assert_array_equal(result[0], expected_diff)\n        self.assertEqual(result[1], -np.inf)\n        \n    def test_case_6(self):\n        result = task_func('Za')\n        expected_diff = np.array([7])\n        np.testing.assert_array_equal(result[0], expected_diff)\n        self.assertEqual(result[1], 0.0)\n    def test_case_7(self):\n        result = task_func('racecar')\n        expected_diff = np.array([-17, 2, 2, -2, -2, 17])\n        np.testing.assert_array_equal(result[0], expected_diff)\n        self.assertEqual(result[1], -np.inf)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "scipy"
+    ],
+    "canonical_solution": "    if not word:  # Handling the case for empty string\n        return np.array([])\n    word_ascii_values = np.array([ord(x) for x in word])\n    difference = np.diff(word_ascii_values)\n    entropy = stats.entropy(difference)\n    \n    return difference, entropy"
+  }
+}

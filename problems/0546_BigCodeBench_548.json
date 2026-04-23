@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/548",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127172546_46ec4737",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import random\nimport string\nimport base64\nimport zlib\ndef task_func(string_length=100):\n    \"\"\"\n    Create a random string of a specified length with uppercase letters and digits, compress it with zlib, \n    and then encode the compressed string in base64.\n\n    Parameters:\n    - string_length (int, optional): The length of the random string to be generated. Default is 100.\n\n    Returns:\n    str: The compressed string in base64.\n\n    Requirements:\n    - base64\n    - zlib\n    - random\n    - string\n\n    Example:\n    >>> random.seed(1)\n    >>> compressed_string = task_func(50)\n    >>> print(compressed_string)\n    eJxzNTH0CgqMMHJxMgkwdAyM8rQwc3IMMffzCHDyCAjy9PQI9HY0CY1wtzRx9YmKMg8wjgQAWN0NxA==\n    \"\"\"",
+    "test": "import unittest\nimport random\nimport string\nimport base64\nimport zlib\n\nclass TestCases(unittest.TestCase):\n    def test_reproducibility(self):\n        \"\"\"Same seed should produce same output\"\"\"\n        random.seed(42)\n        result1 = task_func(50)\n        random.seed(42)\n        result2 = task_func(50)\n        self.assertEqual(result1, result2)\n\n    def test_valid_output_structure(self):\n        \"\"\"Output should be valid base64 that decompresses to uppercase+digits string\"\"\"\n        random.seed(1)\n        result = task_func(100)\n        # Should be valid base64\n        compressed = base64.b64decode(result)\n        # Should decompress successfully\n        decompressed = zlib.decompress(compressed).decode('utf-8')\n        # Should be correct length\n        self.assertEqual(len(decompressed), 100)\n        # Should contain only uppercase letters and digits\n        valid_chars = set(string.ascii_uppercase + string.digits)\n        self.assertTrue(all(c in valid_chars for c in decompressed))\n\n    def test_different_lengths(self):\n        \"\"\"Test various string lengths\"\"\"\n        for length in [1, 10, 50, 100, 200]:\n            random.seed(0)\n            result = task_func(length)\n            compressed = base64.b64decode(result)\n            decompressed = zlib.decompress(compressed).decode('utf-8')\n            self.assertEqual(len(decompressed), length)\n            valid_chars = set(string.ascii_uppercase + string.digits)\n            self.assertTrue(all(c in valid_chars for c in decompressed))\n\n    def test_default_length(self):\n        \"\"\"Default length should be 100\"\"\"\n        random.seed(1)\n        result = task_func()\n        compressed = base64.b64decode(result)\n        decompressed = zlib.decompress(compressed).decode('utf-8')\n        self.assertEqual(len(decompressed), 100)\n\n    def test_returns_string(self):\n        \"\"\"Should return a string, not bytes\"\"\"\n        random.seed(1)\n        result = task_func(10)\n        self.assertIsInstance(result, str)\n",
+    "entry_point": "task_func",
+    "libs": [
+      "base64",
+      "random",
+      "string",
+      "zlib"
+    ],
+    "instruct_prompt": "Create a random string of a specified length with uppercase letters and digits, compress it with zlib, and then encode the compressed string in base64.\nThe function should output with:\n    str: The compressed string in base64.\nYou should write self-contained code starting with:\n```\nimport random\nimport string\nimport base64\nimport zlib\ndef task_func(string_length=100):\n```",
+    "code_prompt": "import random\nimport string\nimport base64\nimport zlib\ndef task_func(string_length=100):",
+    "canonical_solution": "    # Generate a random string\n    random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=string_length))\n    \n    # Compress the string\n    compressed_string = zlib.compress(random_string.encode('utf-8'))\n    \n    # Encode the compressed string in base64\n    encoded_compressed_string = base64.b64encode(compressed_string)\n\n    return encoded_compressed_string.decode('utf-8')"
+  }
+}

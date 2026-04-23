@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/153",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.preprocessing import LabelEncoder\n\n\ndef task_func(data):\n    \"\"\"\n    Transforms categorical data into a numerical format suitable for machine learning algorithms using sklearn's\n    LabelEncoder. This function generates a DataFrame that pairs original categorical values with their numerical\n    encodings.\n\n    Parameters:\n    data (list): List of categorical data to be encoded.\n\n    Returns:\n    DataFrame: A DataFrame with columns 'Category' and 'Encoded', where 'Category' is the original data and 'Encoded'\n    is the numerical representation.\n\n    Requirements:\n    - pandas\n    - sklearn\n\n    Example:\n    >>> df = task_func(['A', 'B', 'C', 'A', 'D', 'E', 'B', 'C'])\n    >>> print(df.to_string(index=False))\n    Category  Encoded\n           A        0\n           B        1\n           C        2\n           A        0\n           D        3\n           E        4\n           B        1\n           C        2\n    \"\"\"\n",
+    "instruct_prompt": "Transforms categorical data into a numerical format suitable for machine learning algorithms using sklearn's LabelEncoder. This function generates a DataFrame that pairs original categorical values with their numerical encodings.\nThe function should output with:\n    DataFrame: A DataFrame with columns 'Category' and 'Encoded', where 'Category' is the original data and 'Encoded'\n    is the numerical representation.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.preprocessing import LabelEncoder\ndef task_func(data):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.preprocessing import LabelEncoder\ndef task_func(data):\n",
+    "test": "import unittest\nimport pandas as pd\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Testing basic functionality\n        result = task_func(['A', 'B', 'C', 'A', 'D', 'E', 'B', 'C'])\n        expected = pd.DataFrame({'Category': ['A', 'B', 'C', 'A', 'D', 'E', 'B', 'C'],\n                                 'Encoded': [0, 1, 2, 0, 3, 4, 1, 2]})\n        pd.testing.assert_frame_equal(result, expected)\n    def test_case_2(self):\n        # Testing with a single unique category\n        result = task_func(['A', 'A', 'A'])\n        expected = pd.DataFrame({'Category': ['A', 'A', 'A'],\n                                 'Encoded': [0, 0, 0]})\n        pd.testing.assert_frame_equal(result, expected)\n    def test_case_3(self):\n        # Testing with an empty list\n        result = task_func([])\n        expected = pd.DataFrame({'Category': [],\n                                 'Encoded': []})\n        pd.testing.assert_frame_equal(result, expected, check_dtype=False)\n    def test_case_4(self):\n        # Testing with multiple unique categories but in a different order\n        result = task_func(['E', 'D', 'C', 'B', 'A'])\n        expected = pd.DataFrame({'Category': ['E', 'D', 'C', 'B', 'A'],\n                                 'Encoded': [4, 3, 2, 1, 0]})\n        pd.testing.assert_frame_equal(result, expected)\n    def test_case_5(self):\n        # Testing with a list containing a single different category\n        result = task_func(['Z'])\n        expected = pd.DataFrame({'Category': ['Z'],\n                                 'Encoded': [0]})\n        pd.testing.assert_frame_equal(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "    le = LabelEncoder()\n    encoded = le.fit_transform(data)\n    df = pd.DataFrame({'Category': data, 'Encoded': encoded})\n\n    return df"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/721",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import os\nimport csv\nfrom collections import Counter\n\ndef task_func(file_path):\n    \"\"\"\n    This function reads the specified CSV file, counts the frequency of each word, and returns the most common word \n    along with its frequency.\n\n    Parameters:\n    - file_path (str): The path to the CSV file.\n\n    Requirements:\n    - os\n    - csv\n    - collections\n\n    Returns:\n    - tuple: The most common word and its frequency, or None if the file doesn't exist or is empty.\n\n    Example:\n    >>> # Assuming 'example.txt' contains multiple repetitions of the word 'example'\n    >>> task_func('example.txt')  # doctest: +SKIP\n    ('example', <some_positive_integer>)\n\n    Note:\n    - The function specifically reads from the given file path.\n    - This example uses +SKIP because it relies on external file content.\n    \"\"\"\n",
+    "instruct_prompt": "This function reads the specified CSV file, counts the frequency of each word, and returns the most common word along with its frequency.\nNote that: The function specifically reads from the given file path. This example uses +SKIP because it relies on external file content.\nThe function should output with:\n    tuple: The most common word and its frequency, or None if the file doesn't exist or is empty.\nYou should write self-contained code starting with:\n```\nimport os\nimport csv\nfrom collections import Counter\ndef task_func(file_path):\n```",
+    "code_prompt": "import os\nimport csv\nfrom collections import Counter\ndef task_func(file_path):\n",
+    "test": "import unittest\n# Constants\nBASE_PATH = 'task_func_data'\nFILE_NAME = os.path.join(BASE_PATH, 'Output.txt')\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        \"\"\"Create the directory for test files.\"\"\"\n        os.makedirs(BASE_PATH, exist_ok=True)\n    def tearDown(self):\n        \"\"\"Remove all created test files and the directory after all tests.\"\"\"\n        for filename in os.listdir(BASE_PATH):\n            os.remove(os.path.join(BASE_PATH, filename))\n        os.rmdir(BASE_PATH)\n    def create_and_fill_file(self, filename, contents):\n        \"\"\"Helper method to create and populate a file with given contents.\"\"\"\n        full_path = os.path.join(BASE_PATH, filename)\n        with open(full_path, 'w', newline='') as file:\n            writer = csv.writer(file)\n            for content in contents:\n                writer.writerow([content])\n        return full_path\n    def test_1(self):\n        file_path = self.create_and_fill_file('Output.txt', ['banana']*5)\n        result = task_func(file_path)\n        self.assertEqual(result, ('banana', 5))\n    def test_2(self):\n        file_path = self.create_and_fill_file('AnotherOutput.txt', ['cat']*5)\n        result = task_func(file_path)\n        self.assertEqual(result, ('cat', 5))\n    def test_3(self):\n        file_path = self.create_and_fill_file('YetAnotherOutput.txt', ['moon']*5)\n        result = task_func(file_path)\n        self.assertEqual(result, ('moon', 5))\n    def test_4(self):\n        file_path = self.create_and_fill_file('Nonexistent.txt', [])\n        result = task_func(file_path)\n        self.assertIsNone(result)\n    def test_5(self):\n        file_path = self.create_and_fill_file('EmptyFile.txt', [])\n        result = task_func(file_path)\n        self.assertIsNone(result)",
+    "entry_point": "task_func",
+    "libs": [
+      "csv",
+      "collections",
+      "os"
+    ],
+    "canonical_solution": "    if not os.path.isfile(file_path):\n        return None\n\n    word_counter = Counter()\n\n    with open(file_path, 'r') as f:\n        csv_reader = csv.reader(f, delimiter=',', skipinitialspace=True)\n        for row in csv_reader:\n            for word in row:\n                word_counter[word.strip()] += 1\n\n    if not word_counter:\n        return None\n\n    most_common_word, frequency = word_counter.most_common(1)[0]\n    return most_common_word, frequency"
+  }
+}

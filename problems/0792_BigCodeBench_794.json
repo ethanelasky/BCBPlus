@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/794",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import string\nimport random\n\n\n\ndef task_func(length, random_seed=None):\n    \"\"\"\n    Generate a random string of a given length, with each character being either\n    a parenthesis (from the set \"(){}[]\") \n    or a lowercase English character.\n    For function uses a optional random_seed when sampling characters.\n\n    Parameters:\n    length (int): The length of the string to generate.\n    random_seed (int): Random seed for rng. Used in picking random characters.\n                       Defaults to None.\n\n    Returns:\n    str: The generated string.\n\n    Requirements:\n    - string\n    - random\n\n    Note: The function uses the internal string constant BRACKETS for \n          definition of the bracket set.\n\n    Example:\n    >>> string = task_func(10, random_seed=1)\n    >>> print(string)\n    ieqh]{[yng\n    \n    >>> string = task_func(34, random_seed=42)\n    >>> print(string)\n    hbrpoigf)cbfnobm(o{rak)vrjnvgfygww\n\n    >>> string = task_func(23, random_seed=1)\n    >>> print(string)\n    ieqh]{[yng]by)a{rogubbb\n    \"\"\"\n",
+    "instruct_prompt": "Generate a random string of a given length, with each character being either a parenthesis (from the set \"(){}[]\") or a lowercase English character. For function uses a optional random_seed when sampling characters. >>> string = task_func(34, random_seed=42) >>> print(string) hbrpoigf)cbfnobm(o{rak)vrjnvgfygww >>> string = task_func(23, random_seed=1) >>> print(string) ieqh]{[yng]by)a{rogubbb\nNote that: The function uses the internal string constant BRACKETS for definition of the bracket set.\nThe function should output with:\n    str: The generated string.\nYou should write self-contained code starting with:\n```\nimport string\nimport random\ndef task_func(length, random_seed=None):\n```",
+    "code_prompt": "import string\nimport random\ndef task_func(length, random_seed=None):\n",
+    "test": "import unittest\nimport string\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.BRACKETS = \"(){}[]\"\n        return \n    def test_rng(self):\n        # rng reproducability\n        res1 = task_func(100, random_seed=42)\n        res2 = task_func(100, random_seed=42)\n        self.assertEqual(res1, res2)\n    def test_case_1(self):\n        # Testing with length = 5\n        result = task_func(5, random_seed=1)\n        self.assertEqual(len(result), 5)\n        for char in result:\n            self.assertIn(char, string.ascii_lowercase + self.BRACKETS)\n    def test_case_2(self):\n        # Testing with length = 0 (edge case)\n        result = task_func(0, random_seed=2)\n        self.assertEqual(len(result), 0)\n    def test_case_3(self):\n        # Testing with length = 10\n        result = task_func(10, random_seed=3)\n        self.assertEqual(len(result), 10)\n        for char in result:\n            self.assertIn(char, string.ascii_lowercase + self.BRACKETS)\n    def test_case_4(self):\n        # Testing with length = 1 (edge case)\n        result = task_func(1, random_seed=34)\n        self.assertEqual(len(result), 1)\n        self.assertIn(result, string.ascii_lowercase + self.BRACKETS)\n    def test_case_5(self):\n        # Testing with length = 50\n        result = task_func(50, random_seed=777)\n        self.assertEqual(len(result), 50)\n        for char in result:\n            self.assertIn(char, string.ascii_lowercase + self.BRACKETS)",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "string"
+    ],
+    "canonical_solution": "    random.seed(random_seed)\n    # Constants\n    BRACKETS = \"(){}[]\"\n    return ''.join(random.choice(string.ascii_lowercase + BRACKETS) for _ in range(length))"
+  }
+}

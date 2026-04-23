@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/309",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nimport random\nfrom sklearn.preprocessing import MinMaxScaler\n\n\ndef task_func(list_of_lists, seed=42):\n    \"\"\"\n    Scale the values in a list of lists to a (0,1) range using MinMaxScaler.\n    If any inner list is empty, the function fills it with five random integers between 0 and 100, and then scales the values.\n    \n    Parameters:\n    list_of_lists (list of list of int): A list containing inner lists of integers.\n    seed (int, Optional): Seed for random number generation. Default is 42.\n    \n    Returns:\n    list of list of float: A list of lists containing scaled values between the range [0, 1].\n    \n    Requirements:\n    - numpy\n    - random\n    - sklearn.preprocessing.MinMaxScaler\n    \n    Example:\n    >>> task_func([[1, 2, 3], [], [4, 5, 6]])\n    [[0.0, 0.5, 1.0], [0.8571428571428572, 0.1208791208791209, 0.0, 1.0, 0.3516483516483517], [0.0, 0.5, 1.0]]\n    \"\"\"\n",
+    "instruct_prompt": "Scale the values in a list of lists to a (0,1) range using MinMaxScaler. If any inner list is empty, the function fills it with five random integers between 0 and 100, and then scales the values.\nThe function should output with:\n    list of list of float: A list of lists containing scaled values between the range [0, 1].\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport random\nfrom sklearn.preprocessing import MinMaxScaler\ndef task_func(list_of_lists, seed=42):\n```",
+    "code_prompt": "import numpy as np\nimport random\nfrom sklearn.preprocessing import MinMaxScaler\ndef task_func(list_of_lists, seed=42):\n",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        input_data = [[1, 2, 3], [], [4, 5, 6]]\n        output = task_func(input_data)\n        for inner_list in output:\n            self.assertTrue(0.0 <= min(inner_list) <= 1.0)\n            self.assertTrue(0.0 <= max(inner_list) <= 1.0)\n            self.assertTrue(len(inner_list) <= 5)\n    \n    def test_case_2(self):\n        input_data = [[10, 20, 30, 40, 50], [], [60, 70, 80, 90, 100]]\n        output = task_func(input_data)\n        for inner_list in output:\n            self.assertTrue(0.0 <= min(inner_list) <= 1.0)\n            self.assertTrue(0.0 <= max(inner_list) <= 1.0)\n            self.assertEqual(len(inner_list), 5)\n        \n    def test_case_3(self):\n        input_data = [[], [], []]\n        output = task_func(input_data)\n        for inner_list in output:\n            self.assertTrue(0.0 <= min(inner_list) <= 1.0)\n            self.assertTrue(0.0 <= max(inner_list) <= 1.0)\n            self.assertEqual(len(inner_list), 5)\n    def test_case_4(self):\n        input_data = [[15], [25], [35], [45], [55]]\n        expected_output = [[0.0], [0.0], [0.0], [0.0], [0.0]]\n        output = task_func(input_data)\n        self.assertEqual(output, expected_output)\n    \n    def test_case_5(self):\n        input_data = [[0, 100], [0, 50], [50, 100]]\n        expected_output = [[0.0, 1.0], [0.0, 1.0], [0.0, 1.0]]\n        output = task_func(input_data)\n        self.assertEqual(output, expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "random",
+      "sklearn"
+    ],
+    "canonical_solution": "    np.random.seed(seed)\n    random.seed(seed)\n    scaled_data = []\n    scaler = MinMaxScaler(feature_range=(0, 1))\n    for list_ in list_of_lists:\n        if not list_:\n            list_ = [random.randint(0, 100) for _ in range(5)]\n        # Reshape the data to fit the scaler\n        reshaped_data = np.array(list_).reshape(-1, 1)\n        scaled_list = scaler.fit_transform(reshaped_data)\n        # Flatten the list and append to the result\n        scaled_data.append(scaled_list.flatten().tolist())\n    \n    return scaled_data"
+  }
+}

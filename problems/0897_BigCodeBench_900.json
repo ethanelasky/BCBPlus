@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/900",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport numpy as np\n\ndef task_func(d):\n    \"\"\"\n    Calculate mean, sum, max, min and standard deviation for the keys \"x,\" \"y\" and \"z\" from a list of dictionaries \"d.\"\n    \n    Parameters:\n    d (list): A list of dictionaries.\n\n    Returns:\n    dict: A dictionary with keys as 'x', 'y', and 'z' and values as dictionaries of statistics.\n\n    Raises:\n    - ValueError: If input is not a list of dictionaries.\n\n    Requirements:\n    - pandas\n    - numpy\n\n    Examples:\n    >>> data = [{'x': 1, 'y': 10, 'z': 5}, {'x': 3, 'y': 15, 'z': 6}, {'x': 2, 'y': 1, 'z': 7}]\n    >>> task_func(data)\n    {'x': {'mean': 2.0, 'sum': 6, 'max': 3, 'min': 1, 'std': 0.816496580927726}, 'y': {'mean': 8.666666666666666, 'sum': 26, 'max': 15, 'min': 1, 'std': 5.792715732327589}, 'z': {'mean': 6.0, 'sum': 18, 'max': 7, 'min': 5, 'std': 0.816496580927726}}\n    >>> task_func([])\n    {'x': None, 'y': None, 'z': None}\n    >>> task_func([{'a': 1}])\n    {'x': None, 'y': None, 'z': None}\n    \"\"\"\n",
+    "instruct_prompt": "Calculate mean, sum, max, min and standard deviation for the keys \"x,\" \"y\" and \"z\" from a list of dictionaries \"d.\"\nThe function should raise the exception for: ValueError: If input is not a list of dictionaries.\nThe function should output with:\n    dict: A dictionary with keys as 'x', 'y', and 'z' and values as dictionaries of statistics.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport numpy as np\ndef task_func(d):\n```",
+    "code_prompt": "import pandas as pd\nimport numpy as np\ndef task_func(d):\n",
+    "test": "# Test suite\nimport unittest\nclass TestCases(unittest.TestCase):\n    def test_empty_list(self):\n        self.assertEqual(task_func([]), {'x': None, 'y': None, 'z': None})\n    def test_valid_input(self):\n        data = [{'x': 1, 'y': 10, 'z': 5}, {'x': 3, 'y': 15, 'z': 6}, {'x': 2, 'y': 1, 'z': 7}]\n        result = task_func(data)\n        self.assertAlmostEqual(result['x']['mean'], 2.0)\n        self.assertAlmostEqual(result['y']['mean'], 8.666666666666666)\n        self.assertAlmostEqual(result['z']['mean'], 6.0)\n    def test_invalid_input_type(self):\n        with self.assertRaises(ValueError):\n            task_func(\"not a list\")\n    def test_partial_keys(self):\n        data = [{'x': 1, 'y': 2}, {'y': 3, 'z': 4}]\n        result = task_func(data)\n        self.assertIsNotNone(result['x'])\n        self.assertIsNotNone(result['y'])\n        self.assertIsNotNone(result['z'])\n    def test_all_keys_missing(self):\n        data = [{'a': 1}, {'b': 2}]\n        self.assertEqual(task_func(data), {'x': None, 'y': None, 'z': None})",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy"
+    ],
+    "canonical_solution": "    if not isinstance(d, list) or any(not isinstance(item, dict) for item in d):\n        raise ValueError(\"Input must be a list of dictionaries.\")\n    \n    if not d:\n        return {key: None for key in ['x', 'y', 'z']}\n\n    df = pd.DataFrame(d).fillna(0)  # Replace missing values with 0 to allow computations\n    stats = {}\n\n    for key in ['x', 'y', 'z']:\n        if key in df.columns:\n            stats[key] = {\n                'mean': np.mean(df[key]),\n                'sum': np.sum(df[key]),\n                'max': np.max(df[key]),\n                'min': np.min(df[key]),\n                'std': np.std(df[key], ddof=0)  # Population standard deviation\n            }\n        else:\n            stats[key] = None\n\n    return stats"
+  }
+}

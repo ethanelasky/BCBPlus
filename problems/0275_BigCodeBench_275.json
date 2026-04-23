@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/275",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260422132346_a83016d4",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom itertools import combinations\n\ndef task_func(n):\n    \"\"\"\n    Generate a list of all possible integer pairs within the range of 1 to n.\n\n    Parameters:\n    n (int): The upper bound of the range (inclusive) from which pairs are generated.\n             Must be an integer or convertible to an integer (e.g., numpy integer types,\n             float with no fractional part, or numeric string).\n\n    Returns:\n    list of tuples: A list of tuple pairs representing all possible combinations \n                    of two numbers within the specified range.\n    \n    Raises:\n    - ValueError: If the input n is not convertible to an integer, or if the\n                  converted integer value is less than 1.\n    \n    Requirements:\n    - numpy\n    - itertools.combinations\n\n    Example:\n    >>> task_func(3)\n    [(1, 2), (1, 3), (2, 3)]\n    >>> task_func(4)\n    [(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_small_range(self):\n        self.assertEqual(task_func(2), [(1, 2)])\n    def test_medium_range(self):\n        expected_output = [(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]\n        self.assertEqual(task_func(4), expected_output)\n    def test_large_range(self):\n        result = task_func(10)\n        self.assertEqual(len(result), 45)  # 10 choose 2 combinations\n        self.assertIn((1, 10), result)\n    def test_edge_case_empty(self):\n        self.assertEqual(task_func(1), [])\n    def test_invalid_input_negative(self):\n        with self.assertRaises(ValueError):\n            task_func(-1)\n    def test_invalid_input_zero(self):\n        with self.assertRaises(ValueError):\n            task_func(0)\n",
+    "entry_point": "task_func",
+    "libs": "['numpy', 'itertools']",
+    "instruct_prompt": "Generate a list of all possible integer pairs within the range of 1 to n.\nThe function should raise the exception for: This function will raise Value Error if the input n is less than 1.\nThe function should output with:\n    list of tuples: A list of tuple pairs representing all possible combinations\n    of two numbers within the specified range.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom itertools import combinations\ndef task_func(n):\n```",
+    "code_prompt": "import numpy as np\nfrom itertools import combinations\ndef task_func(n):",
+    "canonical_solution": "\n    if n < 1:\n        raise ValueError(\"Input must be a positive integer\")\n    numbers = np.arange(1, n + 1)\n    pairs = list(combinations(numbers, 2))\n    return pairs"
+  }
+}

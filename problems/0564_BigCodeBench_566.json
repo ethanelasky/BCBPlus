@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/566",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260123101831_b3666ab8",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import inspect\nimport types\n\ndef task_func(f):\n    \"\"\"\n    Inspects a given function 'f' and returns its specifications, including the function's name,\n    whether it is a lambda function, its arguments, defaults, and annotations. This method\n    utilizes the inspect and types modules to introspect function properties.\n\n    Parameters:\n    f (function): The function to inspect.\n\n    Returns:\n    dict: A dictionary containing details about the function:\n        - 'function_name': str, the name of the function\n        - 'is_lambda': bool, True if the function is a lambda\n        - 'args': list of str, the parameter names\n        - 'defaults': tuple of default values (matching the last len(defaults) parameters), or None if no defaults\n        - 'annotations': dict mapping parameter names and 'return' to their annotations\n\n    Requirements:\n    - inspect\n    - types\n\n    Examples:\n    >>> def sample_function(x, y=5): return x + y\n    >>> result = task_func(sample_function)\n    >>> 'sample_function' == result['function_name'] and len(result['args']) == 2\n    True\n    >>> result['defaults']\n    (5,)\n    >>> lambda_func = lambda x: x * 2\n    >>> task_func(lambda_func)['is_lambda']\n    True\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_regular_function(self):\n        def test_func(a, b=1): pass\n        result = task_func(test_func)\n        self.assertEqual(result['function_name'], 'test_func')\n        self.assertListEqual(result['args'], ['a', 'b'])\n        self.assertTupleEqual(result['defaults'], (1,))\n    def test_lambda_function(self):\n        lambda_func = lambda x, y=2: x + y\n        result = task_func(lambda_func)\n        self.assertTrue(result['is_lambda'])\n    def test_no_arguments(self):\n        def test_func(): pass\n        result = task_func(test_func)\n        self.assertEqual(len(result['args']), 0)\n    def test_annotations(self):\n        def test_func(a: int, b: str = 'hello') -> int: pass\n        result = task_func(test_func)\n        self.assertIn('a', result['annotations'])\n        self.assertIn('return', result['annotations'])\n    def test_defaults_none(self):\n        def test_func(a, b=None): pass\n        result = task_func(test_func)\n        self.assertIsNone(result['defaults'][0])",
+    "entry_point": "task_func",
+    "libs": [
+      "types",
+      "inspect"
+    ],
+    "instruct_prompt": "Inspects a given function 'f' and returns its specifications, including the function's name, whether it is a lambda function, its arguments, defaults, and annotations. This method utilizes the inspect and types modules to introspect function properties.\nThe function should output with:\n    dict: A dictionary containing details about the function, such as its name, if it's a lambda function,\n    arguments, default values, and annotations.\nYou should write self-contained code starting with:\n```\nimport inspect\nimport types\ndef task_func(f):\n```",
+    "code_prompt": "import inspect\nimport types\ndef task_func(f):",
+    "canonical_solution": "    spec = inspect.getfullargspec(f)\n\n    return {\n        'function_name': f.__name__,\n        'is_lambda': isinstance(f, types.LambdaType),\n        'args': spec.args,\n        'defaults': spec.defaults,\n        'annotations': spec.annotations\n    }"
+  }
+}

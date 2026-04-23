@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/941",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129114951_97b4bd05",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\n\ndef task_func(start_date: str, periods: int, freq: str, random_seed: int = 0) -> (pd.DataFrame, plt.Axes):\n    \"\"\"\n    Generates and plots a sales forecast starting from a given date, for a specified number of periods and frequency.\n\n    Requirements:\n    - pandas\n    - numpy\n    - matplotlib.pyplot\n    \n    Parameters:\n    - start_date (str): Start date for the forecast in 'YYYY-MM-DD' format.\n    - periods (int): Number of periods to forecast. Must be non-negative.\n    - freq (str): Frequency of the forecast (e.g., 'WOM-2FRI' for the second Friday of each month, 'M' for monthly).\n    - random_seed (int, optional): Seed for the random number generator to ensure reproducibility.\n\n    Returns:\n    - A tuple containing:\n        1. A DataFrame with columns ['Date', 'Sales'], where 'Date' is the forecast date and 'Sales' are the forecasted sales.\n        2. A matplotlib Axes object for the sales forecast plot.\n\n    Raises:\n    - ValueError: If start_date is not a valid date or if periods is negative.\n\n    Examples:\n    >>> df, ax = task_func('2021-01-01', 5, 'WOM-2FRI')\n    >>> print(df)\n                Sales\n    Date             \n    2021-01-08    272\n    2021-02-12    147\n    2021-03-12    217\n    2021-04-09    292\n    2021-05-14    423\n    >>> df, ax = task_func('2022-02-01', 3, 'M', random_seed=42)\n    >>> print(df)\n                Sales\n    Date             \n    2022-02-28    202\n    2022-03-31    448\n    2022-04-30    370\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \n    def setUp(self):\n        self.random_seed = 42\n    def test_basic_forecast(self):\n        df, ax = task_func('2021-01-01', 5, 'WOM-2FRI', self.random_seed)\n        self.assertEqual(len(df), 5)\n        self.assertTrue(all(df.columns == ['Sales']))\n        self.assertEqual(ax.get_title(), 'Sales Forecast')\n    def test_monthly_forecast(self):\n        df, ax = task_func('2022-01-01', 3, 'M', self.random_seed)\n        self.assertEqual(len(df), 3)\n        self.assertTrue(all(df.columns == ['Sales']))\n    def test_quarterly_forecast(self):\n        df, ax = task_func('2020-01-01', 4, 'Q', self.random_seed)\n        self.assertEqual(len(df), 4)\n        self.assertTrue(all(df.columns == ['Sales']))\n    def test_invalid_input(self):\n        with self.assertRaises(ValueError):\n            task_func('2021-13-01', 5, 'M', self.random_seed)\n    def test_negative_periods(self):\n        with self.assertRaises(ValueError):\n            task_func('2021-01-01', -5, 'M', self.random_seed)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy",
+      "matplotlib"
+    ],
+    "instruct_prompt": "Generates and plots a sales forecast starting from a given date, for a specified number of periods and frequency.\nThe function should output with:\n    A tuple containing:\n    1. A DataFrame with columns ['Date', 'Sales'], where 'Date' is the forecast date and 'Sales' are the forecasted sales.\n    2. A matplotlib Axes object for the sales forecast plot.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\ndef task_func(start_date: str, periods: int, freq: str, random_seed: int = 0) -> (pd.DataFrame, plt.Axes):\n```",
+    "code_prompt": "import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\ndef task_func(start_date: str, periods: int, freq: str, random_seed: int = 0) -> (pd.DataFrame, plt.Axes):",
+    "canonical_solution": "    np.random.seed(random_seed)\n    date_range = pd.date_range(start_date, periods=periods, freq=freq)\n    sales_forecast = np.random.randint(100, 500, size=periods)\n    forecast_df = pd.DataFrame({'Date': date_range, 'Sales': sales_forecast}).set_index('Date')\n\n    fig, ax = plt.subplots()\n    forecast_df['Sales'].plot(ax=ax, marker='o')\n    ax.set_title('Sales Forecast')\n    ax.set_xlabel('Date')\n    ax.set_ylabel('Sales')\n    ax.grid(True)\n    \n    return forecast_df, ax"
+  }
+}

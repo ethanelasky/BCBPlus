@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/832",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pickle\nimport os\n\ndef task_func(filename, data):\n    \"\"\"\n    Serialize an object using pickle and overwrite the specified file with this serialized data.\n    Before writing, checks if the directory exists, creating it if necessary.\n\n    Parameters:\n    - filename (str): The path of the file to be overwritten with serialized data.\n    - data (object): The object to serialize and write to the file.\n\n    Returns:\n    - bool: True if the operation is successful, False otherwise.\n\n    Requirements:\n    - pickle\n    - os\n\n    Example:\n    >>> result = task_func('data.pkl', {'key': 'value'})\n    >>> print(result)\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Serialize an object using pickle and overwrite the specified file with this serialized data. Before writing, checks if the directory exists, creating it if necessary.\nThe function should output with:\n    bool: True if the operation is successful, False otherwise.\nYou should write self-contained code starting with:\n```\nimport pickle\nimport os\ndef task_func(filename, data):\n```",
+    "code_prompt": "import pickle\nimport os\ndef task_func(filename, data):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.test_data = {'key': 'value'}\n        self.filename = 'test_file.pkl'\n    def tearDown(self):\n        # Remove the file after the test\n        if os.path.exists(self.filename):\n            os.remove(self.filename)\n    def test_serialization_success(self):\n        # Test successful serialization\n        self.assertTrue(task_func(self.filename, self.test_data))\n        # Verify the file exists\n        self.assertTrue(os.path.exists(self.filename))\n    def test_serialization_readback(self):\n        # Test if the serialized then deserialized data matches the original data\n        task_func(self.filename, self.test_data)\n        with open(self.filename, 'rb') as f:\n            data_readback = pickle.load(f)\n        self.assertEqual(self.test_data, data_readback)\n    def test_serialization_failure(self):\n        # Test failure due to an invalid filename (e.g., directory does not exist)\n        result = task_func('/non/existent/path/' + self.filename, self.test_data)\n        self.assertFalse(result)\nimport unittest",
+    "entry_point": "task_func",
+    "libs": [
+      "pickle",
+      "os"
+    ],
+    "canonical_solution": "    try:\n        directory = os.path.dirname(filename)\n        if directory and not os.path.exists(directory):\n            os.makedirs(directory)\n\n        # Serialize the object and write it to the file\n        with open(filename, 'wb') as f:\n            pickle.dump(data, f)\n        return True\n    except Exception as e:\n        print(f\"An error occurred: {e}\")\n        return False"
+  }
+}

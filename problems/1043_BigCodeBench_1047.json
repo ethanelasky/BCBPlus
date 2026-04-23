@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/1047",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from datetime import datetime\nimport random\nimport matplotlib.pyplot as plt\n\n\ndef task_func(date_str):\n    \"\"\"\n    Generates a list of random integers, where the count of integers equals the day of the month in the\n    provided date, then generates a line plot of these integers and returns the Axes object of the plot.\n\n    Parameters:\n    - date_str (str): The date string in \"yyyy-mm-dd\" format.\n\n    Returns:\n    - matplotlib.axes.Axes: The Axes object containing the plot.\n\n    Requirements:\n    - datetime.datetime\n    - random\n    - matplotlib.pyplot\n\n    Example:\n    >>> ax = task_func('2023-06-15')\n    >>> type(ax)\n    <class 'matplotlib.axes._axes.Axes'>\n    \"\"\"\n",
+    "instruct_prompt": "Generates a list of random integers, where the count of integers equals the day of the month in the provided date, then generates a line plot of these integers and returns the Axes object of the plot.\nThe function should output with:\n    matplotlib.axes.Axes: The Axes object containing the plot.\nYou should write self-contained code starting with:\n```\nfrom datetime import datetime\nimport random\nimport matplotlib.pyplot as plt\ndef task_func(date_str):\n```",
+    "code_prompt": "from datetime import datetime\nimport random\nimport matplotlib.pyplot as plt\ndef task_func(date_str):\n",
+    "test": "import unittest\nimport matplotlib.axes\nfrom datetime import datetime\nclass TestCases(unittest.TestCase):\n    \"\"\"Test cases for task_func.\"\"\"\n    def test_mid_month(self):\n        \"\"\"\n        Test the function with a mid-month date.\n        Checks if the generated plot has 15 data points for a date like '2023-06-15'.\n        \"\"\"\n        ax = task_func(\"2023-06-15\")\n        self.assertIsInstance(ax, matplotlib.axes.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 15)\n    def test_beginning_of_month(self):\n        \"\"\"\n        Test the function with a date at the beginning of the month.\n        Checks if the plot has 1 data point for a date like '2023-06-01'.\n        \"\"\"\n        ax = task_func(\"2023-06-01\")\n        self.assertIsInstance(ax, matplotlib.axes.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 1)\n    def test_end_of_month(self):\n        \"\"\"\n        Test the function with a date at the end of the month.\n        Checks if the plot has 31 data points for a date like '2023-07-31'.\n        \"\"\"\n        ax = task_func(\"2023-07-31\")\n        self.assertIsInstance(ax, matplotlib.axes.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 31)\n    def test_leap_year(self):\n        \"\"\"\n        Test the function with a leap year date.\n        Checks if the plot has 29 data points for a leap year date like '2024-02-29'.\n        \"\"\"\n        ax = task_func(\"2024-02-29\")\n        self.assertIsInstance(ax, matplotlib.axes.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 29)\n    def test_invalid_date(self):\n        \"\"\"\n        Test the function with an invalid date format.\n        Expects a ValueError to be raised for an incorrectly formatted date.\n        \"\"\"\n        with self.assertRaises(ValueError):\n            task_func(\"2023/06/15\")\n    def tearDown(self):\n        plt.clf()",
+    "entry_point": "task_func",
+    "libs": [
+      "datetime",
+      "random",
+      "matplotlib"
+    ],
+    "canonical_solution": "    date = datetime.strptime(date_str, \"%Y-%m-%d\")\n    num_of_values = date.day\n    random_values = [random.randint(1, 100) for _ in range(num_of_values)]\n    _, ax = plt.subplots()\n    ax.plot(random_values)\n    return ax"
+  }
+}

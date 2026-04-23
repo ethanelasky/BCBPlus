@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/1098",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import re\nfrom collections import Counter\n\n\ndef task_func(text, top_n):\n    \"\"\"\n    Count the N most common words in a text after removing URLs.\n\n    Parameters:\n    text (str): The text to analyze.\n    top_n (int): The number of top words to return.\n\n    Returns:\n    list: A list of tuples where each tuple contains a word and its frequency.\n\n    Requirements:\n    - re\n    - collections.Counter\n\n    Example:\n    >>> task_func('Visit https://www.python.org for more info. Python is great. I love Python.', 2)\n    [('Python', 2), ('Visit', 1)]\n\n    Note:\n    - Valid url is start with http or https\n    \"\"\"\n",
+    "instruct_prompt": "Count the N most common words in a text after removing URLs.\nNote that: Valid url is start with http or https\nThe function should output with:\n    list: A list of tuples where each tuple contains a word and its frequency.\nYou should write self-contained code starting with:\n```\nimport re\nfrom collections import Counter\ndef task_func(text, top_n):\n```",
+    "code_prompt": "import re\nfrom collections import Counter\ndef task_func(text, top_n):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func('Python is great. I love Python.', 2)\n        expected = [('Python', 2), ('is', 1)]\n        self.assertEqual(result, expected)\n    def test_case_2(self):\n        result = task_func('Visit https://www.python.org for more info. Python is great. I love Python.', 2)\n        expected = [('Python', 2), ('Visit', 1)]\n        self.assertEqual(result, expected)\n    def test_case_3(self):\n        text = 'Visit https://www.python.org and http://www.example.com. Python \u00e9 \u00f3timo! Adoro Python!'\n        result = task_func(text, 2)\n        expected = [('Python', 2), ('Visit', 1)]\n        self.assertEqual(result, expected)\n    def test_case_4(self):\n        result = task_func('', 2)\n        expected = []\n        self.assertEqual(result, expected)\n    def test_case_5(self):\n        result = task_func('Hello, world! How are you?', 2)\n        expected = [('Hello', 1), ('world', 1)]\n        self.assertEqual(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "re"
+    ],
+    "canonical_solution": "    # Remove URLs\n    text = re.sub('http[s]?://\\S+', '', text)\n\n    # Tokenize the text using regex (improved tokenization)\n    words = re.findall(r'\\b\\w+\\b', text)\n\n    # Count the frequency of each word\n    word_freq = Counter(words)\n\n    return word_freq.most_common(top_n)"
+  }
+}

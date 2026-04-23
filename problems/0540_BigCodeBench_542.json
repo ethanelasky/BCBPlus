@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/542",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130102025_e0b477e1",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import hashlib\nimport random\nimport struct\n\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\n\n\ndef task_func(hex_keys=KEYS, seed=42):\n    \"\"\"\n    Given a list of hexadecimal string keys, this function selects one at random,\n    converts it into a floating-point number, and then computes its MD5 hash. An optional\n    seed parameter allows for deterministic random choices for testing purposes.\n\n    Parameters:\n    hex_keys (list of str): A list of hexadecimal strings to choose from.\n    seed (int, optional): A seed for the random number generator to ensure deterministic behavior.\n\n    Returns:\n    str: The MD5 hash of the floating-point number derived from the randomly selected hexadecimal string.\n\n    Raises:\n    ValueError: If the selected hexadecimal string contains invalid characters.\n\n    Note:\n    - If hex_keys is empty, the function allows random.choice to raise IndexError naturally.\n    - The hex string is interpreted as a 32-bit IEEE 754 float using struct.unpack with big-endian\n      byte order ('!f'). The MD5 hash is computed on the UTF-8 encoded string representation of this float.\n\n    Requirements:\n    - struct\n    - hashlib\n    - random\n\n    Example:\n    >>> task_func(['1a2b3c4d', '5e6f7g8h'])\n    '426614caa490f2c185aebf58f1d4adac'\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_normal_functionality(self):\n        \"\"\"Test the function with default parameters.\"\"\"\n        result = task_func()\n        self.assertIsInstance(result, str)\n    def test_custom_keys_list(self):\n        \"\"\"Test the function with a custom list of hexadecimal keys.\"\"\"\n        custom_keys = ['1A2FC614', '1B0FC614', '1C9FC614']\n        result = task_func(hex_keys=custom_keys)\n        self.assertIsInstance(result, str)\n    def test_empty_key_list(self):\n        \"\"\"Test the function with an empty list to check for error handling.\"\"\"\n        with self.assertRaises(IndexError):\n            task_func(hex_keys=[])\n    def test_invalid_hexadecimal(self):\n        \"\"\"Test the function with an invalid hexadecimal string.\"\"\"\n        invalid_keys = ['ZZZ', '4A0FC614']\n        with self.assertRaises(ValueError):\n            task_func(hex_keys=invalid_keys)\n    def test_consistent_output_with_same_seed(self):\n        \"\"\"Test that the same seed returns the same result.\"\"\"\n        result1 = task_func(seed=99)\n        result2 = task_func(seed=99)\n        self.assertEqual(result1, result2)",
+    "entry_point": "task_func",
+    "libs": [
+      "struct",
+      "hashlib",
+      "random"
+    ],
+    "instruct_prompt": "Given a list of hexadecimal string keys, this function selects one at random, converts it into a floating-point number, and then computes its MD5 hash. An optional seed parameter allows for deterministic random choices for testing purposes.\nThe function should raise the exception for: ValueError: If contains invalid hexadecimal strings.\nThe function should output with:\n    str: The MD5 hash of the floating-point number derived from the randomly selected hexadecimal string.\nYou should write self-contained code starting with:\n```\nimport hashlib\nimport random\nimport struct\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\ndef task_func(hex_keys=KEYS, seed=42):\n```",
+    "code_prompt": "import hashlib\nimport random\nimport struct\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\ndef task_func(hex_keys=KEYS, seed=42):",
+    "canonical_solution": "\n    random.seed(seed)\n    hex_key = random.choice(hex_keys)\n\n    try:\n        float_num = struct.unpack('!f', bytes.fromhex(hex_key))[0]\n    except ValueError as e:\n        raise ValueError(\"Invalid hexadecimal string in hex_keys.\") from e\n\n    hashed_float = hashlib.md5(str(float_num).encode()).hexdigest()\n    return hashed_float"
+  }
+}

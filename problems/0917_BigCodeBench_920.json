@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/920",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport seaborn as sns\n\ndef task_func(data):\n    \"\"\"\n    Draw and return a correlation matrix heatmap for a DataFrame containing numerical columns.\n    The title of the heatmap is set to 'Correlation Matrix'.\n    \n    Parameters:\n    df (pandas.DataFrame): The DataFrame containing numerical columns to be used for correlation.\n\n    Returns:\n    matplotlib.axes._axes.Axes: The matplotlib Axes object representing the heatmap.\n\n    Requirements:\n    - pandas\n    - seaborn\n\n    Example:\n    >>> data = {'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]}\n    >>> ax = task_func(data)\n    >>> type(ax)\n    <class 'matplotlib.axes._axes.Axes'>\n\n    \"\"\"\n",
+    "instruct_prompt": "Draw and return a correlation matrix heatmap for a DataFrame containing numerical columns. The title of the heatmap is set to 'Correlation Matrix'.\nThe function should output with:\n    matplotlib.axes._axes.Axes: The matplotlib Axes object representing the heatmap.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport seaborn as sns\ndef task_func(data):\n```",
+    "code_prompt": "import pandas as pd\nimport seaborn as sns\ndef task_func(data):\n",
+    "test": "import unittest\nimport pandas as pd\nimport matplotlib.pyplot as plt\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        data = {'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [7, 8, 9]}\n        ax = task_func(data)\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(ax.title.get_text(), 'Correlation Matrix')\n        \n    def test_case_2(self):\n        data = {'a': [1, 2, 3], 'b': [-4, -5, -6], 'c': [-7, -8, -9]}\n        ax = task_func(data)\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(ax.title.get_text(), 'Correlation Matrix')\n        \n    def test_case_3(self):\n        data = {'a': [1, 2, 3], 'b': [4, 5, 6], 'c': [-7, -8, -9]}\n        ax = task_func(data)\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(ax.title.get_text(), 'Correlation Matrix')\n        \n    def test_case_4(self):\n        data = {'a': [1, 1, 1], 'b': [2, 2, 2], 'c': [3, 3, 3]}\n        ax = task_func(data)\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(ax.title.get_text(), 'Correlation Matrix')\n        \n    def test_case_5(self):\n        data = {'a': [1, 2, None], 'b': [4, None, 6], 'c': [None, 8, 9]}\n        ax = task_func(data)\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(ax.title.get_text(), 'Correlation Matrix')",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "seaborn"
+    ],
+    "canonical_solution": "    df = pd.DataFrame(data)\n    correlation_matrix = df.corr()\n    ax = sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')\n    ax.set_title('Correlation Matrix')\n    return ax"
+  }
+}

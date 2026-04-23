@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/1115",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import random\nfrom string import ascii_uppercase\n\ndef task_func(dict1):\n    \"\"\"\n    Assign each employee of a company a unique ID based on their department code, consisting of the department code, followed by a random string of 5 letters.\n\n    Parameters:\n    dict1 (dict): A dictionary with department codes as keys and number of employees \n                  as values.\n\n    Returns:\n    list: A list of unique employee IDs for all departments.\n\n    Requirements:\n    - random\n    - string.ascii_uppercase\n\n    Example:\n    >>> random.seed(0)\n    >>> d = {'EMP$$': 10, 'MAN$$': 5, 'DEV$$': 8, 'HR$$': 7}\n    >>> emp_ids = task_func(d)\n    >>> print(emp_ids)\n    ['EMP$$MYNBI', 'EMP$$QPMZJ', 'EMP$$PLSGQ', 'EMP$$EJEYD', 'EMP$$TZIRW', 'EMP$$ZTEJD', 'EMP$$XCVKP', 'EMP$$RDLNK', 'EMP$$TUGRP', 'EMP$$OQIBZ', 'MAN$$RACXM', 'MAN$$WZVUA', 'MAN$$TPKHX', 'MAN$$KWCGS', 'MAN$$HHZEZ', 'DEV$$ROCCK', 'DEV$$QPDJR', 'DEV$$JWDRK', 'DEV$$RGZTR', 'DEV$$SJOCT', 'DEV$$ZMKSH', 'DEV$$JFGFB', 'DEV$$TVIPC', 'HR$$CVYEE', 'HR$$BCWRV', 'HR$$MWQIQ', 'HR$$ZHGVS', 'HR$$NSIOP', 'HR$$VUWZL', 'HR$$CKTDP']\n    \"\"\"\n",
+    "instruct_prompt": "Assign each employee of a company a unique ID based on their department code, consisting of the department code, followed by a random string of 5 letters.\nThe function should output with:\n    list: A list of unique employee IDs for all departments.\nYou should write self-contained code starting with:\n```\nimport random\nfrom string import ascii_uppercase\ndef task_func(dict1):\n```",
+    "code_prompt": "import random\nfrom string import ascii_uppercase\ndef task_func(dict1):\n",
+    "test": "import unittest\nimport random\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        random.seed(0)\n        d = {'EMP$$': 2, 'MAN$$': 2}\n        emp_ids = task_func(d)\n        self.assertEqual(len(emp_ids), 4)\n        self.assertTrue(all(id.startswith('EMP$$') or id.startswith('MAN$$') for id in emp_ids))\n        \n    def test_case_2(self):\n        random.seed(0)\n        d = {'HR$$': 3}\n        emp_ids = task_func(d)\n        self.assertEqual(len(emp_ids), 3)\n        self.assertTrue(all(id.startswith('HR$$') for id in emp_ids))\n        \n    def test_case_3(self):\n        random.seed(0)\n        d = {'DEV$$': 1, 'HR$$': 1, 'EMP$$': 1, 'MAN$$': 1}\n        emp_ids = task_func(d)\n        self.assertEqual(len(emp_ids), 4)\n        \n    def test_case_4(self):\n        random.seed(0)\n        d = {}\n        emp_ids = task_func(d)\n        self.assertEqual(len(emp_ids), 0)\n        \n    def test_case_5(self):\n        random.seed(0)\n        d = {'DEV$$': 5}\n        emp_ids = task_func(d)\n        self.assertEqual(len(emp_ids), 5)\n        self.assertTrue(all(id.startswith('DEV$$') for id in emp_ids))",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "string"
+    ],
+    "canonical_solution": "    employee_ids = []\n    \n    for prefix, num_employees in dict1.items():\n        for _ in range(num_employees):\n            random_str = ''.join(random.choice(ascii_uppercase) for _ in range(5))\n            employee_ids.append(f'{prefix}{random_str}')\n\n    return employee_ids"
+  }
+}

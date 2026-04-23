@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/851",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127182635_0e4d0518",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import textwrap\nimport re\n\ndef task_func(input_string, width):\n    \"\"\"\n    Divide a multi-line string into separate strings and wrap each line to a certain width.\n    \n    Parameters:\n    - input_string (str): The multi-line string that needs to be wrapped.\n    - width (int): The width to wrap each line to.\n    \n    Returns:\n    - str: The wrapped string where each line is wrapped to the specified width.\n    \n    Requirements:\n    - textwrap\n    - re\n    \n    Example:\n    >>> task_func('Another line\\\\nWith wrapping', 8)\n    'Another\\\\nline\\\\nWith\\\\nwrapping'\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        input_str = \"Hello world\\nThis is a test string\\nHappy coding!\"\n        width = 10\n        expected_output = \"Hello\\nworld\\nThis is a\\ntest\\nstring\\nHappy\\ncoding!\"\n        self.assertEqual(task_func(input_str, width), expected_output)\n        \n        \n    def test_case_2(self):\n        # Test with single line and specific width\n        input_str = \"Hello world\"\n        width = 5\n        expected_output = \"Hello\\nworld\"\n        self.assertEqual(task_func(input_str, width), expected_output)\n    \n    def test_case_3(self):\n        # Test with empty string and specific width\n        input_str = \"\"\n        width = 10\n        expected_output = \"\"\n        self.assertEqual(task_func(input_str, width), expected_output)\n    \n    def test_case_4(self):\n        input_str = \"Hello world This is a test string Happy coding!\"\n        width = 1000\n        expected_output = \"Hello world This is a test string Happy coding!\"  # Very wide width, should not wrap\n        self.assertEqual(task_func(input_str, width), expected_output)\n    \n    def test_case_5(self):\n        # Test with special characters and specific width\n        input_str = \"Hello, @world!\\n#This$is^a&test*string\"\n        width = 10\n        expected_output = \"Hello,\\n@world!\\n#This$is^a\\n&test*stri\\nng\"\n        self.assertEqual(task_func(input_str, width), expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "re",
+      "textwrap"
+    ],
+    "instruct_prompt": "Divide a multi-line string into separate strings and wrap each line to a certain width.\nThe function should output with:\n    str: The wrapped string where each line is wrapped to the specified width.\nYou should write self-contained code starting with:\n```\nimport textwrap\nimport re\ndef task_func(input_string, width):\n```",
+    "code_prompt": "import textwrap\nimport re\ndef task_func(input_string, width):",
+    "canonical_solution": "    lines = input_string.split('\\\\n')\n    wrapped_lines = [textwrap.fill(line, width, break_long_words=False) for line in lines]\n    # Join wrapped lines into a single string\n    wrapped_string = '\\\\n'.join(wrapped_lines)\n    \n    # Additional processing using regular expressions (re)\n    # For example, let's replace all whole-word instances of 'is' with 'was'\n    wrapped_string = re.sub(r'\\bis\\b', 'was', wrapped_string)\n    \n    return wrapped_string"
+  }
+}

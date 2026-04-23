@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/634",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260122134527_8c0db25e",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import itertools\nfrom typing import Any\nfrom scipy import stats\n\n\ndef task_func(input_list: list, repetitions: int) -> Any:\n    \"\"\"\n    Calculate the mode of a list of elements with multiple repetitions of the original list.\n    \n    Functionality: \n    - Takes a list and a repetition count as input.\n    - Flattens the list with multiple repetitions.\n    - Calculates the mode of the flattened list.\n    \n    Parameters:\n    - input_list (list): A list of elements (can be of any hashable type).\n    - repetitions (int): The number of times the original list should be repeated.\n\n    Requirements:\n    - typing\n    - itertools\n    - scipy\n\n    Returns:\n    - scipy.stats.ModeResult: An object containing the mode(s) and count(s) of the most frequently occurring element(s) in the flattened list. For an empty flattened list, returns a ModeResult with empty arrays.\n    \n    Examples:\n    >>> task_func(['A', 'B', 'C'], 10)\n    ModeResult(mode=array(['A'], dtype='<U1'), count=array([10]))\n    \n    >>> task_func([1, 2, 3], 5)\n    ModeResult(mode=array([1]), count=array([5]))\n    \n    >>> task_func([], 10)\n    ModeResult(mode=array([], ...), count=array([], ...))\n    \"\"\"",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        # Test with list of integers\n        result = task_func([1, 2, 3], 5)\n        self.assertEqual(result.mode.tolist(), [1])\n        self.assertEqual(result.count.tolist(), [5])\n        \n    def test_case_2(self):\n        # Test with list of strings\n        result = task_func(['A', 'B', 'C'], 10)\n        self.assertEqual(result.mode.tolist(), ['A'])\n        self.assertEqual(result.count.tolist(), [10])\n        \n    def test_case_3(self):\n        # Test with list of floating-point numbers\n        result = task_func([1.5, 2.5, 3.5], 4)\n        self.assertEqual(result.mode.tolist(), [1.5])\n        self.assertEqual(result.count.tolist(), [4])\n        \n    def test_case_4(self):\n        # Test with empty list\n        result = task_func([], 10)\n        self.assertEqual(result.mode.shape, (0,))\n        self.assertEqual(result.count.shape, (0,))\n        \n    def test_case_5(self):\n        # Test with mixed type list\n        result = task_func([1, 'A', 1.5], 3)\n        self.assertEqual(result.mode.tolist(), ['1'])\n        self.assertEqual(result.count.tolist(), [3])",
+    "entry_point": "task_func",
+    "libs": [
+      "typing",
+      "itertools",
+      "scipy"
+    ],
+    "instruct_prompt": "Calculate the mode of a list of elements with multiple repetitions of the original list. Functionality: - Takes a list and a repetition count as input. - Flattens the list with multiple repetitions. - Calculates the mode of the flattened list. >>> task_func([1, 2, 3], 5) ModeResult(mode=array([1]), count=array([5]))\nThe function should output with:\n    scipy.stats.ModeResult: An object containing the mode(s) and count(s) of the most frequently occurring element(s) in the flattened list.\nYou should write self-contained code starting with:\n```\nimport itertools\nfrom typing import Any\nfrom scipy import stats\ndef task_func(input_list: list, repetitions: int) -> Any:\n```",
+    "code_prompt": "import itertools\nfrom typing import Any\nfrom scipy import stats\ndef task_func(input_list: list, repetitions: int) -> Any:",
+    "canonical_solution": "    # Flattening the list with multiple repetitions\n    flattened_list = np.array(list(itertools.chain(*[input_list for _ in range(repetitions)])))\n    \n    # Calculating the mode\n    mode = stats.mode(flattened_list)\n    \n    return mode"
+  }
+}

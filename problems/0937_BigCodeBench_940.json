@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/940",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import re\nfrom nltk import word_tokenize\nfrom collections import Counter\n\ndef task_func(input_str):\n    \"\"\"\n    Remove all special characters, punctuation marks and spaces from a string called \"input _ str\" using regex and then count the frequency of each word.\n\n    Parameters:\n    input_str (str): The input string.\n\n    Returns:\n    dict: A dictionary with the frequency of each word.\n\n    Requirements:\n    - re\n    - nltk.word_tokenize\n    - collections.Counter\n\n    Example:\n    >>> task_func('Special $#! characters   spaces 888323')\n    Counter({'Special': 1, 'characters': 1, 'spaces': 1, '888323': 1})\n    \"\"\"\n",
+    "instruct_prompt": "Remove all special characters, punctuation marks and spaces from a string called \"input _ str\" using regex and then count the frequency of each word.\nThe function should output with:\n    dict: A dictionary with the frequency of each word.\nYou should write self-contained code starting with:\n```\nimport re\nfrom nltk import word_tokenize\nfrom collections import Counter\ndef task_func(input_str):\n```",
+    "code_prompt": "import re\nfrom nltk import word_tokenize\nfrom collections import Counter\ndef task_func(input_str):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func('Special $#! characters   spaces 888323')\n        expected = {'Special': 1, 'characters': 1, 'spaces': 1, '888323': 1}\n        self.assertEqual(result, expected)\n    def test_case_2(self):\n        result = task_func('Hello hello world')\n        expected = {'Hello': 1, 'hello': 1, 'world': 1}\n        self.assertEqual(result, expected)\n    def test_case_3(self):\n        result = task_func('')\n        expected = {}\n        self.assertEqual(result, expected)\n    def test_case_4(self):\n        result = task_func('123 123 456')\n        expected = {'123': 2, '456': 1}\n        self.assertEqual(result, expected)\n    def test_case_5(self):\n        result = task_func('Hello123 #$! 123')\n        expected = {'Hello123': 1, '123': 1}\n        self.assertEqual(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "nltk",
+      "collections",
+      "re"
+    ],
+    "canonical_solution": "    cleaned_str = re.sub('[^A-Za-z0-9 ]+', '', input_str)\n    words = word_tokenize(cleaned_str)\n    freq_dict = Counter(words)\n\n    return freq_dict"
+  }
+}

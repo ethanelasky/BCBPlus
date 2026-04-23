@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/243",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport random\n\n\n# Constants\nN_DATA_POINTS = 10000\nMIN_VALUE = 0.0\nMAX_VALUE = 10.0\n\ndef task_func(n_data_points=N_DATA_POINTS):\n    '''\n    Generate a random set of floating-point numbers, truncate each value to 3 decimal places, and return them in a DataFrame.\n    The number of data points to generate can be specified. If zero, returns an empty DataFrame.\n\n    Parameters:\n    n_data_points (int): Number of data points to generate. Default is 10000.\n\n    Returns:\n    DataFrame: A pandas DataFrame containing one column 'Value' with the generated data. Empty if n_data_points is 0.\n\n    Note:\n    - This function use 'Value' for the column name in returned DataFrame \n\n    Requirements:\n    - pandas\n    - random\n\n    Example:\n    >>> random.seed(0)\n    >>> data = task_func(20)\n    >>> print(data.shape)\n    (20, 1)\n    >>> MIN_VALUE <= data.iloc[0]['Value'] <= MAX_VALUE\n    True\n    '''\n",
+    "instruct_prompt": "Generate a random set of floating-point numbers, truncate each value to 3 decimal places, and return them in a DataFrame. The number of data points to generate can be specified. If zero, returns an empty DataFrame.\nNote that: This function use 'Value' for the column name in returned DataFrame\nThe function should output with:\n    DataFrame: A pandas DataFrame containing one column 'Value' with the generated data. Empty if n_data_points is 0.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport random\n# Constants\nN_DATA_POINTS = 10000\nMIN_VALUE = 0.0\nMAX_VALUE = 10.0\ndef task_func(n_data_points=N_DATA_POINTS):\n```",
+    "code_prompt": "import pandas as pd\nimport random\n# Constants\nN_DATA_POINTS = 10000\nMIN_VALUE = 0.0\nMAX_VALUE = 10.0\ndef task_func(n_data_points=N_DATA_POINTS):\n",
+    "test": "import unittest\nimport pandas as pd\nclass TestCases(unittest.TestCase):\n    def test_return_type(self):\n        random.seed(0)\n        result = task_func()\n        self.assertIsInstance(result, pd.DataFrame)\n    def test_data_points_count(self):\n        random.seed(0)\n        result = task_func()\n        self.assertEqual(len(result), 10000)\n    def test_value_range(self):\n        random.seed(0)\n        result = task_func()\n        within_range = result['Value'].apply(lambda x: 0.0 <= x <= 10.0)\n        self.assertTrue(within_range.all())\n    def test_value_truncation(self):\n        random.seed(0)\n        result = task_func()\n        correctly_truncated = result['Value'].apply(lambda x: len(str(x).split('.')[1]) <= 3 if '.' in str(x) else True)\n        self.assertTrue(correctly_truncated.all())\n    def test_empty_data_frame(self):\n        random.seed(0)\n        result = task_func(n_data_points=0)\n        self.assertTrue(result.empty)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "random"
+    ],
+    "canonical_solution": "    if n_data_points == 0:\n        return pd.DataFrame(columns=['Value'])\n    \n    data = [round(random.uniform(MIN_VALUE, MAX_VALUE), 3) for _ in range(n_data_points)]\n    data_df = pd.DataFrame(data, columns=['Value'])\n\n    return data_df"
+  }
+}

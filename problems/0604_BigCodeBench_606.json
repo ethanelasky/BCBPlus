@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/606",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom scipy import stats\n\n\ndef task_func(matrix):\n    \"\"\"\n    Normalizes a 2D numeric array (matrix) using the Z score.\n    \n    Parameters:\n    matrix (array): The 2D numpy array.\n    \n    Returns:\n    DataFrame: The normalized DataFrame.\n\n    Requirements:\n    - pandas\n    - numpy\n    - scipy\n\n    Example:\n    >>> import numpy as np\n    >>> matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n    >>> normalized_df = task_func(matrix)\n    >>> isinstance(normalized_df, pd.DataFrame)\n    True\n    >>> np.allclose(normalized_df.mean(), 0)\n    True\n    >>> np.allclose(normalized_df.std(ddof=0), 1)\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Normalizes a 2D numeric array (matrix) using the Z score.\nThe function should output with:\n    DataFrame: The normalized DataFrame.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom scipy import stats\ndef task_func(matrix):\n```",
+    "code_prompt": "import pandas as pd\nfrom scipy import stats\ndef task_func(matrix):\n",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def test_extreme_values_shape(self):\n        \"\"\"Test the function with extreme values to ensure output shape is correct.\"\"\"\n        matrix = [[1, 2], [10000, 20000]]\n        result_df = task_func(matrix)\n        # Verify that the shape of the result is the same as the input\n        self.assertEqual(result_df.shape, (2, 2))\n    def test_case_2(self):\n        matrix = np.array([[2, 5], [5, 2]])\n        result = task_func(matrix)\n        expected_result = pd.DataFrame({\n            0: [-1.0, 1.0],\n            1: [1.0, -1.0]\n        })\n        pd.testing.assert_frame_equal(result, expected_result)\n    def test_case_3(self):\n        matrix = np.array([[5]])\n        result = task_func(matrix)\n        expected_result = pd.DataFrame({\n            0: [0.0]\n        })\n        pd.testing.assert_frame_equal(result, expected_result)\n    def test_uniform_data(self):\n        \"\"\"Test a matrix where all elements are the same.\"\"\"\n        matrix = [[1, 1], [1, 1]]\n        expected_result = pd.DataFrame({\n            0: [0.0, 0.0],\n            1: [0.0, 0.0]\n        })\n        pd.testing.assert_frame_equal(task_func(matrix), expected_result)\n    def test_non_numeric_data(self):\n        \"\"\"Test the function with non-numeric data.\"\"\"\n        matrix = [['a', 'b'], ['c', 'd']]\n        with self.assertRaises(TypeError):\n            task_func(matrix)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "scipy"
+    ],
+    "canonical_solution": "    df = pd.DataFrame(matrix)\n    normalized_df = df.apply(stats.zscore)\n    # Handle NaN values by replacing them with 0.0\n    normalized_df = normalized_df.fillna(0.0)\n    return normalized_df"
+  }
+}

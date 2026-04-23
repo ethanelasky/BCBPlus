@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/789",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260122235344_ed2d1dcb",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom sklearn.preprocessing import MinMaxScaler\n\n# Constants\nARRAY_LENGTH = 10\n\ndef task_func():\n    \"\"\"\n    Generate a random array and apply min-max normalization (scaling) to transform the array values into a range between 0 and 1.\n    \n    The function must set a fixed random seed (0) at the start of each call to ensure reproducible results across multiple invocations.\n\n    Parameters:\n    - None\n\n    Returns:\n    - scaled_array (numpy.ndarray): The normalized array.\n\n    Requirements:\n    - numpy\n    - sklearn\n\n    Example:\n    >>> task_func()\n    array([[0.57142857],\n           [0.14285714],\n           [0.71428571],\n           [0.28571429],\n           [0.57142857],\n           [1.        ],\n           [0.        ],\n           [0.57142857],\n           [0.71428571],\n           [0.28571429]])\n    \"\"\"",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.result = task_func()  # Call the function once to use in multiple tests if needed\n    def test_normal_functionality(self):\n        \"\"\"Testing the basic functionality and shape of the output array.\"\"\"\n        self.assertEqual(self.result.shape, (10, 1), \"Array shape should be (10, 1)\")\n        self.assertTrue((self.result >= 0).all() and (self.result <= 1).all(), \"Array values should be in the range [0, 1]\")\n    def test_output_values(self):\n        \"\"\" Ensuring that the scaling works as expected. \"\"\"\n        expected_min = 0\n        expected_max = 1\n        actual_min = np.min(self.result)\n        actual_max = np.max(self.result)\n        self.assertEqual(actual_min, expected_min, \"The minimum of the scaled array should be 0\")\n        self.assertAlmostEqual(actual_max, expected_max, places=15, msg=\"The maximum of the scaled array should be very close to 1\")\n    def test_no_arguments(self):\n        \"\"\"Ensure that no arguments are passed to the function.\"\"\"\n        with self.assertRaises(TypeError):\n            task_func(10)  # This should fail since the function expects no arguments\n    def test_unchanging_output(self):\n        \"\"\"Test if multiple calls to the function give the same result due to seed setting.\"\"\"\n        second_result = task_func()\n        np.testing.assert_array_equal(self.result, second_result, \"Results should be the same on every call due to fixed seed.\")\n    def test_distribution_of_values(self):\n        \"\"\"Test that the distribution of scaled values is neither constant nor degenerate (not all values the same).\"\"\"\n        unique_values = np.unique(self.result)\n        self.assertTrue(len(unique_values) > 1, \"There should be more than one unique scaled value to confirm distribution.\")",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "sklearn"
+    ],
+    "instruct_prompt": "Generate a random array and apply min-max normalization (scaling) to transform the array values into a range between 0 and 1.\nThe function should output with:\n    scaled_array (numpy.ndarray): The normalized array.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom sklearn.preprocessing import MinMaxScaler\n# Constants\nARRAY_LENGTH = 10\ndef task_func():\n```",
+    "code_prompt": "import numpy as np\nfrom sklearn.preprocessing import MinMaxScaler\n# Constants\nARRAY_LENGTH = 10\ndef task_func():",
+    "canonical_solution": "    np.random.seed(42)  # For reproducibility, as shown in your example\n    array = np.random.randint(0, 10, ARRAY_LENGTH).reshape(-1, 1)\n    scaler = MinMaxScaler()\n    scaled_array = scaler.fit_transform(array)\n    return scaled_array"
+  }
+}

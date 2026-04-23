@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/689",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom scipy import stats\n\ndef task_func(df):\n    \"\"\"\n    Given a Pandas DataFrame with random numeric values test if the data in each column is normally distributed using the Shapiro-Wilk test.\n\n    Parameters:\n    - df (DataFrame): A Pandas DataFrame with random numeric values.\n    \n    Returns:\n    - dict: A dictionary with p-values from the Shapiro-Wilk test for each column.\n\n    Requirements:\n    - numpy\n    - scipy\n\n    Example:\n    >>> np.random.seed(42)\n    >>> df = pd.DataFrame(np.random.normal(size=(100, 5)))\n    >>> p_values = task_func(df)\n    >>> print(p_values)\n    {0: 0.3595593273639679, 1: 0.23594242334365845, 2: 0.7625704407691956, 3: 0.481273353099823, 4: 0.13771861791610718}\n    \"\"\"\n",
+    "instruct_prompt": "Given a Pandas DataFrame with random numeric values test if the data in each column is normally distributed using the Shapiro-Wilk test.\nThe function should output with:\n    dict: A dictionary with p-values from the Shapiro-Wilk test for each column.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom scipy import stats\ndef task_func(df):\n```",
+    "code_prompt": "import numpy as np\nfrom scipy import stats\ndef task_func(df):\n",
+    "test": "import unittest\nimport pandas as pd\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        np.random.seed(42)\n    \n    def test_case_1(self):\n        df = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6]})\n        p_values = task_func(df)\n        self.assertEqual(len(p_values), 2)\n        self.assertTrue('a' in p_values)\n        self.assertTrue('b' in p_values)\n        self.assertTrue(p_values['a'] > 0.05)\n        self.assertTrue(p_values['b'] > 0.05)\n    def test_case_2(self):\n        df = pd.DataFrame({'a': [-1, 0, 1], 'b': [4, 5, 6]})\n        p_values = task_func(df)\n        self.assertEqual(len(p_values), 2)\n        self.assertTrue('a' in p_values)\n        self.assertTrue('b' in p_values)\n        self.assertTrue(p_values['a'] > 0.05)\n        self.assertTrue(p_values['b'] > 0.05)\n    def test_case_3(self):\n        df = pd.DataFrame(np.random.normal(size=(100, 5)))\n        p_values = task_func(df)\n        self.assertEqual(len(p_values), 5)\n        for col in df.columns:\n            self.assertTrue(col in p_values)\n            self.assertTrue(p_values[col] > 0.05)\n    def test_case_4(self):\n        df = pd.DataFrame(np.random.normal(size=(100, 5)))\n        df['a'] = np.random.uniform(size=100)\n        p_values = task_func(df)\n        self.assertEqual(len(p_values), 6)\n        for col in df.columns:\n            self.assertTrue(col in p_values)\n            if col == 'a':\n                self.assertTrue(p_values[col] < 0.05)\n            else:\n                self.assertTrue(p_values[col] > 0.05)\n    def test_case_5(self):\n        df = pd.DataFrame(np.random.normal(size=(100, 5)))\n        df['a'] = np.random.uniform(size=100)\n        df['b'] = np.random.uniform(size=100)\n        p_values = task_func(df)\n        self.assertEqual(len(p_values), 7)\n        for col in df.columns:\n            self.assertTrue(col in p_values)\n            if col in ['a', 'b']:\n                self.assertTrue(p_values[col] < 0.05)\n            else:\n                self.assertTrue(p_values[col] > 0.05)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "scipy"
+    ],
+    "canonical_solution": "\n    p_values = {}\n\n    for col in df.columns:\n        column_data = np.array(df[col])\n        \n        test_stat, p_value = stats.shapiro(column_data)\n        \n        p_values[col] = p_value\n\n    return p_values"
+  }
+}

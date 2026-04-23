@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/1080",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\n\nDATA = {\n    \"Area_String\": [\"1,000\", \"2,000\", \"3,000\", \"4,000\", \"5,000\"],\n    \"Price\": [100, 200, 300, 400, 500],\n}\n\n\ndef task_func(area_string, data=DATA):\n    \"\"\"\n    Predicts the price based on a given area after training a linear regression model.\n\n    Parameters:\n    - area_string (str): A string representing the area (in square units) for\n    which the price needs to be predicted. The string may contain commas.\n    - data (dict): Optional. A dictionary with keys 'Area_String' and 'Price'\n    representing area values (as strings) and their corresponding prices. Defaults to a predefined dataset.\n\n    Returns:\n    - float: The predicted price for the given area.\n\n    Requirements:\n    - pandas\n    - sklearn.linear_model\n\n    Example:\n    >>> task_func('6,000')\n    600.0\n    \"\"\"\n",
+    "instruct_prompt": "Predicts the price based on a given area after training a linear regression model.\nThe function should output with:\n    float: The predicted price for the given area.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.linear_model import LinearRegression\nDATA = {\n    \"Area_String\": [\"1,000\", \"2,000\", \"3,000\", \"4,000\", \"5,000\"],\n    \"Price\": [100, 200, 300, 400, 500],\n}\ndef task_func(area_string, data=DATA):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\nDATA = {\n    \"Area_String\": [\"1,000\", \"2,000\", \"3,000\", \"4,000\", \"5,000\"],\n    \"Price\": [100, 200, 300, 400, 500],\n}\ndef task_func(area_string, data=DATA):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \"\"\"Test cases for task_func\"\"\"\n    def test_correctness(self):\n        \"\"\"Test correctness.\"\"\"\n        self.assertAlmostEqual(task_func(\"6,000\"), 600, delta=10)\n        self.assertAlmostEqual(task_func(\"7,000\"), 700, delta=10)\n    def test_input_formats(self):\n        \"\"\"Test input formats.\"\"\"\n        self.assertAlmostEqual(task_func(\"6,500\"), 650, delta=10)\n        self.assertAlmostEqual(task_func(\"6500\"), 650, delta=10)\n    def test_custom_data(self):\n        \"\"\"Test custom data.\"\"\"\n        custom_data = {\n            \"Area_String\": [\"10\", \"20\", \"30\", \"40\", \"50\"],\n            \"Price\": [1, 2, 3, 4, 5],\n        }\n        self.assertAlmostEqual(task_func(\"60\", data=custom_data), 6, delta=0.1)\n    def test_existing_area(self):\n        \"\"\"Test existing area.\"\"\"\n        self.assertAlmostEqual(task_func(\"5,000\"), 500, delta=5)\n    def test_large_area(self):\n        \"\"\"Test large area.\"\"\"\n        self.assertAlmostEqual(task_func(\"100,000\"), 10000, delta=100)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "    # Convert area strings to float and prepare data for the model\n    df = pd.DataFrame(data)\n    df[\"Area_Float\"] = df[\"Area_String\"].str.replace(\",\", \"\").astype(float)\n\n    # Train the linear regression model\n    X = df[[\"Area_Float\"]]\n    Y = df[\"Price\"]\n    model = LinearRegression()\n    model.fit(X, Y)\n\n    # Predict the price for the given area string\n    area_float = float(area_string.replace(\",\", \"\"))\n    prediction_data = pd.DataFrame([area_float], columns=[\"Area_Float\"])\n    price_predicted = model.predict(prediction_data)\n\n    return price_predicted[0]"
+  }
+}

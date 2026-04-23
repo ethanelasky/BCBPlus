@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/62",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127172554_6b3ea9db",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import random\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\ndef task_func(result, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k']):\n    \"\"\"\n    Draws a histogram of the \"from_user\" values in the provided result. The color of the histogram bars is selected at random from the provided colors list.\n\n    Parameters:\n    result (list): A list of dictionaries. Only dictionaries containing the key \"from_user\" contribute to the histogram.\n    colors (list, optional): A list of colors to choose from for the histogram bars. Defaults is ['b', 'g', 'r', 'c', 'm', 'y', 'k'].\n\n    Returns:\n    None: The function displays the histogram and does not return any value.\n\n    Note:\n    The histogram is always displayed via plt.show(), even if no valid \"from_user\" values are found (resulting in an empty histogram).\n\n    Requirements:\n    - random\n    - matplotlib\n    - seaborn\n\n    Example:\n    >>> result = [{\"from_user\": 0}, {\"from_user\": 0}, {\"from_user\": 1}]\n    >>> task_func(result)\n    \"\"\"",
+    "test": "import unittest\nfrom unittest.mock import patch\nclass TestCases(unittest.TestCase):\n    \"\"\"Test cases for the task_func function.\"\"\"\n    def test_case_1(self):\n        random.seed(42)\n        result = [\n            {\"from_user\": 0}, \n            {\"from_user\": 0}, \n            {\"from_user\": 1}\n        ]\n        with patch(\"matplotlib.pyplot.show\") as mocked_show:\n            task_func(result)\n            mocked_show.assert_called_once()\n    def test_case_2(self):\n        random.seed(42)\n        result = []\n        with patch(\"matplotlib.pyplot.show\") as mocked_show:\n            task_func(result)\n            mocked_show.assert_called_once()\n    def test_case_3(self):\n        random.seed(42)\n        result = [\n            {\"hello\": 0}, \n            {\"world\": 1}\n        ]\n        with patch(\"matplotlib.pyplot.show\") as mocked_show:\n            task_func(result)\n            mocked_show.assert_called_once()\n    def test_case_4(self):\n        random.seed(42)\n        result = [\n            {\"from_user\": 0}, \n            {\"from_user\": 1}, \n            {\"from_user\": 2}\n        ]\n        colors = [\"orange\", \"purple\"]\n        with patch(\"matplotlib.pyplot.show\") as mocked_show, patch(\"random.choice\", return_value=\"orange\") as mocked_choice:\n            task_func(result, colors)\n            mocked_choice.assert_called_with(colors)\n            mocked_show.assert_called_once()\n    def test_case_5(self):\n        random.seed(42)\n        result = [\n            {\n                \"hello\": 0,\n                \"from_user\": 1,\n            },\n            {\n                \"world\": 1,\n                \"from_user\": 1\n            },\n            {\n                \"love\": 1,\n                \"from_user\": 1\n            }\n        ]\n        with patch(\"matplotlib.pyplot.show\") as mocked_show:\n            task_func(result)\n            mocked_show.assert_called_once()",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "matplotlib",
+      "seaborn"
+    ],
+    "instruct_prompt": "Draws a histogram of the \"from_user\" values in the provided result. The color of the histogram bars is selected at random from the provided colors list.\nThe function should output with:\n    None: The function displays the histogram and does not return any value.\nYou should write self-contained code starting with:\n```\nimport random\nimport matplotlib.pyplot as plt\nimport seaborn as sns\ndef task_func(result, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k']):\n```",
+    "code_prompt": "import random\nimport matplotlib.pyplot as plt\nimport seaborn as sns\ndef task_func(result, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k']):",
+    "canonical_solution": "    from_user_values = [d['from_user'] for d in result if 'from_user' in d]\n    color = random.choice(colors)\n    plt.figure()\n    sns.histplot(from_user_values, color=color)\n    plt.show()"
+  }
+}

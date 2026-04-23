@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/268",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import collections\nimport random\n\n# Constants\nLETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']\n\ndef task_func(n_keys, n_values):\n    \"\"\"\n    Create a Python dictionary with a specified number of keys and values. \n\n    Parameters:\n    n_keys (int): The number of keys to generate.\n    n_values (int): The number of values for each key (consecutive integers starting from 1).\n\n    Returns:\n    dict: A Python dictionary with keys as strings and values as lists of integers.\n\n    Note: \n    - Keys are randomly selected from a predefined list of letters, and values are consecutive integers starting from 1.\n    - Due to the randomness in key selection, the actual keys in the dictionary may vary in each execution.\n\n    Requirements:\n    - collections\n    - random\n\n    Example:\n    >>> random.seed(0)\n    >>> task_func(3, 5)\n    {'g': [1, 2, 3, 4, 5], 'a': [1, 2, 3, 4, 5]}\n    >>> result = task_func(1, 5)\n    >>> list(result)[0] in LETTERS\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Create a Python dictionary with a specified number of keys and values.\nNote that: Keys are randomly selected from a predefined list of letters, and values are consecutive integers starting from 1. Due to the randomness in key selection, the actual keys in the dictionary may vary in each execution.\nThe function should output with:\n    dict: A Python dictionary with keys as strings and values as lists of integers.\nYou should write self-contained code starting with:\n```\nimport collections\nimport random\n# Constants\nLETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']\ndef task_func(n_keys, n_values):\n```",
+    "code_prompt": "import collections\nimport random\n# Constants\nLETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']\ndef task_func(n_keys, n_values):\n",
+    "test": "import unittest\nimport random\nLETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']\nclass TestCases(unittest.TestCase):\n    def test_basic_functionality(self):\n        random.seed(0)\n        result = task_func(3, 5)\n        self.assertLessEqual(len(result), 3)\n        for key in result:\n            self.assertIn(key, LETTERS)\n            self.assertEqual(result[key], [1, 2, 3, 4, 5])\n    def test_no_keys(self):\n        random.seed(0)\n        result = task_func(0, 5)\n        self.assertEqual(result, {})\n    def test_no_values(self):\n        random.seed(0)\n        result = task_func(3, 0)\n        for key in result:\n            self.assertEqual(result[key], [])\n    def test_large_input(self):\n        random.seed(0)\n        result = task_func(10, 1000)\n        for key in result:\n            self.assertIn(key, LETTERS)\n            self.assertEqual(len(result[key]), 1000)\n    def test_max_keys(self):\n        random.seed(0)\n        result = task_func(len(LETTERS), 5)\n        for key in result:\n            self.assertIn(key, LETTERS)\n            self.assertEqual(result[key], [1, 2, 3, 4, 5])",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "random"
+    ],
+    "canonical_solution": "\n    keys = [random.choice(LETTERS) for _ in range(n_keys)]\n    values = list(range(1, n_values + 1))\n    return dict(collections.OrderedDict((k, values) for k in keys))"
+  }
+}

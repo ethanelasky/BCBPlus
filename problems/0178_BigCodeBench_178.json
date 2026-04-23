@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/178",
+  "dataset": "bigcodebench",
+  "version": 2,
+  "version_id": "v2_20260422113819_bcfd0358",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nimport json\n\n# Constants\nIP_REGEX = r'[0-9]+(?:\\.[0-9]+){3}'\n\ndef task_func(ip_address):\n    \"\"\"\n    Get the public IP address from a JSON response containing the IP address.\n    \n    Parameters:\n    ip_address (str): JSON-formatted string containing the IP address. \n\n    Returns:\n    str: The public IP address.\n    \n    Note:\n    - The function needs to check whether the provided IP address is valid.\n      If the IP address is not valid, the function will return 'Invalid IP address received'.\n\n    Requirements:\n    - re\n    - json\n    \n    Example:\n    >>> ip_address = '{\"ip\": \"192.168.1.1\"}'\n    >>> task_func(ip_address)\n    '192.168.1.1'\n    \"\"\"",
+    "test": "import unittest\nimport json\n\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Input should be a string, not bytes, per spec's type hint.\n        ip_address = json.dumps({'ip': '192.168.1.1'})\n        result = task_func(ip_address)\n        self.assertEqual(result, '192.168.1.1')\n\n    def test_case_2(self):\n        ip_address = json.dumps({'ip': '500.500.500.500'})\n        result = task_func(ip_address)\n        self.assertEqual(result, '500.500.500.500')\n\n    def test_case_3(self):\n        ip_address = json.dumps({'ip': '192.168.0.3'})\n        result = task_func(ip_address)\n        self.assertEqual(result, '192.168.0.3')\n\n    def test_case_4(self):\n        ip_address = json.dumps({'ip': ''})\n        result = task_func(ip_address)\n        self.assertEqual(result, 'Invalid IP address received')\n\n    def test_case_5(self):\n        ip_address = json.dumps({'ip': 'Non-JSON response'})\n        result = task_func(ip_address)\n        self.assertEqual(result, 'Invalid IP address received')\n",
+    "entry_point": "task_func",
+    "libs": "['re', 'json']",
+    "instruct_prompt": "Get the public IP address from a JSON response containing the IP address.\nNote that: The function needs to check whether the provided IP address is valid. If the IP address is not valid, the function will return 'Invalid IP address received'.\nThe function should output with:\n    str: The public IP address.\nYou should write self-contained code starting with:\n```\nimport re\nimport json\n# Constants\nIP_REGEX = r'[0-9]+(?:\\.[0-9]+){3}'\ndef task_func(ip_address):\n```",
+    "code_prompt": "import re\nimport json\n# Constants\nIP_REGEX = r'[0-9]+(?:\\.[0-9]+){3}'\ndef task_func(ip_address):",
+    "canonical_solution": "\n    try:\n        response = ip_address\n        data = json.loads(response)\n        ip = data['ip']\n        if re.match(IP_REGEX, ip):\n            return ip\n        else:\n            return 'Invalid IP address received'\n    except Exception as e:\n        return str(e)"
+  }
+}

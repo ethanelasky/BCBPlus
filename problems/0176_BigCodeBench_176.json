@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/176",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129143844_f3930dbc",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nimport socket\n\ndef task_func(ip_addresses: list) -> dict:\n    \"\"\"\n    Given a list of IP addresses, this function returns a dictionary mapping each IP-formatted string to its \n    respective hostname. An IP-formatted string is any string matching the pattern of four dot-separated \n    numeric segments (e.g., '8.8.8.8', '256.256.256.256'). Strings not matching this format are excluded.\n    \n    If the hostname cannot be determined for an IP-formatted string (due to DNS resolution failure or \n    invalid IP values), the value will be None.\n    \n    Parameters:\n    ip_addresses (list): A list of IP addresses (as strings).\n    \n    Returns:\n    dict: A dictionary with IP-formatted strings as keys and their hostnames as values. If the hostname \n          cannot be determined, the value will be None. Strings not matching the IP format are excluded.\n    \n    Requirements:\n    - re\n    - socket\n    \n    Example:\n    >>> task_func(['8.8.8.8', '8.8.4.4'])\n    {'8.8.8.8': 'dns.google', '8.8.4.4': 'dns.google'}\n    >>> task_func(['256.256.256.256'])\n    {'256.256.256.256': None}\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func(['8.8.8.8', '8.8.4.4'])\n        expected = {'8.8.8.8': 'dns.google', '8.8.4.4': 'dns.google'}\n        self.assertDictEqual(result, expected)\n    def test_case_2(self):\n        result = task_func(['8.8.4.4'])\n        expected = {'8.8.4.4': 'dns.google'}\n        self.assertDictEqual(result, expected)\n    def test_case_3(self):\n        result = task_func(['256.256.256.256'])\n        expected = {'256.256.256.256': None}\n        self.assertDictEqual(result, expected)\n    def test_case_4(self):\n        result = task_func([])\n        expected = {}\n        self.assertDictEqual(result, expected)\n    def test_case_5(self):\n        result = task_func(['1.1.1.1', '2.2.2.2'])\n        expected_keys = ['1.1.1.1', '2.2.2.2']\n        self.assertListEqual(list(result.keys()), expected_keys)",
+    "entry_point": "task_func",
+    "libs": [
+      "re",
+      "socket"
+    ],
+    "instruct_prompt": "Given a list of IP addresses, this function returns a dictionary mapping each valid IP address to its respective hostname. If the hostname cannot be determined, the value will be None.\nThe function should output with:\n    dict: A dictionary with IP addresses as keys and their hostnames as values. If the hostname cannot be determined,\n    the value will be None.\nYou should write self-contained code starting with:\n```\nimport re\nimport socket\ndef task_func(ip_addresses: list) -> dict:\n```",
+    "code_prompt": "import re\nimport socket\ndef task_func(ip_addresses: list) -> dict:",
+    "canonical_solution": "\n    \n    IP_REGEX = r'[0-9]+(?:\\.[0-9]+){3}'\n    hostnames = {}\n    for ip in ip_addresses:\n        if re.match(IP_REGEX, ip):\n            try:\n                hostname = socket.gethostbyaddr(ip)[0]\n                hostnames[ip] = hostname\n            except (socket.herror, socket.gaierror):\n                hostnames[ip] = None\n    return hostnames"
+  }
+}

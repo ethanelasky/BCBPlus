@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/240",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom random import uniform\n\n\ndef task_func(n_data_points=1000, min_value=0.0, max_value=10.0, column_name='Value'):\n    \"\"\"\n    Generate a random dataset of floating-point numbers, truncate each value to 3 decimal places, then return the generated DataFrame with\n    the specified column name.\n\n    Parameters:\n    n_data_points (int, optional): The number of data points to generate. Default is 1000.\n    min_value (float, optional): The minimum value for the generated data. Default is 0.0.\n    max_value (float, optional): The maximum value for the generated data. Default is 10.0.\n    column_name (str, optional): The column name in generated DataFrame. Default is 'Value'.\n\n\n    Returns:\n    DataFrame: A pandas DataFrame with the generated data.\n    \n    Requirements:\n    - pandas\n    - random.uniform\n\n    Example:\n    >>> random.seed(0)\n    >>> data = task_func()\n    >>> data.shape[0]\n    1000\n    \"\"\"\n",
+    "instruct_prompt": "Generate a random dataset of floating-point numbers, truncate each value to 3 decimal places, then return the generated DataFrame with the specified column name.\nThe function should output with:\n    DataFrame: A pandas DataFrame with the generated data.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom random import uniform\ndef task_func(n_data_points=1000, min_value=0.0, max_value=10.0, column_name='Value'):\n```",
+    "code_prompt": "import pandas as pd\nfrom random import uniform\ndef task_func(n_data_points=1000, min_value=0.0, max_value=10.0, column_name='Value'):\n",
+    "test": "import unittest\nimport random\nclass TestCases(unittest.TestCase):\n    def test_dataframe_type(self):\n        \"\"\"Test if the returned object is a pandas DataFrame.\"\"\"\n        random.seed(0)\n        result = task_func()\n        self.assertIsInstance(result, pd.DataFrame, \"Returned object is not a pandas DataFrame\")\n    def test_dataframe_size(self):\n        \"\"\"Test if the DataFrame contains the correct number of data points.\"\"\"\n        random.seed(0)\n        result = task_func()\n        self.assertEqual(len(result), 1000, \"DataFrame does not contain 1000 data points\")\n    def test_value_range(self):\n        \"\"\"Test if values are within the specified range.\"\"\"\n        random.seed(0)\n        result = task_func(100)\n        for value in result['Value']:\n            self.assertGreaterEqual(value, 0.0, \"Value is less than 0.0\")\n            self.assertLessEqual(value, 10.0, \"Value is greater than 10.0\")\n    def test_decimal_precision(self):\n        \"\"\"Test if values have up to 3 decimal places.\"\"\"\n        random.seed(0)\n        result = task_func(10, 5.0, 8.0)\n        for value in result['Value']:\n            self.assertLessEqual(len(str(value).split('.')[1]), 3, \"Value does not have up to 3 decimal places\")\n    def test_dataframe_columns(self):\n        \"\"\"Test if the DataFrame has the correct column name.\"\"\"\n        random.seed(0)\n        column_name = 'User'\n        result = task_func(10, 5.0, 8.0, column_name)\n        self.assertIn(column_name, result.columns, \"DataFrame does not have a column named \"+column_name)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "random"
+    ],
+    "canonical_solution": "\n    data = [round(uniform(min_value, max_value), 3) for _ in range(n_data_points)]\n    data_df = pd.DataFrame(data, columns=[column_name])\n\n    return data_df"
+  }
+}

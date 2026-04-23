@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/632",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport time\nOUTPUT_DIR = './output'\n\n\ndef task_func(df: pd.DataFrame, filename: str) -> str:\n    \"\"\"\n    Write a Pandas DataFrame into a JSON Lines file and save it in a specified directory.\n\n    Parameters:\n    - df (pd.DataFrame): A Pandas DataFrame to be saved.\n    - filename (str): The filename of the JSON Lines file to be saved.\n\n    Returns:\n    - str: The full path where the JSON Lines file was saved.\n\n    Requirements:\n    - pandas\n    - time\n\n    Example:\n    >>> df = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})\n    >>> 'data.jsonl' in task_func(df, 'data.jsonl')\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Write a Pandas DataFrame into a JSON Lines file and save it in a specified directory.\nThe function should output with:\n    str: The full path where the JSON Lines file was saved.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport time\nOUTPUT_DIR = './output'\ndef task_func(df: pd.DataFrame, filename: str) -> str:\n```",
+    "code_prompt": "import pandas as pd\nimport time\nOUTPUT_DIR = './output'\ndef task_func(df: pd.DataFrame, filename: str) -> str:\n",
+    "test": "import unittest\nimport pandas as pd\nimport os\nimport json\nimport shutil\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        \"\"\"Create the data directory if it doesn't exist.\"\"\"\n        if not os.path.exists(OUTPUT_DIR):\n            os.makedirs(OUTPUT_DIR)\n    def tearDown(self):\n        \"\"\"Clean up by removing the data directory and its contents after tests.\"\"\"\n        shutil.rmtree(OUTPUT_DIR, ignore_errors=True)\n    def test_basic_dataframe(self):\n        \"\"\"Ensure basic DataFrame is saved correctly.\"\"\"\n        df = pd.DataFrame({'A': [1, 2], 'B': ['x', 'y']})\n        path = task_func(df, 'test_basic.jsonl')\n        self.assertTrue(os.path.exists(path))\n    def test_empty_dataframe(self):\n        \"\"\"Ensure method handles empty DataFrame correctly.\"\"\"\n        df = pd.DataFrame()\n        path = task_func(df, 'test_empty.jsonl')\n        self.assertTrue(os.path.exists(path))\n    def test_with_nan_values(self):\n        \"\"\"Ensure NaN values are handled correctly.\"\"\"\n        df = pd.DataFrame({'A': [1, None], 'B': [None, 2]})\n        path = task_func(df, 'test_nan.jsonl')\n        self.assertTrue(os.path.exists(path))\n    def test_large_dataframe(self):\n        \"\"\"Test with a large DataFrame.\"\"\"\n        df = pd.DataFrame({'A': range(1000)})\n        path = task_func(df, 'test_large.jsonl')\n        self.assertTrue(os.path.exists(path))\n    def test_special_characters(self):\n        \"\"\"Test DataFrame containing special characters.\"\"\"\n        df = pd.DataFrame({'A': ['Hello, \"World\"', \"It's alright\"]})\n        path = task_func(df, 'test_special_chars.jsonl')\n        self.assertTrue(os.path.exists(path))",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "time"
+    ],
+    "canonical_solution": "    start_time = time.time()\n    # Ensure the data directory exists\n    if not os.path.exists(OUTPUT_DIR):\n        os.makedirs(OUTPUT_DIR)\n\n    file_path = os.path.join(OUTPUT_DIR, filename)\n\n    # Save DataFrame as JSON Lines\n    with open(file_path, 'w') as file:\n        for record in df.to_dict(orient='records'):\n            json.dump(record, file)\n            file.write('\\n')\n    end_time = time.time()  # End timing\n    cost = f\"Operation completed in {end_time - start_time} seconds.\"\n    return os.path.abspath(file_path)"
+  }
+}

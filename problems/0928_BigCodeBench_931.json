@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/931",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from collections import defaultdict\nimport re\n\ndef task_func(word: str) -> dict:\n    \"\"\"\n    Find the occurrences of each two-letter combination in the sanitized word,\n    where only alphabetic characters are considered.\n\n    Requirements:\n    - collections.defaultdict\n    - re\n    \n    Parameters:\n    word (str): The input string.\n\n    Returns:\n    collections.defaultdict: A dictionary with keys as two-letter combinations and values as their counts in the sanitized word.\n\n    Example:\n    >>> task_func('abcdef')\n    defaultdict(<class 'int'>, {'ab': 1, 'bc': 1, 'cd': 1, 'de': 1, 'ef': 1})\n    >>> task_func('aabbcc')\n    defaultdict(<class 'int'>, {'aa': 1, 'ab': 1, 'bb': 1, 'bc': 1, 'cc': 1})\n    >>> task_func('a1!b@c#d$')\n    defaultdict(<class 'int'>, {'ab': 1, 'bc': 1, 'cd': 1})\n    \"\"\"\n",
+    "instruct_prompt": "Find the occurrences of each two-letter combination in the sanitized word, where only alphabetic characters are considered.\nThe function should output with:\n    collections.defaultdict: A dictionary with keys as two-letter combinations and values as their counts in the sanitized word.\nYou should write self-contained code starting with:\n```\nfrom collections import defaultdict\nimport re\ndef task_func(word: str) -> dict:\n```",
+    "code_prompt": "from collections import defaultdict\nimport re\ndef task_func(word: str) -> dict:\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func('abcdef')\n        expected = {'ab': 1, 'bc': 1, 'cd': 1, 'de': 1, 'ef': 1}\n        self.assertEqual(result, expected)\n    def test_case_2(self):\n        result = task_func('aabbcc')\n        expected = {'aa': 1, 'ab': 1, 'bb': 1, 'bc': 1, 'cc': 1}\n        self.assertEqual(result, expected)\n    def test_case_3(self):\n        result = task_func('a')\n        expected = {}\n        self.assertEqual(result, expected)\n    def test_case_4(self):\n        result = task_func('')\n        expected = {}\n        self.assertEqual(result, expected)\n    def test_case_5(self):\n        result = task_func('AbCd')\n        expected = {'Ab': 1, 'bC': 1, 'Cd': 1}\n        self.assertEqual(result, expected)\n    def test_case_6(self):\n        # Test with non-alphabetic characters in the word\n        result = task_func('a1!b@c#d$')\n        expected = {'ab': 1, 'bc': 1, 'cd': 1}\n        self.assertEqual(result, expected)\n    def test_case_7(self):\n        # Test with mixed case and non-alphabetic characters\n        result = task_func('AaBb!!Cc123')\n        expected = {'Aa': 1, 'aB': 1, 'Bb': 1, 'bC': 1, 'Cc': 1}\n        self.assertEqual(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "re"
+    ],
+    "canonical_solution": "    # Sanitize the word to include only alphabetic characters\n    sanitized_word = re.sub('[^A-Za-z]', '', word)\n    occurrences = defaultdict(int)\n    pairs = [''.join(x) for x in zip(sanitized_word, sanitized_word[1:])]\n\n    for pair in pairs:\n        occurrences[pair] += 1\n\n    return occurrences"
+  }
+}

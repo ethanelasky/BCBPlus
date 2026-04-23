@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/769",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from collections import Counter\nimport itertools\nimport operator\n\ndef task_func(list_of_menuitems):\n    \"\"\"\n    Faced with a nested list of menu items, flatten the list and return the most common menu item.\n\n    Parameters:\n    - list_of_menuitems (list): A nested list of menu items.\n\n    Returns:\n    - str: The most common menu item.\n\n    Requirements:\n    - collections\n    - itertools\n    - operator\n\n    Example:\n    >>> task_func([['Pizza', 'Burger'], ['Pizza', 'Coke'], ['Pasta', 'Coke']])\n    'Pizza'\n    \"\"\"\n",
+    "instruct_prompt": "Faced with a nested list of menu items, flatten the list and return the most common menu item.\nThe function should output with:\n    str: The most common menu item.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\nimport operator\ndef task_func(list_of_menuitems):\n```",
+    "code_prompt": "from collections import Counter\nimport itertools\nimport operator\ndef task_func(list_of_menuitems):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Description: Testing with a list where 'Pizza' appears more frequently than other items.\n        input_data = [['Pizza', 'Burger'], ['Pizza', 'Coke'], ['Pasta', 'Coke']]\n        output = task_func(input_data)\n        self.assertEqual(output, 'Pizza')\n    \n    def test_case_2(self):\n        # Description: Testing with a list where 'Burger' appears more frequently than other items.\n        input_data = [['Burger', 'Burger'], ['Pizza', 'Coke'], ['Pasta', 'Coke']]\n        output = task_func(input_data)\n        self.assertEqual(output, 'Burger')\n    \n    def test_case_3(self):\n        # Description: Testing with a list where 'Pasta' appears more frequently than other items.\n        input_data = [['Pasta', 'Pasta'], ['Pasta', 'Coke'], ['Pizza', 'Coke']]\n        output = task_func(input_data)\n        self.assertEqual(output, 'Pasta')\n    \n    def test_case_4(self):\n        # Description: Testing with a list where 'Sushi' appears more frequently than other items.\n        input_data = [['Sushi'], ['Sushi', 'Coke'], ['Pizza', 'Coke']]\n        output = task_func(input_data)\n        self.assertEqual(output, 'Sushi')\n    \n    def test_case_5(self):\n        # Description: Testing with a list where 'Salad' appears more frequently than other items.\n        input_data = [['Salad'], ['Salad', 'Coke'], ['Pizza', 'Coke'], ['Salad', 'Burger']]\n        output = task_func(input_data)\n        self.assertEqual(output, 'Salad')",
+    "entry_point": "task_func",
+    "libs": [
+      "operator",
+      "collections",
+      "itertools"
+    ],
+    "canonical_solution": "    flat_list = list(itertools.chain(*list_of_menuitems))\n\n    counter = Counter(flat_list)\n\n    return max(counter.items(), key=operator.itemgetter(1))[0]"
+  }
+}

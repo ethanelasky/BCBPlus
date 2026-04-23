@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/735",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom itertools import chain\n\ndef task_func(L):\n    \"\"\"\n    Calculate the mean and variance of all elements in a nested list 'L'.\n    \n    Parameters:\n    - L (list): The nested list.\n    \n    Returns:\n    - dict: A dictionary containing the mean and variance.\n    \n    Requirements:\n    - numpy\n    - itertools.chain\n\n    Example:\n    >>> task_func([[1,2,3],[4,5,6]])\n    {'mean': 3.5, 'variance': 2.9166666666666665}\n    \"\"\"\n",
+    "instruct_prompt": "Calculate the mean and variance of all elements in a nested list 'L'.\nThe function should output with:\n    dict: A dictionary containing the mean and variance.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom itertools import chain\ndef task_func(L):\n```",
+    "code_prompt": "import numpy as np\nfrom itertools import chain\ndef task_func(L):\n",
+    "test": "import unittest\nimport numpy as np\nfrom itertools import chain\nclass TestCases(unittest.TestCase):\n    \n    def test_1(self):\n        L = [[1, 2, 3], [4, 5, 6]]\n        result = task_func(L)\n        flattened = list(chain.from_iterable(L))\n        expected_mean = np.mean(flattened)\n        expected_variance = np.var(flattened)\n        self.assertEqual(result['mean'], expected_mean)\n        self.assertEqual(result['variance'], expected_variance)\n    def test_2(self):\n        L = [[10, 20], [30, 40], [50, 60]]\n        result = task_func(L)\n        flattened = list(chain.from_iterable(L))\n        expected_mean = np.mean(flattened)\n        expected_variance = np.var(flattened)\n        self.assertEqual(result['mean'], expected_mean)\n        self.assertEqual(result['variance'], expected_variance)\n    def test_3(self):\n        L = [[5]]\n        result = task_func(L)\n        flattened = list(chain.from_iterable(L))\n        expected_mean = np.mean(flattened)\n        expected_variance = np.var(flattened)\n        self.assertEqual(result['mean'], expected_mean)\n        self.assertEqual(result['variance'], expected_variance)\n    def test_4(self):\n        L = [[1, 2, 3], [3, 2, 1], [4, 5, 6], [6, 5, 4]]\n        result = task_func(L)\n        flattened = list(chain.from_iterable(L))\n        expected_mean = np.mean(flattened)\n        expected_variance = np.var(flattened)\n        self.assertEqual(result['mean'], expected_mean)\n        self.assertEqual(result['variance'], expected_variance)\n    def test_5(self):\n        L = [[10, 11, 12], [13, 14, 15], [16, 17, 18], [19, 20, 21]]\n        result = task_func(L)\n        flattened = list(chain.from_iterable(L))\n        expected_mean = np.mean(flattened)\n        expected_variance = np.var(flattened)\n        self.assertEqual(result['mean'], expected_mean)\n        self.assertEqual(result['variance'], expected_variance)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "itertools"
+    ],
+    "canonical_solution": "    flattened = list(chain.from_iterable(L))\n    mean = np.mean(flattened)\n    variance = np.var(flattened)\n    \n    return {'mean': mean, 'variance': variance}"
+  }
+}

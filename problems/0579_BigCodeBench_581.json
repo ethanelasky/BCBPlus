@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/581",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130094900_e8f585fc",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import math\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport random\n# Constants\nRANGE = 10000\nSIZE = 1000\nPI = np.pi\n\n\ndef task_func(size=SIZE, frequency=1):\n    '''\n    Create a list of random sinusoidal values and plot them in a graph.\n\n    Note: The y-values must be bounded within [-1, 1] (standard sinusoidal amplitude).\n\n    Parameters:\n    - size (int): The number of points for the sinusoidal wave. Default is 1000.\n    - frequency (float): The frequency of the sinusoidal wave. Default is 1.\n\n    Returns:\n    - Axes object: The plot of the sinusoidal wave.\n\n    Requirements:\n    - random\n    - math\n    - matplotlib.pyplot\n    - numpy\n\n    Example:\n    >>> import matplotlib\n    >>> ax = task_func(size=1000, frequency=1)\n    >>> isinstance(ax, matplotlib.axes.Axes)\n    True\n    >>> len(ax.lines[0].get_ydata()) == 1000  # Verify the number of data points in the sinusoidal wave\n    True\n    >>> isinstance(ax.lines[0].get_ydata()[0], float)  # Check if y-values are floating-point numbers\n    True\n    '''\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n        \n    def test_case_4(self):\n        ax = task_func(size=1500, frequency=0.5)\n        x_data, y_data = ax.lines[0].get_data()\n        self.assertEqual(len(x_data), 1500)\n        self.assertTrue(min(y_data) >= -1 and max(y_data) <= 1)\n    def test_standard_functionality(self):\n        \"\"\"Test the function with default parameters.\"\"\"\n        ax = task_func()\n        self.assertIsInstance(ax, plt.Axes)\n    def test_varying_sizes(self):\n        \"\"\"Test the function with different array sizes.\"\"\"\n        for size in [0, 10, 500, 1500]:\n            ax = task_func(size=size)\n            self.assertIsInstance(ax, plt.Axes)\n            self.assertEqual(len(ax.lines[0].get_xdata()), size)\n    def test_different_frequencies(self):\n        \"\"\"Test the function with different frequencies.\"\"\"\n        for frequency in [0.5, 1, 2]:\n            ax = task_func(frequency=frequency)\n            self.assertIsInstance(ax, plt.Axes)\n    def test_plot_output(self):\n        \"\"\"Verify the plot is generated and is of correct type.\"\"\"\n        ax = task_func()\n        self.assertTrue(hasattr(ax, 'figure'), \"Plot does not have associated figure attribute\")",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "numpy",
+      "matplotlib",
+      "random"
+    ],
+    "instruct_prompt": "Create a list of random sinusoidal values and plot them in a graph.\nThe function should output with:\n    Axes object: The plot of the sinusoidal wave.\nYou should write self-contained code starting with:\n```\nimport math\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport random\n# Constants\nRANGE = 10000\nSIZE = 1000\nPI = np.pi\ndef task_func(size=SIZE, frequency=1):\n```",
+    "code_prompt": "import math\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport random\n# Constants\nRANGE = 10000\nSIZE = 1000\nPI = np.pi\ndef task_func(size=SIZE, frequency=1):",
+    "canonical_solution": "    x_values = np.arange(0, size)\n    y_values = [math.sin((2 * PI / RANGE) * (x + int(RANGE * random.random()) * frequency)) for x in range(size)]\n    \n    fig, ax = plt.subplots()\n    ax.plot(x_values, y_values)\n    \n    return ax"
+  }
+}

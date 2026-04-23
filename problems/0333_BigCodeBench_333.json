@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/333",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import heapq\nimport random\n\ndef task_func(k, list_length = 5, min_value = 0, max_value = 100):\n    \"\"\"\n    Find the k smallest numbers in a randomly generated list using heapq.\n\n    Parameters:\n    k (int): The number of smallest elements to find.\n    list_length (int): The length of the randomly generated list of integers.\n    min_value (int): The minimum value for randomly generated integers.\n    max_value (int): The maximum value for randomly generated integers.\n\n    Returns:\n    tuple: A tuple containing two lists: \n        - list[int]: The randomly generated list of integers with the specified length.\n        - list[int]: The k smallest numbers found using heapq.\n\n    Requirements:\n    - heapq\n    - random\n\n    Example:\n    >>> random.seed(0)\n    >>> rand_list, least_k = task_func(3)\n    >>> least_k[0] in rand_list\n    True\n    >>> rand_list, least_k = task_func(3,5,100,100)\n    >>> print(least_k)\n    [100, 100, 100]\n    \"\"\"\n",
+    "instruct_prompt": "Find the k smallest numbers in a randomly generated list using heapq.\nThe function should output with:\n    tuple: A tuple containing two lists:\n    list[int]: The randomly generated list of integers with the specified length.\n    list[int]: The k smallest numbers found using heapq.\nYou should write self-contained code starting with:\n```\nimport heapq\nimport random\ndef task_func(k, list_length = 5, min_value = 0, max_value = 100):\n```",
+    "code_prompt": "import heapq\nimport random\ndef task_func(k, list_length = 5, min_value = 0, max_value = 100):\n",
+    "test": "import unittest\nimport random\nclass TestCases(unittest.TestCase):\n    \n    def test_empty_list(self):\n        random.seed(0)\n        rand_list, least_k = task_func(0, 0)\n        self.assertEqual(rand_list, [])\n        self.assertEqual(least_k, [])\n    def test_k_larger_than_list_length(self):\n        random.seed(0)\n        rand_list, least_k = task_func(5, 10)\n        self.assertEqual(len(rand_list), 10)\n        self.assertEqual(len(least_k), 5)\n    def test_sorted_list(self):\n        random.seed(0)\n        rand_list, least_k = task_func(100, 3)\n        self.assertEqual(least_k, sorted(rand_list)[:3])\n    def test_least_k_sorted(self):\n        random.seed(0)\n        rand_list, least_k = task_func(100, 5, 100, 100)\n        self.assertEqual(least_k, sorted(least_k)[:5])\n    \n    def test_least_k_sorted_first(self):\n        random.seed(0)\n        rand_list, least_k = task_func(100, 5)\n        self.assertEqual(least_k[0], sorted(least_k)[0])",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "heapq"
+    ],
+    "canonical_solution": "\n    numbers = [random.randint(min_value, max_value) for _ in range(list_length)]\n    heapq.heapify(numbers)\n    smallest_numbers = heapq.nsmallest(k, numbers)\n   \n    return numbers, smallest_numbers"
+  }
+}

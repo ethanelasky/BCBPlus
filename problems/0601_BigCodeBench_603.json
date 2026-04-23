@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/603",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nimport pandas as pd\n\n\ndef task_func(matrix1, matrix2):\n    \"\"\"\n    Connects two 2D numeric arrays (matrices) along the second axis (columns),\n    converts them into a Pandas DataFrame, and returns a string representation of the DataFrame.\n\n    Parameters:\n    - matrix1 (np.ndarray): The first 2D numpy array.\n    - matrix2 (np.ndarray): The second 2D numpy array.\n\n    Returns:\n    - str: The string representation of the DataFrame without the index and header.\n\n    Requirements:\n    - pandas\n    - numpy\n\n    Example:\n    >>> matrix1 = np.array([[1, 2, 3], [4, 5, 6]])\n    >>> matrix2 = np.array([[7, 8, 9], [10, 11, 12]])\n    >>> result = task_func(matrix1, matrix2)\n    >>> all(x in result.replace(' ', '') for x in ['123789', '456101112'])\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Connects two 2D numeric arrays (matrices) along the second axis (columns), converts them into a Pandas DataFrame, and returns a string representation of the DataFrame.\nThe function should output with:\n    str: The string representation of the DataFrame without the index and header.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport pandas as pd\ndef task_func(matrix1, matrix2):\n```",
+    "code_prompt": "import numpy as np\nimport pandas as pd\ndef task_func(matrix1, matrix2):\n",
+    "test": "import unittest\nimport re\nclass TestCases(unittest.TestCase):\n    def normalize_whitespace(self, string):\n        \"\"\"Normalize the whitespace in the string to a single space.\"\"\"\n        return re.sub(r'\\s+', ' ', string).strip()\n    def test_basic_concatenation(self):\n        \"\"\"Test basic functionality of concatenating two matrices.\"\"\"\n        matrix1 = np.array([[1, 2], [3, 4]])\n        matrix2 = np.array([[5, 6], [7, 8]])\n        expected_output = \" 1  2  5  6\\n 3  4  7  8\"\n        result = task_func(matrix1, matrix2)\n        self.assertEqual(self.normalize_whitespace(result), self.normalize_whitespace(expected_output))\n    def test_different_length_matrices(self):\n        \"\"\"Test concatenation of matrices with different numbers of rows.\"\"\"\n        matrix1 = np.array([[1, 2], [3, 4], [5, 6]])\n        matrix2 = np.array([[7, 8]])\n        with self.assertRaises(ValueError):\n            task_func(matrix1, matrix2)\n    def test_mismatched_dimensions(self):\n        \"\"\"Test concatenation with mismatched dimensions.\"\"\"\n        matrix1 = np.array([[1, 2]])\n        matrix2 = np.array([[3], [4]])\n        with self.assertRaises(ValueError):\n            task_func(matrix1, matrix2)\n    def test_single_row_matrices(self):\n        \"\"\"Test concatenation of single-row matrices.\"\"\"\n        matrix1 = np.array([[1, 2, 3]])\n        matrix2 = np.array([[4, 5, 6]])\n        expected_output = \" 1  2  3  4  5  6\"\n        result = task_func(matrix1, matrix2)\n        self.assertEqual(self.normalize_whitespace(result), self.normalize_whitespace(expected_output))\n    def test_non_numeric_matrices(self):\n        \"\"\"Ensure non-numeric matrices are handled.\"\"\"\n        matrix1 = np.array([['a', 'b']])\n        matrix2 = np.array([['c', 'd']])\n        expected_output = \" a  b  c  d\"\n        result = task_func(matrix1, matrix2)\n        self.assertEqual(self.normalize_whitespace(result), self.normalize_whitespace(expected_output))",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy"
+    ],
+    "canonical_solution": "    combined_matrix = np.concatenate((matrix1, matrix2), axis=1)\n    df = pd.DataFrame(combined_matrix)\n    return df.to_string(index=False, header=False)"
+  }
+}

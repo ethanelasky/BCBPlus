@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/701",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\n\ndef task_func(df, target):\n    \"\"\"\n    Perform a linear regression analysis on a given DataFrame.\n    \n    Parameters:\n    - df (pd.DataFrame): The pandas DataFrame.\n    - target (str): The target variable.\n    \n    Returns:\n    - score (float): The R-squared score of the model.\n\n    Requirements:\n    - pandas\n    - sklearn\n\n    Example:\n    >>> import numpy as np\n    >>> np.random.seed(42)\n    >>> df = pd.DataFrame({'feature': np.random.rand(100), 'target': np.random.rand(100)})  # Explicitly using pd\n    >>> r_squared = task_func(df, 'target')\n    >>> print(r_squared)\n    0.0011582111228732872\n    \"\"\"\n",
+    "instruct_prompt": "Perform a linear regression analysis on a given DataFrame.\nThe function should output with:\n    score (float): The R-squared score of the model.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.linear_model import LinearRegression\ndef task_func(df, target):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\ndef task_func(df, target):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        df = pd.DataFrame([[0, 1, 2], [3, 4, 5], [6, 7, 8]], columns = ['x', 'y', 'z'])\n        r_squared = task_func(df, 'z')\n        self.assertEqual(r_squared, 1.0)\n        \n    def test_case_2(self):\n        df = pd.DataFrame([[-1, 1, 2], [3, 4, 5], [6, 7, 8]], columns = ['x', 'y', 'z'])\n        r_squared = task_func(df, 'z')\n        self.assertEqual(r_squared, 1.0)\n    \n    def test_case_3(self):\n        df = pd.DataFrame([[0, 0, 0], [1, 1, 1], [2, 2, 2]], columns = ['x', 'y', 'z'])\n        r_squared = task_func(df, 'z')\n        self.assertEqual(r_squared, 1.0)\n    def test_case_4(self):\n        df = pd.DataFrame([[0, 0, 9], [1, 1, 35], [2, 2, 78]], columns = ['x', 'y', 'z'])\n        r_squared = task_func(df, 'z')\n        self.assertFalse(r_squared == 1.0)\n    def test_case_5(self):\n        df = pd.DataFrame([[0, 0, 0, 0], [1, 1, 1, 1], [2, 2, 2, 2]], columns = ['x', 'y', 'z', 'w'])\n        r_squared = task_func(df, 'w')\n        self.assertEqual(r_squared, 1.0)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "    X = pd.DataFrame.drop(df, target, axis=1)  \n    y = pd.Series(df[target])  \n    \n    model = LinearRegression()\n    model.fit(X, y)\n\n    return model.score(X, y)"
+  }
+}

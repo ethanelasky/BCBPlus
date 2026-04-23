@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/572",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129145007_d9114b97",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from random import randint\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n\ndef task_func(array_length=100):\n    \"\"\"\n    Generate two arrays of random integers and draw a line diagram with the \n    maximum values of the respective elements of the two arrays. Set 'Maximum Values' on its y-axis.\n\n    Parameters:\n    - array_length (int): Length of the random arrays to be generated. Default is 100.\n      Must be non-negative (zero produces an empty plot).\n\n    Returns:\n    - matplotlib.axes.Axes: Axes object with the plot.\n\n    Requirements:\n    - numpy\n    - matplotlib.pyplot\n    - random\n\n    Example:\n    >>> ax = task_func(100)\n    \"\"\"\n",
+    "test": "import unittest\nfrom matplotlib.axes import Axes\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        ax = task_func(50)\n        self.assertIsInstance(ax, Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 50)\n    def test_standard_functionality(self):\n        \"\"\"Test the function with default array length.\"\"\"\n        ax = task_func()\n        self.assertIsInstance(ax, plt.Axes)\n    def test_zero_length_array(self):\n        \"\"\"Test the function with zero array length.\"\"\"\n        ax = task_func(0)\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 0)  # Expect no data points in the plot\n    def test_non_default_length_array(self):\n        \"\"\"Test the function with non-default array lengths.\"\"\"\n        lengths = [50, 200]\n        for length in lengths:\n            ax = task_func(length)\n            self.assertIsInstance(ax, plt.Axes)\n            self.assertEqual(len(ax.lines[0].get_ydata()), length)\n    def test_plot_output(self):\n        \"\"\"Verify the plot is generated and is of correct type.\"\"\"\n        ax = task_func()\n        self.assertTrue(hasattr(ax, 'figure'), \"Plot does not have associated figure attribute\")",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib",
+      "random"
+    ],
+    "instruct_prompt": "Generate two arrays of random integers and draw a line diagram with the maximum values of the respective elements of the two arrays. Set 'Maximum Values' on its y-axis.\nThe function should output with:\n    matplotlib.axes.Axes: Axes object with the plot.\nYou should write self-contained code starting with:\n```\nfrom random import randint\nimport matplotlib.pyplot as plt\nimport numpy as np\ndef task_func(array_length=100):\n```",
+    "code_prompt": "from random import randint\nimport matplotlib.pyplot as plt\nimport numpy as np\ndef task_func(array_length=100):",
+    "canonical_solution": "    array1 = np.array([randint(1, 100) for _ in range(array_length)])\n    array2 = np.array([randint(1, 100) for _ in range(array_length)])\n\n    max_values = np.maximum(array1, array2)\n\n    fig, ax = plt.subplots()\n    ax.plot(max_values)\n    ax.set_ylabel('Maximum Values')\n    \n    return ax"
+  }
+}

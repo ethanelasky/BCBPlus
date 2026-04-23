@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/125",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from collections import defaultdict\nimport itertools\nimport json\nimport random\n\ndef task_func(LETTERS, n):\n    \"\"\"\n    Generates all possible combinations of a given set of letters of length 'n'.\n    Counts the occurrences of each letter in these combinations and saves the results\n    in a JSON file. The name of the file is prefix_<random-number-here>.json. The value of\n    <random-number-here> is between 0 and 100. \n\n    Parameters:\n        LETTERS (list): The list of letters to generate combinations from.\n        n (int): The length of the combinations.\n\n    Returns:\n        str: The name of the generated JSON file containing letter counts.\n\n    Requirements:\n    - collections.defaultdict\n    - itertools\n    - json\n    - random\n\n    Examples:\n    >>> isinstance(task_func(['a', 'b', 'c', 'd', 'e'], 3), str)\n    True\n    >>> 'letter_combinations_' in task_func(['a', 'b', 'c', 'd', 'e'], 2)\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Generates all possible combinations of a given set of letters of length 'n'. Counts the occurrences of each letter in these combinations and saves the results in a JSON file. The name of the file is prefix_<random-number-here>.json. The value of <random-number-here> is between 0 and 100.\nThe function should output with:\n    str: The name of the generated JSON file containing letter counts.\nYou should write self-contained code starting with:\n```\nfrom collections import defaultdict\nimport itertools\nimport json\nimport random\ndef task_func(LETTERS, n):\n```",
+    "code_prompt": "from collections import defaultdict\nimport itertools\nimport json\nimport random\ndef task_func(LETTERS, n):\n",
+    "test": "import unittest\nimport os\nfrom unittest.mock import patch, mock_open\nimport json\nLETTERS = ['a', 'b', 'c', 'd', 'e']\nclass TestCases(unittest.TestCase):\n    @patch('random.randint', return_value=42)  # Mock randint to control filename\n    def test_return_type(self, mock_randint):\n        \"\"\"Test that the function returns a string.\"\"\"\n        result = task_func(LETTERS, 2)\n        self.assertIsInstance(result, str)\n        expected_filename = 'letter_combinations_42.json'\n        self.assertEqual(result, expected_filename)\n    @patch('random.randint', return_value=42)\n    def test_file_creation(self, mock_randint):\n        \"\"\"Test that a file with the expected pattern name is created.\"\"\"\n        filename = task_func(LETTERS, 2)\n        self.assertTrue(os.path.exists(filename))\n    @patch('random.randint', return_value=42)\n    def test_file_content(self, mock_randint):\n        \"\"\"Test the correctness of the file content.\"\"\"\n        filename = task_func(LETTERS, 2)\n        with open(filename, 'r') as f:\n            data = json.load(f)\n        self.assertIsInstance(data, dict)\n    @patch('random.randint', return_value=42)\n    def test_combination_length(self, mock_randint):\n        \"\"\"Test with different lengths of combinations.\"\"\"\n        filename = task_func(LETTERS, 1)\n        with open(filename, 'r') as f:\n            data = json.load(f)\n        expected_count = 1 * len(LETTERS)  # Each letter should appear once for n=1\n        actual_count = sum(data.values())\n        self.assertEqual(actual_count, expected_count)\n    def tearDown(self):\n        \"\"\"Clean up created files.\"\"\"\n        for file in os.listdir('.'):\n            if file.startswith('letter_combinations_') and file.endswith('.json'):\n                os.remove(file)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "random",
+      "itertools",
+      "json"
+    ],
+    "canonical_solution": "    combinations = list(itertools.combinations(LETTERS, n))\n    letter_counts = defaultdict(int)\n\n    for combination in combinations:\n        for letter in combination:\n            letter_counts[letter] += 1\n\n    filename = f'letter_combinations_{random.randint(1, 100)}.json'\n    with open(filename, 'w') as f:\n        json.dump(letter_counts, f)\n\n    return filename"
+  }
+}

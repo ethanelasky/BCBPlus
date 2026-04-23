@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/737",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nimport math\n\ndef task_func(L):\n    \"\"\"\n    Calculate the median of all elements in a nested list 'L'.\n    \n    Parameters:\n    - L (list): The nested list.\n    \n    Returns:\n    - median (float): The median.\n    \n    Requirements:\n    - numpy\n    - math\n\n    Example:\n    >>> task_func([[1,2,3],[4,5,6]])\n    3.5\n    \"\"\"\n",
+    "instruct_prompt": "Calculate the median of all elements in a nested list 'L'.\nThe function should output with:\n    median (float): The median.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport math\ndef task_func(L):\n```",
+    "code_prompt": "import numpy as np\nimport math\ndef task_func(L):\n",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    \n    def test_median_odd_elements(self):\n        result = task_func([[1, 2, 3], [4, 5, 6], [7]])\n        self.assertEqual(result, 4.0)\n    def test_median_even_elements(self):\n        result = task_func([[1, 2, 3], [4, 5, 6]])\n        self.assertEqual(result, 3.5)\n        \n    def test_median_single_element(self):\n        result = task_func([[5]])\n        self.assertEqual(result, 5.0)\n        \n    def test_median_deep_nesting(self):\n        result = task_func([1, [2, [3, 4, [5, 6], 7], 8], 9])\n        self.assertEqual(result, 5.0)\n        \n    def test_median_empty_list(self):\n        with self.assertRaises(ValueError):\n            task_func([])",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "numpy"
+    ],
+    "canonical_solution": "    # Recursive function to flatten the list\n    def flatten(lst):\n        flat_list = []\n        for item in lst:\n            if isinstance(item, list):\n                flat_list.extend(flatten(item))\n            else:\n                flat_list.append(item)\n        return flat_list\n    \n    flattened = flatten(L)\n    \n    if not flattened:\n        raise ValueError(\"List is empty\")\n    \n    # Using numpy to sort the list\n    sorted_flattened = np.sort(flattened)\n    n = len(sorted_flattened)\n    \n    # Calculating the median index using math.ceil\n    if n % 2 == 0:\n        median_index1 = math.ceil(n / 2) - 1\n        median_index2 = median_index1 + 1\n        median = (sorted_flattened[median_index1] + sorted_flattened[median_index2]) / 2.0\n    else:\n        median_index = math.ceil(n / 2) - 1\n        median = sorted_flattened[median_index]\n    \n    return median"
+  }
+}

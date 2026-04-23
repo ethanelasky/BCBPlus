@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/715",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129143716_d44f5e5d",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import sys\nimport subprocess\n\n# Constants\nPYTHON_VERSION = '3.8'\nPATH_TO_APPEND = '/path/to/whatever'\n\ndef task_func(python_version=PYTHON_VERSION, path_to_append=PATH_TO_APPEND):\n    \"\"\"\n    Switch to a specific version of Python using `pyenv global` and add a specific path to sys.path.\n    \n    Note: This function changes the global Python version and should be used carefully.\n    \n    Parameters:\n    - python_version (str): The Python version to switch to. Default is '3.8'.\n    - path_to_append (str): The path to append to sys.path. Default is '/path/to/whatever'.\n\n    Returns:\n    - python_version (str): The Python version that was switched to.\n\n    Requirements:\n    - sys\n    - subprocess\n\n    Example:\n    >>> task_func('3.7', '/path/to/new_directory')\n    '3.7'\n    \"\"\"\n",
+    "test": "import sys\nimport unittest\nfrom unittest.mock import patch\nclass TestCases(unittest.TestCase):\n    @patch('subprocess.run')\n    def test_switch_to_default_python_version(self, mock_run):\n        original_path_length = len(sys.path)\n        task_func()\n        mock_run.assert_called_with(['pyenv', 'global', '3.8'], check=True)\n        self.assertEqual(sys.path[-1], '/path/to/whatever')\n        sys.path = sys.path[:original_path_length]  # Reset sys.path to original state\n    @patch('subprocess.run')\n    def test_switch_to_python_3_7(self, mock_run):\n        original_path_length = len(sys.path)\n        task_func('3.7', '/another/path')\n        mock_run.assert_called_with(['pyenv', 'global', '3.7'], check=True)\n        self.assertEqual(sys.path[-1], '/another/path')\n        sys.path = sys.path[:original_path_length]\n    @patch('subprocess.run')\n    def test_switch_to_python_3_9(self, mock_run):\n        original_path_length = len(sys.path)\n        task_func('3.9')\n        mock_run.assert_called_with(['pyenv', 'global', '3.9'], check=True)\n        self.assertEqual(sys.path[-1], '/path/to/whatever')\n        sys.path = sys.path[:original_path_length]\n    @patch('subprocess.run')\n    def test_switch_to_python_2_7(self, mock_run):\n        original_path_length = len(sys.path)\n        task_func('2.7')\n        mock_run.assert_called_with(['pyenv', 'global', '2.7'], check=True)\n        self.assertEqual(sys.path[-1], '/path/to/whatever')\n        sys.path = sys.path[:original_path_length]\n    @patch('subprocess.run')\n    def test_switch_to_python_3_6(self, mock_run):\n        original_path_length = len(sys.path)\n        task_func('3.6', '/different/path')\n        mock_run.assert_called_with(['pyenv', 'global', '3.6'], check=True)\n        self.assertEqual(sys.path[-1], '/different/path')\n        sys.path = sys.path[:original_path_length]",
+    "entry_point": "task_func",
+    "libs": [
+      "subprocess",
+      "sys"
+    ],
+    "instruct_prompt": "Switch to a specific version of Python and add a specific path to sys.path.\nNote that: This function changes the global Python version and should be used carefully.\nThe function should output with:\n    python_version (str): The Python version that was switched to.\nYou should write self-contained code starting with:\n```\nimport sys\nimport subprocess\n# Constants\nPYTHON_VERSION = '3.8'\nPATH_TO_APPEND = '/path/to/whatever'\ndef task_func(python_version=PYTHON_VERSION, path_to_append=PATH_TO_APPEND):\n```",
+    "code_prompt": "import sys\nimport subprocess\n# Constants\nPYTHON_VERSION = '3.8'\nPATH_TO_APPEND = '/path/to/whatever'\ndef task_func(python_version=PYTHON_VERSION, path_to_append=PATH_TO_APPEND):",
+    "canonical_solution": "    subprocess.run(['pyenv', 'global', python_version], check=True)\n    sys.path.append(path_to_append)\n\n    return python_version"
+  }
+}

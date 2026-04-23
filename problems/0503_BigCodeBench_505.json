@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/505",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import hashlib\nimport hmac\n\ndef task_func(secret, message):\n    \"\"\"\n    Generates an HMAC (Hash-based Message Authentication Code) signature for a given message using a secret key.\n    The function uses SHA-256 as the hash function to create the HMAC signature.\n\n    Parameters:\n    secret (str): The secret key used for HMAC generation.\n    message (str): The message for which the HMAC signature is to be generated.\n\n    Returns:\n    str: The HMAC signature of the message, returned as a hexadecimal string.\n\n    Requirements:\n    - hashlib\n    - hmac\n\n    Examples:\n    Generate an HMAC signature for a message.\n    >>> len(task_func('mysecretkey', 'Hello, world!')) == 64\n    True\n\n    Generate an HMAC for a different message with the same key.\n    >>> len(task_func('mysecretkey', 'Goodbye, world!')) == 64\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Generates an HMAC (Hash-based Message Authentication Code) signature for a given message using a secret key. The function uses SHA-256 as the hash function to create the HMAC signature. Generate an HMAC for a different message with the same key. >>> len(task_func('mysecretkey', 'Goodbye, world!')) == 64 True\nThe function should output with:\n    str: The HMAC signature of the message, returned as a hexadecimal string.\nYou should write self-contained code starting with:\n```\nimport hashlib\nimport hmac\ndef task_func(secret, message):\n```",
+    "code_prompt": "import hashlib\nimport hmac\ndef task_func(secret, message):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_hmac_signature_length(self):\n        signature = task_func('secretkey', 'Hello, world!')\n        self.assertEqual(len(signature), 64)\n    def test_hmac_signature_different_messages(self):\n        sig1 = task_func('secretkey', 'Hello, world!')\n        sig2 = task_func('secretkey', 'Goodbye, world!')\n        self.assertNotEqual(sig1, sig2)\n    def test_hmac_signature_same_message_different_keys(self):\n        sig1 = task_func('key1', 'Hello, world!')\n        sig2 = task_func('key2', 'Hello, world!')\n        self.assertNotEqual(sig1, sig2)\n    def test_hmac_signature_empty_message(self):\n        signature = task_func('secretkey', '')\n        self.assertEqual(len(signature), 64)\n    def test_hmac_signature_empty_key(self):\n        signature = task_func('', 'Hello, world!')\n        self.assertEqual(len(signature), 64)",
+    "entry_point": "task_func",
+    "libs": [
+      "hmac",
+      "hashlib"
+    ],
+    "canonical_solution": "    return hmac.new(secret.encode(), message.encode(), hashlib.sha256).hexdigest()"
+  }
+}

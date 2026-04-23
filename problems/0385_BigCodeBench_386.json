@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/386",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127172549_ac4240ea",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nimport pandas as pd\n\n# Constants\nCOLUMNS = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\n\ndef task_func(length, min_value = 0, max_value = 100):\n    \"\"\"\n    Randomly generate a pandas DataFrame with specified ranges and length, and calculate the cumulative distribution function (CDF).\n\n    Parameters:\n    length (int): The length of the DataFrame to be generated. If 0, returns an empty DataFrame.\n    min_value (int, optional): The minimum value for random data generation. Default is 0.\n    max_value (int, optional): The maximum value for random data generation. Default is 100.\n\n    Returns:\n    DataFrame: A pandas DataFrame with the calculated cumulative distribution function (CDF),\n               where each column contains the count of values in that column that are less than\n               or equal to max_value (i.e., the empirical CDF evaluated at max_value, expressed\n               as a count rather than a proportion).\n\n    Note:\n    - DataFrame columns are defined by the COLUMNS constant.\n    - For length=0, returns an empty DataFrame with the correct columns.\n\n    Requirements:\n    - numpy\n    - pandas\n    - matplotlib.pyplot\n\n    Example:\n    >>> np.random.seed(0)\n    >>> cdf = task_func(100, 0, 1)\n    >>> print(len(cdf))\n    1\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        np.random.seed(0)\n        df = task_func(100, 0, 1)\n        self.assertEqual(df.shape[0], 1)\n        self.assertEqual(list(df.columns), ['Column1', 'Column2', 'Column3', 'Column4', 'Column5'])\n    def test_case_2(self):\n        np.random.seed(0)\n        min_value = 0\n        max_value = 1\n        length = 10\n        cdf = task_func(length, min_value, max_value)\n        self.assertEqual(cdf.iloc[0]['Column1'], 10)\n    def test_case_3(self):\n        np.random.seed(0)\n        df = task_func(100)\n        #self.assertEqual(df.shape[0], 100)\n        self.assertEqual(list(df.columns), ['Column1', 'Column2', 'Column3', 'Column4', 'Column5'])\n    def test_case_4(self):\n        np.random.seed(0)\n        df = task_func(100, 50, 100)\n        self.assertEqual(list(df.columns), ['Column1', 'Column2', 'Column3', 'Column4', 'Column5'])\n        for column in df.columns:\n            self.assertTrue(all(df[column].diff().dropna() >= 0))\n    def test_case_5(self):\n        np.random.seed(0)\n        df  = task_func(0)\n        self.assertEqual(df.shape[0], 0)\n        self.assertEqual(list(df.columns), ['Column1', 'Column2', 'Column3', 'Column4', 'Column5'])",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy"
+    ],
+    "instruct_prompt": "Randomly generate a pandas DataFrame with specified ranges and length, and calculate the cumulative distribution function (CDF).\nNote that: DataFrame columns are defined by the COLUMNS constant.\nThe function should output with:\n    DataFrame: A pandas DataFrame with the calculated cumulative distribution function (CDF).\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport pandas as pd\n# Constants\nCOLUMNS = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\ndef task_func(length, min_value = 0, max_value = 100):\n```",
+    "code_prompt": "import numpy as np\nimport pandas as pd\n# Constants\nCOLUMNS = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\ndef task_func(length, min_value = 0, max_value = 100):",
+    "canonical_solution": "\n    # Generate random data and create a DataFrame\n    data = np.random.randint(min_value, max_value, size=(length, len(COLUMNS)))\n    df = pd.DataFrame(data, columns=COLUMNS)\n\n    # Calculate the cumulative distribution function (CDF) for each column\n    df = df.apply(lambda x: x.value_counts().sort_index().cumsum())\n\n    return df"
+  }
+}

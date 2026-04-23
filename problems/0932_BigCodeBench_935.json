@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/935",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260123131545_713526c9",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport string\n\ndef task_func(word):\n    \"\"\"\n    Creates a Pandas DataFrame from a single word, where each row contains a letter from the word \n    and its 1-based position in the alphabet.\n\n    Requirements:\n    - pandas\n    - string\n    \n    Parameters:\n    - word (str): The word to create the DataFrame from. The word should be in lowercase and consist of alphabetic characters only. \n    \n    Returns:\n    - pandas.DataFrame: A DataFrame with two columns: 'Letter' and 'Position', \n      where 'Position' is the letter's position in the English alphabet.\n    \n    Examples:\n    >>> task_func('abc')\n      Letter  Position\n    0      a         1\n    1      b         2\n    2      c         3\n\n    >>> task_func('zoo')\n      Letter  Position\n    0      z        26\n    1      o        15\n    2      o        15\n\n    >>> task_func('')\n    Empty DataFrame\n    Columns: [Letter, Position]\n    Index: []\n    \n    Raises:\n    - ValueError: If the input word contains uppercase letters or non-alphabetic characters.\n\n    \"\"\"",
+    "test": "import unittest\nimport pandas as pd\nclass TestCases(unittest.TestCase):\n    def test_abc(self):\n        \"\"\"Test with the word 'abc'.\"\"\"\n        result = task_func('abc')\n        expected = pd.DataFrame({'Letter': ['a', 'b', 'c'], 'Position': [1, 2, 3]})\n        pd.testing.assert_frame_equal(result, expected)\n    def test_xyz(self):\n        \"\"\"Test with the word 'xyz'.\"\"\"\n        result = task_func('xyz')\n        expected = pd.DataFrame({'Letter': ['x', 'y', 'z'], 'Position': [24, 25, 26]})\n        pd.testing.assert_frame_equal(result, expected)\n    def test_mixed_case_error(self):\n        \"\"\"Test with a mixed case word, expecting a ValueError.\"\"\"\n        with self.assertRaises(ValueError):\n            task_func('AbC')\n    def test_non_alpha_error(self):\n        \"\"\"Test with a non-alphabetic word, expecting a ValueError.\"\"\"\n        with self.assertRaises(ValueError):\n            task_func('123')\n    def test_empty_string(self):\n        \"\"\"Test with an empty string, expecting an empty DataFrame.\"\"\"\n        result = task_func('')\n        expected = pd.DataFrame({'Letter': [], 'Position': []})\n        pd.testing.assert_frame_equal(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "string"
+    ],
+    "instruct_prompt": "Creates a Pandas DataFrame from a single word, where each row contains a letter from the word and its 1-based position in the alphabet. >>> task_func('zoo') Letter  Position 0      z        26 1      o        15 2      o        15\nThe function should raise the exception for: ValueError: If the input word is not in lowercase or contains non-alphabetic characters.\nThe function should output with:\n    pandas.DataFrame: A DataFrame with two columns: 'Letter' and 'Position',\n    where 'Position' is the letter's position in the English alphabet.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport string\ndef task_func(word):\n```",
+    "code_prompt": "import pandas as pd\nimport string\ndef task_func(word):",
+    "canonical_solution": "    if not word:  # Check if the input word is empty and return an empty DataFrame\n        return pd.DataFrame({'Letter': [], 'Position': []})\n    elif not word.isalpha() or not word.islower():\n        raise ValueError(\"Input word must be in lowercase alphabetic characters only.\")\n\n    alphabet = string.ascii_lowercase\n    positions = [alphabet.index(char) + 1 for char in word]\n    df = pd.DataFrame({'Letter': list(word), 'Position': positions})\n\n    return df"
+  }
+}

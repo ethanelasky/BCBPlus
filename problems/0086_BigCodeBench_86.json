@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/86",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nimport pandas as pd\n\ndef task_func(students=[\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eve\"], seed=42):\n    \"\"\"\n    Generate random scores for a given list of students, sort these scores in ascending order,\n    and return both the scores and a bar plot of these scores.\n\n    Parameters:\n    students (list of str): List of student names.\n    seed (int): Seed for the random number generator. Default is 42.\n\n    Returns:\n    DataFrame: A pandas DataFrame with columns 'Student' and 'Score', sorted by 'Score'.\n    Axes: A matplotlib Axes object containing the bar plot of scores.\n\n    use np.random.randint(0, 100) to generate the scores of the students\n\n    Requirements:\n    - numpy\n    - pandas\n\n    Example:\n    >>> scores, plot = task_func()\n    >>> print(scores)\n       Student  Score\n    2  Charlie     14\n    0    Alice     51\n    4      Eve     60\n    3    David     71\n    1      Bob     92\n    \"\"\"\n",
+    "instruct_prompt": "Generate random scores for a given list of students, sort these scores in ascending order, and return both the scores and a bar plot of these scores. use np.random.randint(0, 100) to generate the scores of the students\nThe function should output with:\n    DataFrame: A pandas DataFrame with columns 'Student' and 'Score', sorted by 'Score'.\n    Axes: A matplotlib Axes object containing the bar plot of scores.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport pandas as pd\ndef task_func(students=[\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eve\"], seed=42):\n```",
+    "code_prompt": "import numpy as np\nimport pandas as pd\ndef task_func(students=[\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eve\"], seed=42):\n",
+    "test": "import unittest\nimport pandas as pd\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.students = [\"Alice\", \"Bob\", \"Charlie\", \"David\", \"Eve\"]\n    def test_random_reproducibility(self):\n        df1, _ = task_func(self.students, 42)\n        df2, _ = task_func(self.students, 42)\n        pd.testing.assert_frame_equal(df1, df2)\n    def test_dataframe_columns(self):\n        df, _ = task_func(self.students)\n        self.assertListEqual(list(df.columns), [\"Student\", \"Score\"])\n    def test_scores_within_range(self):\n        df, _ = task_func(self.students)\n        self.assertTrue(df[\"Score\"].between(0, 100).all())\n    def test_plot_labels(self):\n        _, ax = task_func(self.students)\n        self.assertEqual(ax.get_ylabel(), \"Score\")\n        self.assertEqual(ax.get_xlabel(), \"Student\")\n    def test_different_seeds_produce_different_scores(self):\n        df1, _ = task_func(self.students, 42)\n        df2, _ = task_func(self.students, 43)\n        self.assertFalse(df1.equals(df2))\n    \n    def test_dataframe_value(self):\n        df, _ = task_func(self.students)                \n        df_list = df.apply(lambda row: ','.join(row.values.astype(str)), axis=1).tolist()\n        expect = ['Charlie,14', 'Alice,51', 'Eve,60', 'David,71', 'Bob,92']\n        # with open('df_contents.txt', 'w') as file:\n        #     file.write(str(df_list))\n        self.assertEqual(df_list, expect, \"DataFrame contents should match the expected output\")",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy"
+    ],
+    "canonical_solution": "    np.random.seed(seed)\n    scores_data = [(student, np.random.randint(0, 100)) for student in students]\n    df = pd.DataFrame(scores_data, columns=[\"Student\", \"Score\"])\n    df.sort_values(\"Score\", inplace=True)\n\n    ax = df.plot(x='Student', y='Score', kind='bar', legend=False)\n    ax.set_ylabel(\"Score\")\n\n    return df, ax"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/547",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import hashlib\nimport os\nimport base64\n\n\ndef task_func(password: str, salt_length: int = 8) -> str:\n    \"\"\"\n    Encrypt a password using Salt and SHA-256, then encode the result in base64.\n\n    Parameters:\n    password (str): The password to be encrypted.\n    salt_length (int, optional): The length of the generated salt. Default is 8.\n\n    Returns:\n    str: The encrypted password in base64 format.\n\n    Requirements:\n    - base64\n    - hashlib\n    - os\n\n    Example:\n    >>> isinstance(task_func('my_password'), str)\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Encrypt a password using Salt and SHA-256, then encode the result in base64.\nThe function should output with:\n    str: The encrypted password in base64 format.\nYou should write self-contained code starting with:\n```\nimport hashlib\nimport os\nimport base64\ndef task_func(password: str, salt_length: int = 8) -> str:\n```",
+    "code_prompt": "import hashlib\nimport os\nimport base64\ndef task_func(password: str, salt_length: int = 8) -> str:\n",
+    "test": "import unittest\nimport binascii\nclass TestCases(unittest.TestCase):\n    \n    def test_valid_encryption_format(self):\n        encrypted = task_func(\"test_password\")\n        try:\n            base64.b64decode(encrypted)\n            valid = True\n        except binascii.Error:\n            valid = False\n        self.assertTrue(valid)\n    def test_varying_password_lengths(self):\n        for length in [1, 5, 10, 50, 100]:\n            password = \"a\" * length\n            encrypted = task_func(password)\n            self.assertTrue(isinstance(encrypted, str) and len(encrypted) > 0)\n    \n    def test_salt_length_effect(self):\n        for salt_length in [1, 4, 8, 16]:\n            encrypted = task_func(\"test_password\", salt_length=salt_length)\n            self.assertTrue(isinstance(encrypted, str) and len(encrypted) > 0)\n    \n    def test_special_characters_in_password(self):\n        encrypted = task_func(\"!@#$%^&*()\")\n        self.assertTrue(isinstance(encrypted, str) and len(encrypted) > 0)\n    \n    def test_empty_password(self):\n        encrypted = task_func(\"\")\n        self.assertTrue(isinstance(encrypted, str) and len(encrypted) > 0)",
+    "entry_point": "task_func",
+    "libs": [
+      "base64",
+      "hashlib",
+      "os"
+    ],
+    "canonical_solution": "    # Generate a random salt\n    salt = os.urandom(salt_length)\n    # Use the salt and the password to create a SHA-256 hash\n    hash = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)\n    # Combine the salt and the hash\n    salted_hash = salt + hash\n    # Encode the salted hash in base64\n    encrypted_password = base64.b64encode(salted_hash)\n\n    return encrypted_password.decode('utf-8')"
+  }
+}

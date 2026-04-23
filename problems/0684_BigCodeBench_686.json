@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/686",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom sklearn.preprocessing import OneHotEncoder\n\ndef task_func(list_of_lists):\n    \"\"\"\n    Merges a predefined set of lists into a list and one-hot-encodes the elements of the list.\n\n    Parameters:\n    - list_of_lists (list): The list to be processed.\n\n    Returns:\n    - one_hot (numpy.array): The one-hot encoding of the merged list.\n\n    Requirements:\n    - numpy\n    - scikit-learn\n\n    Example:\n    >>> task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n    array([[1., 0., 0., 0., 0., 0., 0., 0., 0.],\n           [0., 1., 0., 0., 0., 0., 0., 0., 0.],\n           [0., 0., 1., 0., 0., 0., 0., 0., 0.],\n           [0., 0., 0., 1., 0., 0., 0., 0., 0.],\n           [0., 0., 0., 0., 1., 0., 0., 0., 0.],\n           [0., 0., 0., 0., 0., 1., 0., 0., 0.],\n           [0., 0., 0., 0., 0., 0., 1., 0., 0.],\n           [0., 0., 0., 0., 0., 0., 0., 1., 0.],\n           [0., 0., 0., 0., 0., 0., 0., 0., 1.]])\n    \"\"\"\n",
+    "instruct_prompt": "Merges a predefined set of lists into a list and one-hot-encodes the elements of the list.\nThe function should output with:\n    one_hot (numpy.array): The one-hot encoding of the merged list.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom sklearn.preprocessing import OneHotEncoder\ndef task_func(list_of_lists):\n```",
+    "code_prompt": "import numpy as np\nfrom sklearn.preprocessing import OneHotEncoder\ndef task_func(list_of_lists):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        self.assertEqual(task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]]).shape, (9, 9))\n    def test_case_2(self):\n        arr = task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n        self.assertTrue(np.all(arr.sum(axis=0) == 1))\n        self.assertTrue(np.all(arr.sum(axis=1) == 1))\n        self.assertTrue(np.all(arr >= 0))\n    def test_case_3(self):\n        arr = task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n        self.assertEqual(arr[0, 0], 1)\n        self.assertEqual(arr[1, 1], 1)\n        self.assertEqual(arr[2, 2], 1)\n        self.assertEqual(arr[3, 3], 1)\n        self.assertEqual(arr[4, 4], 1)\n        self.assertEqual(arr[5, 5], 1)\n        self.assertEqual(arr[6, 6], 1)\n        self.assertEqual(arr[7, 7], 1)\n        self.assertEqual(arr[8, 8], 1)\n        \n    def test_case_4(self):\n        arr = task_func([[1, 1, 1], [2, 2, 2], [3, 3, 3]])\n        self.assertEqual(arr[0, 0], 1)\n        self.assertEqual(arr[1, 0], 1)\n        self.assertEqual(arr[2, 0], 1)\n        self.assertEqual(arr[3, 1], 1)\n        self.assertEqual(arr[4, 1], 1)\n        self.assertEqual(arr[5, 1], 1)\n        self.assertEqual(arr[6, 2], 1)\n        self.assertEqual(arr[7, 2], 1)\n        self.assertEqual(arr[8, 2], 1)\n    def test_case_5(self):\n        arr = task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n        self.assertEqual(arr[0, 0], 1)\n        self.assertEqual(arr[1, 1], 1)\n        self.assertEqual(arr[2, 2], 1)\n        self.assertEqual(arr[3, 3], 1)\n        self.assertEqual(arr[4, 4], 1)\n        self.assertEqual(arr[5, 5], 1)\n        self.assertEqual(arr[6, 6], 1)\n        self.assertEqual(arr[7, 7], 1)\n        self.assertEqual(arr[8, 8], 1)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "sklearn"
+    ],
+    "canonical_solution": "    merged_list = np.array([item for sublist in list_of_lists for item in sublist]).reshape(-1, 1)\n    encoder = OneHotEncoder(sparse=False)\n    one_hot = encoder.fit_transform(merged_list)\n    return one_hot"
+  }
+}

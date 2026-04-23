@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/670",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260422120608_3c2e626e",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from itertools import combinations\nimport math\n\ndef task_func(x, w):\n    \"\"\"\n    Find the continuous substring of x, which has the maximum total weight, given a dictionary where the keys are characters and the values are their weights.\n\n    If there are multiple substrings with the same maximum weight, return the one that appears first (i.e., with the smallest starting index).\n\n    Parameters:\n    - x (str): The input string.\n    - w (dict): The dictionary of character weights.\n\n    Returns:\n    - max_substr (str): The continuous substring with the highest weight.\n\n    Requirements:\n    - itertools\n    - math\n\n    Example:\n    >>> task_func('c', {'a': 1, 'b': 2, 'c': 3})\n    'c'\n    >>> task_func('abc', {'a': 10, 'b': -5, 'c': 3})\n    'a'\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        self.assertEqual(task_func('c', {'a': 1, 'b': 2, 'c': 3}), 'c')\n\n    def test_case_2(self):\n        self.assertEqual(task_func('aabc', {'a': 10, 'b': -5, 'c': 3}), 'aa')\n\n    def test_case_3(self):\n        self.assertEqual(task_func('aabc', {'a': 10, 'b': -2, 'c': 3}), 'aabc')\n\n    def test_case_4(self):\n        self.assertEqual(task_func('aabc', {'a': 2, 'b': -5, 'c': 3}), 'aa')\n\n    def test_case_5(self):\n        self.assertEqual(task_func('aabc', {'a': 0, 'b': -1, 'c': 1}), 'c')\n\n    def test_tie_break_first_is_longer(self):\n        # Two substrings have max weight 3: 'abac' (starts at 0) and 'ac' (starts at 2).\n        # The one that appears first, 'abac', should be returned.\n        self.assertEqual(task_func('abac', {'a': 1, 'b': -1, 'c': 2}), 'abac')\n\n    def test_tie_break_equal_length_substrings(self):\n        # Two non-overlapping substrings both have weight 5: 'a' (index 0) and 'b' (index 2).\n        # Negative-weighted 'x' separates them so no longer substring beats 5.\n        # First-occurrence wins: 'a'.\n        self.assertEqual(task_func('axb', {'a': 5, 'b': 5, 'x': -100}), 'a')\n",
+    "entry_point": "task_func",
+    "libs": "['math', 'itertools']",
+    "instruct_prompt": "Find the continuous substring of x, which has the maximum total weight, given a dictionary where the keys are characters and the values are their weights.\nThe function should output with:\n    max_substr (str): The continuous substring with the highest weight.\nYou should write self-contained code starting with:\n```\nfrom itertools import combinations\nimport math\ndef task_func(x, w):\n```",
+    "code_prompt": "from itertools import combinations\nimport math\ndef task_func(x, w):",
+    "canonical_solution": "    max_weight = -math.inf\n    max_substr = ''\n\n    for start, end in combinations(range(len(x) + 1), 2):\n        substr = x[start:end]\n        weight = sum(w.get(c, 0) for c in substr)\n        if weight > max_weight:\n            max_weight = weight\n            max_substr = substr\n\n    return max_substr"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/732",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import re\nimport string\nfrom nltk.stem import PorterStemmer\nfrom collections import Counter\n\nSTEMMER = PorterStemmer()\n\ndef task_func(content):\n    \"\"\"\n    Stem every word in a sentence, except the last, and count the frequency of each stem.\n\n    Parameters:\n    content (str): The sentence to stem and count.\n\n    Returns:\n    dict: A dictionary with stemmed words as keys and their frequency as values.\n\n    Requirements:\n    - re\n    - string\n    - nltk.stem\n    - collections.Counter\n\n    Example:\n    >>> task_func('running runner run')\n    {'run': 1, 'runner': 1}\n    \"\"\"\n",
+    "instruct_prompt": "Stem every word in a sentence, except the last, and count the frequency of each stem.\nThe function should output with:\n    dict: A dictionary with stemmed words as keys and their frequency as values.\nYou should write self-contained code starting with:\n```\nimport re\nimport string\nfrom nltk.stem import PorterStemmer\nfrom collections import Counter\nSTEMMER = PorterStemmer()\ndef task_func(content):\n```",
+    "code_prompt": "import re\nimport string\nfrom nltk.stem import PorterStemmer\nfrom collections import Counter\nSTEMMER = PorterStemmer()\ndef task_func(content):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        result = task_func('running runner run')\n        self.assertEqual(result, {'run': 1, 'runner': 1})\n    \n    def test_case_2(self):\n        result = task_func('dancing dancer danced')\n        self.assertEqual(result, {'danc': 1, 'dancer': 1})\n        \n    def test_case_3(self):\n        result = task_func('loving lover love')\n        self.assertEqual(result, {'love': 1, 'lover': 1})\n        \n    def test_case_4(self):\n        result = task_func('computing computer compute')\n        self.assertEqual(result, {'comput': 2})\n        \n    def test_case_5(self):\n        result = task_func('swimming swimmer swim')\n        self.assertEqual(result, {'swim': 1, 'swimmer': 1})",
+    "entry_point": "task_func",
+    "libs": [
+      "nltk",
+      "collections",
+      "string",
+      "re"
+    ],
+    "canonical_solution": "    content = content.split(' ')[:-1]\n    words = [word.strip(string.punctuation).lower() for word in re.split('\\W+', ' '.join(content))]\n    stemmed_words = [STEMMER.stem(word) for word in words]\n    word_counts = Counter(stemmed_words)\n\n    return dict(word_counts)"
+  }
+}

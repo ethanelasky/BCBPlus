@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/903",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130094821_64e8bb8a",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\n\ndef task_func(d, target='z'):\n    \"\"\"\n    Perform linear regression using all columns except the target as features from a list of dictionaries \"d.\"\n\n    Parameters:\n    d (list): A list of dictionaries.\n    target (str): The target variable for the regression.\n\n    Returns:\n    LinearRegression: A LinearRegression model.\n\n    Requirements:\n    - pandas\n    - sklearn.linear_model.LinearRegression\n\n    Examples:\n    >>> data = [{'x': 1, 'y': 10, 'z': 5}, {'x': 3, 'y': 15, 'z': 6}, {'x': 2, 'y': 1, 'z': 7}]\n    >>> model = task_func(data)\n    >>> isinstance(model, LinearRegression)\n    True\n\n    >>> data = [{'x': 4, 'y': 20, 'z': 10}, {'x': 5, 'y': 25, 'z': 15}, {'x': 6, 'y': 5, 'z': 20}]\n    >>> model = task_func(data, target='y')\n    >>> isinstance(model, LinearRegression)\n    True\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \n    def test_basic_regression(self):\n        data = [{'x': 1, 'y': 10, 'z': 5}, {'x': 3, 'y': 15, 'z': 6}, {'x': 2, 'y': 1, 'z': 7}]\n        model = task_func(data)\n        self.assertIsInstance(model, LinearRegression)\n        self.assertEqual(len(model.coef_), 2)\n    def test_negative_values(self):\n        data = [{'x': -1, 'y': -10, 'z': -5}, {'x': -3, 'y': -15, 'z': -6}, {'x': -2, 'y': -1, 'z': -7}]\n        model = task_func(data)\n        self.assertIsInstance(model, LinearRegression)\n        self.assertEqual(len(model.coef_), 2)\n    \n    def test_zero_values(self):\n        data = [{'x': 0, 'y': 0, 'z': 0}, {'x': 0, 'y': 0, 'z': 0}, {'x': 0, 'y': 0, 'z': 0}]\n        model = task_func(data)\n        self.assertIsInstance(model, LinearRegression)\n        self.assertEqual(len(model.coef_), 2)\n    \n    def test_different_target(self):\n        data = [{'x': 1, 'y': 10, 'z': 5}, {'x': 3, 'y': 15, 'z': 6}, {'x': 2, 'y': 1, 'z': 7}]\n        model = task_func(data, target='y')\n        self.assertIsInstance(model, LinearRegression)\n        self.assertEqual(len(model.coef_), 2)\n    \n    def test_single_predictor(self):\n        data = [{'x': 1, 'z': 5}, {'x': 3, 'z': 6}, {'x': 2, 'z': 7}]\n        model = task_func(data, target='z')\n        self.assertIsInstance(model, LinearRegression)\n        self.assertEqual(len(model.coef_), 1)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "instruct_prompt": "Perform linear regression to \"x,\" \"y,\" against \"z\" from a list of dictionaries \"d.\" >>> data = [{'x': 4, 'y': 20, 'z': 10}, {'x': 5, 'y': 25, 'z': 15}, {'x': 6, 'y': 5, 'z': 20}] >>> model = task_func(data, target='y') >>> isinstance(model, LinearRegression) True\nThe function should output with:\n    LinearRegression: A LinearRegression model.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.linear_model import LinearRegression\ndef task_func(d, target='z'):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\ndef task_func(d, target='z'):",
+    "canonical_solution": "    df = pd.DataFrame(d)\n    predictors = [k for k in df.columns if k != target]\n\n    X = df[predictors]\n    y = df[target]\n\n    model = LinearRegression().fit(X, y)\n\n    return model"
+  }
+}

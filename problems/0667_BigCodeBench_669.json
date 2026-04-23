@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/669",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260413011719_3d9f212a",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import itertools\nimport math\n\ndef task_func(x):\n    \"\"\"\n    Find the key pair in a dictionary, x, which has the highest sum of the cosine of each of its values.\n\n    Parameters:\n    - x (dict): The dictionary of key-value pairs.\n\n    Returns:\n    - tuple: The pair of keys with the highest sum of the cosine of their values. In case of a tie, any of the top pairs is an acceptable return value.\n\n    Raises:\n    - ValueError: If the input dictionary `x` contains fewer than two items.\n\n    Requirements:\n    - itertools\n    - math\n\n    Example:\n    >>> task_func({'a': 1, 'b': 2, 'c': 3})\n    ('a', 'b')\n    >>> task_func({'a': 1, 'b': 2, 'c': 3, 'd': 4})\n    ('a', 'b')\n    \"\"\"",
+    "test": "import unittest\nimport math\n\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        self.assertEqual(sorted(task_func({'a': 1, 'b': 2, 'c': 3})), sorted(('a', 'b')))\n    \n    def test_case_2(self):\n        self.assertEqual(sorted(task_func({'a': 1, 'b': 2, 'c': 3, 'd': 4})), sorted(('a', 'b')))\n\n    def test_case_3(self):\n        self.assertEqual( sorted(task_func({'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5})),  sorted(('e', 'a')))\n\n    def test_case_4(self):\n        self.assertEqual( sorted(task_func({'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6})),  sorted(('f', 'a')))\n\n    def test_case_5(self):\n        self.assertEqual( sorted(task_func({'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7})),  sorted(('g', 'f')))\n\n    # Added tests for edge cases\n    def test_empty_dict(self):\n        with self.assertRaises(ValueError):\n            task_func({})\n\n    def test_single_item_dict(self):\n        with self.assertRaises(ValueError):\n            task_func({'a': 1})",
+    "entry_point": "task_func",
+    "libs": "['math', 'itertools']",
+    "instruct_prompt": "Find the key pair in a dictionary, x, which has the highest sum of the cosine of each of its values.\nThe function should output with:\n    tuple: The pair of keys with the highest sum of the cosine of their values.\nYou should write self-contained code starting with:\n```\nimport itertools\nimport math\ndef task_func(x):\n```",
+    "code_prompt": "import itertools\nimport math\ndef task_func(x):",
+    "canonical_solution": "    pairs = list(itertools.combinations(x.keys(), 2))\n    max_pair = max(pairs, key=lambda pair: math.cos(x[pair[0]]) + math.cos(x[pair[1]]))\n    print(max_pair)\n\n    return max_pair"
+  }
+}

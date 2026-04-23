@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/693",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.preprocessing import StandardScaler\n\n\ndef task_func(tuples_list, columns):\n    \"\"\"\n    Convert a list of tuples into a Pandas DataFrame, perform a default scaling in each column, and return the transformed DataFrame.\n    \n    Parameters:\n    - tuples_list (list): The list of tuples.\n    - columns (list): The list of column names.\n    \n    Returns:\n    - df_scaled (DataFrame): A pandas DataFrame containing the scaled versions of the original data.\n\n    Requirements:\n    - pandas\n    - sklearn\n    \n    Example:\n    >>> df = task_func([(1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12)], ['A', 'B', 'C', 'D'])\n    >>> print(df)\n              A         B         C         D\n    0 -1.224745 -1.224745 -1.224745 -1.224745\n    1  0.000000  0.000000  0.000000  0.000000\n    2  1.224745  1.224745  1.224745  1.224745\n    \"\"\"\n",
+    "instruct_prompt": "Convert a list of tuples into a Pandas DataFrame, perform a default scaling in each column, and return the transformed DataFrame.\nThe function should output with:\n    df_scaled (DataFrame): A pandas DataFrame containing the scaled versions of the original data.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(tuples_list, columns):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(tuples_list, columns):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        df = task_func([(1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12)], ['A', 'B', 'C', 'D'])\n        self.assertEqual(df.shape, (3, 4))\n        self.assertEqual(df.columns.tolist(), ['A', 'B', 'C', 'D'])\n        self.assertEqual(df['A'].tolist(), [-1.224744871391589, 0.0, 1.224744871391589])\n    def test_case_2(self):\n        df = task_func([(1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12)], ['A', 'B', 'C', 'D'])\n        self.assertEqual(df.shape, (3, 4))\n        self.assertEqual(df.columns.tolist(), ['A', 'B', 'C', 'D'])\n        self.assertEqual(df['B'].tolist(), [-1.224744871391589, 0.0, 1.224744871391589])\n    def test_case_3(self):\n        df = task_func([(1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12)], ['A', 'B', 'C', 'D'])\n        self.assertEqual(df.shape, (3, 4))\n        self.assertEqual(df.columns.tolist(), ['A', 'B', 'C', 'D'])\n        self.assertEqual(df['C'].tolist(), [-1.224744871391589, 0.0, 1.224744871391589])\n    def test_case_4(self):\n        df = task_func([(1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12)], ['A', 'B', 'C', 'D'])\n        self.assertEqual(df.shape, (3, 4))\n        self.assertEqual(df.columns.tolist(), ['A', 'B', 'C', 'D'])\n        self.assertEqual(df['D'].tolist(), [-1.224744871391589, 0.0, 1.224744871391589])\n    def test_case_5(self):\n        df = task_func([(0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)], ['A', 'B', 'C', 'D'])\n        self.assertEqual(df.shape, (3, 4))\n        self.assertEqual(df.columns.tolist(), ['A', 'B', 'C', 'D'])\n        self.assertEqual(df['A'].tolist(), [0.0, 0.0, 0.0])",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "    df = pd.DataFrame(tuples_list, columns=columns)\n    scaler = StandardScaler()\n    df_scaled = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)\n\n    return df_scaled"
+  }
+}

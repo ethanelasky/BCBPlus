@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/291",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127172500_90fe1432",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\nimport seaborn as sns\n\n\ndef task_func(mu, sigma, seed=0):\n    \"\"\"\n    Draw a normal distribution using a 1000 samples, indicating the mean and standard deviation \n    with a color bar.\n    \n    Parameters:\n    mu (float): The mean of the distribution.\n    sigma (float): The standard deviation of the distribution.\n    seed (int, Optional): The seed for the random number generator. Defaults to 0.\n    \n    Returns:\n    matplotlib.axes._axes.Axes: The Axes object of the plotted distribution.\n    \n    Requirements:\n    - matplotlib.pyplot\n    - numpy\n    - seaborn\n    \n    Example:\n    >>> plot = task_func(0, 1)\n    >>> type(plot)\n    <class 'matplotlib.axes._axes.Axes'>\n    \"\"\"",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        ax = task_func(0, 1)\n        self.assertIsInstance(ax, plt.Axes)\n        # Check if the plot has data (collections for scatter/line OR patches for bar)\n        has_data = len(ax.collections) > 0 or len(ax.patches) > 0\n        self.assertTrue(has_data, \"The plot should have data.\")\n        # Check if the colorbar is present\n        self.assertTrue(ax.get_figure().colorbar is not None)\n        \n    def test_case_2(self):\n        ax = task_func(2, 0.5)\n        self.assertIsInstance(ax, plt.Axes)\n        has_data = len(ax.collections) > 0 or len(ax.patches) > 0\n        self.assertTrue(has_data, \"The plot should have data.\")\n        # Test the plot data exists\n        if len(ax.collections) > 0:\n            self.assertTrue(len(ax.collections[0].get_offsets()) > 0)\n        \n    def test_case_3(self):\n        ax = task_func(-2, 2)\n        self.assertIsInstance(ax, plt.Axes)\n        has_data = len(ax.collections) > 0 or len(ax.patches) > 0\n        self.assertTrue(has_data, \"The plot should have data.\")\n        \n    def test_case_4(self):\n        ax = task_func(5, 0.1)\n        self.assertIsInstance(ax, plt.Axes)\n        has_data = len(ax.collections) > 0 or len(ax.patches) > 0\n        self.assertTrue(has_data, \"The plot should have data.\")\n        \n    def test_case_5(self):\n        ax = task_func(-5, 5)\n        self.assertIsInstance(ax, plt.Axes)\n        has_data = len(ax.collections) > 0 or len(ax.patches) > 0\n        self.assertTrue(has_data, \"The plot should have data.\")",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib",
+      "seaborn"
+    ],
+    "instruct_prompt": "Draw a normal distribution using a 1000 samples, indicating the mean and standard deviation with a color bar.\nThe function should output with:\n    matplotlib.axes._axes.Axes: The Axes object of the plotted distribution.\nYou should write self-contained code starting with:\n```\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport seaborn as sns\ndef task_func(mu, sigma, seed=0):\n```",
+    "code_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\nimport seaborn as sns\ndef task_func(mu, sigma, seed=0):",
+    "canonical_solution": "    # Set the random seed\n    np.random.seed(seed)\n    # Generate samples from the normal distribution\n    samples = np.random.normal(mu, sigma, 1000)\n\n    # Generate a KDE plot\n    mappable = sns.kdeplot(samples, fill=True)\n\n    # Add a colorbar to the plot\n    plt.colorbar(mappable=mappable.collections[0])\n\n    return mappable"
+  }
+}

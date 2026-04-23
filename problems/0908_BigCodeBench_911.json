@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/911",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from functools import reduce\nimport operator\nimport string\n\ndef task_func(letters):\n    \"\"\"\n    Calculate the product of the corresponding numbers for a list of uppercase letters, \n    where \\\"A\\\" corresponds to 1, \\\"B\\\" to 2, etc.\n    \n    Parameters:\n    letters (list of str): A list of uppercase letters.\n    \n    Returns:\n    int: The product of the numbers corresponding to the input letters.\n    \n    Requirements:\n    - functools.reduce\n    - operator\n    - string\n    \n    Examples:\n    >>> task_func([\\\"A\\\", \\\"B\\\", \\\"C\\\"])\n    6\n    \n    >>> task_func([\\\"A\\\", \\\"E\\\", \\\"I\\\"])\n    45\n    \n    Note:\n    The function uses a predefined dictionary to map each uppercase letter to its corresponding number.\n    \"\"\"\n",
+    "instruct_prompt": "Calculate the product of the corresponding numbers for a list of uppercase letters, where \\\"A\\\" corresponds to 1, \\\"B\\\" to 2, etc. >>> task_func([\\\"A\\\", \\\"E\\\", \\\"I\\\"]) 45\nNote that: The function uses a predefined dictionary to map each uppercase letter to its corresponding number.\nThe function should output with:\n    int: The product of the numbers corresponding to the input letters.\nYou should write self-contained code starting with:\n```\nfrom functools import reduce\nimport operator\nimport string\ndef task_func(letters):\n```",
+    "code_prompt": "from functools import reduce\nimport operator\nimport string\ndef task_func(letters):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Input: [\"A\", \"B\", \"C\"]\n        # Expected Output: 6 (1 * 2 * 3)\n        result = task_func([\"A\", \"B\", \"C\"])\n        self.assertEqual(result, 6)\n        \n    def test_case_2(self):\n        # Input: [\"A\", \"E\", \"I\"]\n        # Expected Output: 45 (1 * 5 * 9)\n        result = task_func([\"A\", \"E\", \"I\"])\n        self.assertEqual(result, 45)\n    def test_case_3(self):\n        # Input: [\"Z\"]\n        # Expected Output: 26\n        result = task_func([\"Z\"])\n        self.assertEqual(result, 26)\n    def test_case_4(self):\n        # Input: [\"X\", \"Y\", \"Z\"]\n        # Expected Output: 24 * 25 * 26\n        result = task_func([\"X\", \"Y\", \"Z\"])\n        self.assertEqual(result, 24 * 25 * 26)\n        \n    def test_case_5(self):\n        # Input: [\"A\", \"A\", \"A\"]\n        # Expected Output: 1 (1 * 1 * 1)\n        result = task_func([\"A\", \"A\", \"A\"])\n        self.assertEqual(result, 1)",
+    "entry_point": "task_func",
+    "libs": [
+      "operator",
+      "string",
+      "functools"
+    ],
+    "canonical_solution": "    # Creating a dictionary to map each letter to its corresponding number\n    letter_to_number = {letter: i+1 for i, letter in enumerate(string.ascii_uppercase)}\n    \n    # Convert the letters to numbers\n    numbers = [letter_to_number[letter] for letter in letters]\n    \n    # Calculate the product using functools.reduce and operator.mul\n    product = reduce(operator.mul, numbers, 1)\n    \n    return product"
+  }
+}

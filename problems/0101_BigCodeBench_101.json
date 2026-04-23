@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/101",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129234204_6b1e844c",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport seaborn as sns\nimport numpy as np\n\ndef task_func(data_url=\"http://lib.stat.cmu.edu/datasets/boston\", seed=42):\n    \"\"\"\n    Draw the correlation heatmap of the Boston Housing dataset using Seaborn, with an option to save it to a specified file.\n\n    Parameters:\n        seed (int, optional): Random seed for reproducibility. Defaults to 42.\n    The font should be in the family of sans-serif and Arial.\n\n    Returns:\n        matplotlib.axes.Axes: The Axes object containing the heatmap plot.\n\n    Raises:\n        ValueError: If an error occurs in generating or saving the plot.\n\n    Requirements:\n        - matplotlib\n        - os\n        - pandas\n        - seaborn\n        - numpy \n\n    Example:\n        >>> ax = task_func()\n        >>> type(ax)\n        <class 'matplotlib.axes._axes.Axes'>\n    \"\"\"",
+    "test": "import unittest\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nclass TestCases(unittest.TestCase):\n    def test_basic_functionality(self):\n        ax = task_func()\n        self.assertIsInstance(ax, plt.Axes)\n\n    def test_heatmap_features(self):\n        ax = task_func()\n        heatmap_data = ax.get_children()[0].get_array().data\n        # Boston dataset loaded has 13 features, so 13\u00d713 = 169 correlation values\n        self.assertEqual(heatmap_data.shape, (169,))\n\n    def test_heatmap_values(self):\n        ax = task_func()\n        heatmap_data = ax.get_children()[0].get_array().data\n\n        # Check that correlation values are in valid range [-1, 1]\n        self.assertTrue(np.all(heatmap_data >= -1.0))\n        self.assertTrue(np.all(heatmap_data <= 1.0))\n\n        # Check diagonal elements are 1.0 (self-correlation)\n        n_features = 13\n        for i in range(n_features):\n            self.assertAlmostEqual(heatmap_data[i * n_features + i], 1.0, places=5)\n\n    def test_plot_appearance(self):\n        ax = task_func()\n        # Check that the plot was created successfully\n        self.assertIsNotNone(ax.get_figure())\n\n",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy",
+      "matplotlib",
+      "seaborn"
+    ],
+    "instruct_prompt": "Draw the correlation heatmap of the Boston Housing dataset using Seaborn, with an option to save it to a specified file.\nThe function should raise the exception for: ValueError: If an error occurs in generating or saving the plot.\nThe function should output with:\n    matplotlib.axes.Axes: The Axes object containing the heatmap plot.\nYou should write self-contained code starting with:\n```\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport seaborn as sns\nimport numpy as np\ndef task_func(data_url=\"http://lib.stat.cmu.edu/datasets/boston\", seed=42):\n```",
+    "code_prompt": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport seaborn as sns\nimport numpy as np\ndef task_func(data_url=\"http://lib.stat.cmu.edu/datasets/boston\", seed=42):",
+    "canonical_solution": "    try:\n        # Set font to Arial\n        font = {'sans-serif': 'Arial', 'family': 'sans-serif'}\n        plt.rc('font', **font)\n\n        # boston = load_boston()\n        # boston_df = pd.DataFrame(data=boston.data, columns=boston.feature_names)\n        # corr = boston_df.corr()\n\n        raw_df = pd.read_csv(data_url, sep=\"\\s+\", skiprows=22, header=None)\n        data = np.hstack([raw_df.values[::2, :], raw_df.values[1::2, :2]])\n        target = raw_df.values[1::2, 2]\n\n        # Step 1: Convert data and target into DataFrame\n        columns = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT']\n        boston_df = pd.DataFrame(data=data, columns=columns)\n\n        # Step 2: Compute correlation matrix\n        corr = boston_df.corr()\n\n\n        sns.set_theme(style=\"white\")  # Optional: for better aesthetics\n        plt.figure(figsize=(10, 8))  # Optional: adjust the size of the heatmap\n        ax = sns.heatmap(corr, annot=True)  # 'annot=True' to display correlation values\n        # if file_path:\n        #     plt.savefig(file_path)\n\n        return ax\n\n    except Exception as e:\n        raise ValueError(f\"An error occurred: {e}\")"
+  }
+}

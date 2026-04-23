@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/270",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129140755_80829be4",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nfrom collections import Counter\n\ndef task_func(sentence):\n    \"\"\"\n    Count the occurrence of each word in a sentence and return the result as a dictionary.\n    This function uses a regular expression to find words and a Counter to count their occurrences.\n    Word counting is case-sensitive: 'Apple' and 'apple' are counted as different words.\n\n    Parameters:\n    sentence (str): The sentence to count the words in.\n\n    Returns:\n    dict: A dictionary where the keys are the words and the values are their counts.\n\n    Requirements:\n    - re\n    - collections.Counter\n    \n    Example:\n    >>> task_func(\"apple banana apple orange orange orange\")\n    {'apple': 2, 'banana': 1, 'orange': 3}\n    \"\"\"\n",
+    "test": "import unittest\nfrom faker import Faker\nfake = Faker()\nclass TestCases(unittest.TestCase):\n    def test_empty_string(self):\n        self.assertEqual(task_func(\"\"), {})\n    def test_single_word(self):\n        word = fake.word()\n        self.assertEqual(task_func(word)[word], 1)\n    def test_multiple_words(self):\n        sentence = fake.sentence()\n        expected_result = {}\n        for word in sentence.split():\n            expected_result[word] = expected_result.get(word, 0) + 1\n        self.assertEqual(len(task_func(sentence)), len(expected_result))\n    def test_case_sensitivity(self):\n        sentence = 'Apple apple'\n        self.assertEqual(task_func(sentence), {\"Apple\": 1, \"apple\": 1})\n    def test_punctuation_inclusion(self):\n        sentence = 'apple, apple; banana!'\n        self.assertEqual(task_func(sentence), {\"apple\": 2, \"banana\": 1})\n    def test_numeric_and_special_characters(self):\n        sentence = '123 $%^& 123'\n        self.assertEqual(task_func(sentence), {'123': 2})",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "re"
+    ],
+    "instruct_prompt": "Count the occurrence of each word in a sentence and return the result as a dictionary. This function uses a regular expression to find words and a Counter to count their occurrences.\nThe function should output with:\n    dict: A dictionary where the keys are the words and the values are their counts.\nYou should write self-contained code starting with:\n```\nimport re\nfrom collections import Counter\ndef task_func(sentence):\n```",
+    "code_prompt": "import re\nfrom collections import Counter\ndef task_func(sentence):",
+    "canonical_solution": "\n\n    words = re.findall(r'\\b\\w+\\b', sentence)\n    return dict(Counter(words))"
+  }
+}

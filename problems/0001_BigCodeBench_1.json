@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/1",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import collections\nimport random\nimport string\n\ndef task_func(length=100):\n    \"\"\"\n    Generate a random string of the specified length composed of uppercase and lowercase letters, \n    and then count the occurrence of each character in this string.\n\n    Parameters:\n    length (int, optional): The number of characters in the generated string. Default is 100.\n\n    Returns:\n    dict: A dictionary where each key is a character from the generated string and the value \n            is the count of how many times that character appears in the string.\n\n    Requirements:\n    - collections\n    - random\n    - string\n\n    Raises:\n    ValueError if the length is a negative number\n\n    Example:\n    >>> import random\n    >>> random.seed(42)  # Ensures reproducibility for demonstration\n    >>> task_func(10)\n    {'h': 1, 'B': 2, 'O': 1, 'L': 1, 'm': 1, 'j': 1, 'u': 1, 'E': 1, 'V': 1}\n    \"\"\"\n",
+    "instruct_prompt": "Generate a random string of the specified length composed of uppercase and lowercase letters, and then count the occurrence of each character in this string.\nThe function should raise the exception for: ValueError if the length is a negative number\nThe function should output with:\n    dict: A dictionary where each key is a character from the generated string and the value\n    is the count of how many times that character appears in the string.\nYou should write self-contained code starting with:\n```\nimport collections\nimport random\nimport string\ndef task_func(length=100):\n```",
+    "code_prompt": "import collections\nimport random\nimport string\ndef task_func(length=100):\n",
+    "test": "import unittest\nimport string\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        # Prepare valid characters and set a random seed for reproducibility\n        self.valid_chars = string.ascii_uppercase + string.ascii_lowercase\n        random.seed(42)  # Ensuring reproducibility for tests\n    def test_generated_string_properties(self):\n        # Consolidated test for different lengths to check structure and correctness\n        test_lengths = [10, 50, 100, 150, 5]\n        for length in test_lengths:\n            with self.subTest(length=length):\n                result = task_func(length)\n                self.assertTrue(len(result) <= length, \"Length of result should be <= requested string length\")\n                self.assertEqual(sum(result.values()), length, f\"Total counts should sum to {length}\")\n                self.assertTrue(all(char in self.valid_chars for char in result), \"All characters should be valid letters\")\n    def test_zero_length(self):\n        # Test edge case where length is zero\n        result = task_func(0)\n        self.assertEqual(len(result), 0, \"Result should be empty for zero length\")\n        self.assertEqual(sum(result.values()), 0, \"Sum of counts should be zero for zero length\")\n    def test_negative_length(self):\n        # Test handling of negative length input\n        with self.assertRaises(ValueError, msg=\"Negative length should raise an error\"):\n            task_func(-1)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "random",
+      "string"
+    ],
+    "canonical_solution": "    if length < 0:\n        raise ValueError\n    random_string = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=length))\n    char_counts = collections.Counter(random_string)\n    return dict(char_counts)"
+  }
+}

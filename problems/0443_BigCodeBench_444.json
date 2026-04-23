@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/444",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129233521_ee335cab",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nimport matplotlib.pyplot as plt\n\n\ndef task_func(n_points=100, random_seed=None):\n    \"\"\"\n    Generate an array of random 3D dots in the range [0, 1) for each dimension\n    and draw them in a 3D scatter plot.\n\n    Parameters:\n    n_points (int): The number of points to generate and plot. Default is 100.\n        Must be a non-negative integer. Raises ValueError if negative.\n        Raises TypeError if not an integer type (e.g., float, string, None, list).\n    random_seed (int, optional): Seed for the random number generator. Default is None.\n\n    Returns:\n    tuple: A tuple containing:\n        - points (ndarray): A numpy ndarray of shape (n_points, 3) with the coordinates of the points.\n        - plot (Axes3D): A 3D scatter plot of the generated points.\n\n    Raises:\n    ValueError: If n_points is negative.\n    TypeError: If n_points is not an integer type.\n\n    Requirements:\n    - numpy\n    - matplotlib.pyplot\n\n    Example:\n    >>> points, plot = task_func(200, random_seed=42)\n    >>> type(points)\n    <class 'numpy.ndarray'>\n    >>> type(plot)\n    <class 'mpl_toolkits.mplot3d.axes3d.Axes3D'>\n    \"\"\"\n\n",
+    "test": "import unittest\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom mpl_toolkits.mplot3d import Axes3D\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Test default parameters - values\n        points, _ = task_func()\n        self.assertEqual(points.shape, (100, 3))\n        self.assertTrue(\n            (points >= 0).all() and (points < 1).all(),\n            \"All points should be in the range [0, 1)\",\n        )\n    def test_case_2(self):\n        # Test default parameters - plot\n        _, plot = task_func()\n        self.assertTrue(isinstance(plot, Axes3D))\n    def test_case_3(self):\n        # Test controlling number of points\n        points1, _ = task_func(n_points=1)\n        points10, _ = task_func(n_points=10)\n        points100, _ = task_func(n_points=100)\n        self.assertEqual(points1.shape, (1, 3))\n        self.assertEqual(points10.shape, (10, 3))\n        self.assertEqual(points100.shape, (100, 3))\n    def test_case_4(self):\n        # Test random seed\n        points1, _ = task_func(random_seed=42)\n        points2, _ = task_func(random_seed=42)\n        self.assertTrue(\n            np.array_equal(points1, points2),\n            \"The points should be identical for the same seed\",\n        )\n    def test_case_5(self):\n        # Test handling invalid inputs\n        with self.assertRaises(ValueError):\n            task_func(-1)\n        for invalid in [0.5, \"invalid\", None, []]:\n            with self.assertRaises(TypeError):\n                task_func(invalid)\n    def tearDown(self):\n        plt.close(\"all\")",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib"
+    ],
+    "instruct_prompt": "Generate an array of random 3D dots in the range [0, 1) for each dimension and draw them in a 3D scatter plot.\nThe function should output with:\n    tuple: A tuple containing:\n    points (ndarray): A numpy ndarray of shape (n_points, 3) with the coordinates of the points.\n    plot (Axes3D): A 3D scatter plot of the generated points.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport matplotlib.pyplot as plt\ndef task_func(n_points=100, random_seed=None):\n```",
+    "code_prompt": "import numpy as np\nimport matplotlib.pyplot as plt\ndef task_func(n_points=100, random_seed=None):",
+    "canonical_solution": "    np.random.seed(random_seed)\n    points = np.random.random((n_points, 3))\n\n    fig = plt.figure()\n    ax = fig.add_subplot(111, projection=\"3d\")\n    ax.scatter(points[:, 0], points[:, 1], points[:, 2])\n\n    return points, ax"
+  }
+}

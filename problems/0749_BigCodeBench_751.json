@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/751",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import random\nfrom collections import Counter\n\ndef task_func(values, weights, n_samples):\n    \"\"\"\n    Sample random numbers based on a given weighted distribution and return a histogram of the samples.\n\n    Parameters:\n    - values (list): List of values to be sampled from.\n    - weights (list): List of weights corresponding to the values.\n    - n_samples (int): Number of samples to be drawn.\n\n    Returns:\n    - histogram (dict): A histogram as a dictionary with the values as keys and counts as values.\n\n    Requirements:\n    - collections.Counter\n    - random\n\n    Example:\n    >>> random.seed(42)\n    >>> task_func([1, 2, 3], [3, 2, 1], 1000)\n    {2: 342, 1: 480, 3: 178}\n    \"\"\"\n",
+    "instruct_prompt": "Sample random numbers based on a given weighted distribution and return a histogram of the samples.\nThe function should output with:\n    histogram (dict): A histogram as a dictionary with the values as keys and counts as values.\nYou should write self-contained code starting with:\n```\nimport random\nfrom collections import Counter\ndef task_func(values, weights, n_samples):\n```",
+    "code_prompt": "import random\nfrom collections import Counter\ndef task_func(values, weights, n_samples):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_1(self):\n        result = task_func([1, 2, 3], [3, 2, 1], 1000)\n        self.assertTrue(set(result.keys()) == {1, 2, 3})\n    def test_2(self):\n        result = task_func([1, 2], [1, 1], 500)\n        self.assertTrue(set(result.keys()) == {1, 2})\n    def test_3(self):\n        result = task_func([1], [1], 300)\n        self.assertTrue(result == {1: 300})\n    def test_4(self):\n        result = task_func(list(range(1, 11)), list(range(10, 0, -1)), 5000)\n        self.assertTrue(set(result.keys()) == set(range(1, 11)))\n    def test_5(self):\n        result = task_func([1, 2, 3, 4, 5], [5, 4, 3, 2, 1], 2500)\n        self.assertTrue(set(result.keys()) == {1, 2, 3, 4, 5})",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "random"
+    ],
+    "canonical_solution": "    import random\n    samples = random.choices(values, weights=weights, k=n_samples)\n    histogram = dict(Counter(samples))\n\n    return histogram"
+  }
+}

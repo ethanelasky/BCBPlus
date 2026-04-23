@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/544",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import struct\nimport zlib\n\n# Constants\nKEY = '470FC614'\n\ndef task_func(hex_string=KEY):\n    \"\"\"\n    Converts a given hex string to a float number and then compresses the binary32 float number.\n\n    Parameters:\n    hex_string (str, optional): The hex string to be converted. Defaults to 470FC614.\n\n    Returns:\n    bytes: The compressed float number.\n\n    Requirements:\n    - struct\n    - zlib\n\n    Example:\n    >>> task_func(\"470FC614\")\n    b'x\\\\x9c\\\\xf3\\\\xeb\\\\x93\\\\xef\\\\x01\\\\x00\\\\x03\\\\xb0\\\\x01\\\\x88'\n    >>> task_func(\"ABCD1234\")\n    b'x\\\\x9c\\\\xf3\\\\xd7>+\\\\x04\\\\x00\\\\x03m\\\\x01Z'\n    \"\"\"\n",
+    "instruct_prompt": "Converts a given hex string to a float number and then compresses the binary32 float number.\nThe function should output with:\n    bytes: The compressed float number.\nYou should write self-contained code starting with:\n```\nimport struct\nimport zlib\n# Constants\nKEY = '470FC614'\ndef task_func(hex_string=KEY):\n```",
+    "code_prompt": "import struct\nimport zlib\n# Constants\nKEY = '470FC614'\ndef task_func(hex_string=KEY):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_default_functionality(self):\n        \"\"\"Test the function with default parameters.\"\"\"\n        result = task_func()\n        self.assertIsInstance(result, bytes)\n    def test_valid_custom_hex_string(self):\n        \"\"\"Test the function with a valid custom hexadecimal string.\"\"\"\n        hex_string = '1A2FC614'  # Example hex string\n        result = task_func(hex_string)\n        self.assertIsInstance(result, bytes)\n    def test_invalid_hex_string(self):\n        \"\"\"Test the function with an invalid hexadecimal string.\"\"\"\n        with self.assertRaises(ValueError):\n            task_func(hex_string='ZZZZZZZZ')\n    def test_boundary_hex_value(self):\n        \"\"\"Test the function with a large boundary hexadecimal value.\"\"\"\n        boundary_hex = 'FFFFFFFF'  # Maximum float value before overflow in some contexts\n        result = task_func(boundary_hex)\n        self.assertIsInstance(result, bytes)\n    def test_zero_value(self):\n        \"\"\"Test the function with a hex string representing zero.\"\"\"\n        zero_hex = '00000000'\n        result = task_func(zero_hex)\n        self.assertIsInstance(result, bytes)",
+    "entry_point": "task_func",
+    "libs": [
+      "struct",
+      "zlib"
+    ],
+    "canonical_solution": "    binary_float = struct.pack('!f', int(hex_string, 16))\n    compressed_data = zlib.compress(binary_float)\n    return compressed_data"
+  }
+}

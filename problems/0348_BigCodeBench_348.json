@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/348",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129145845_8e4e7a3c",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import subprocess\nimport os\nimport signal\nimport time\n\n\ndef task_func(process_name: str) -> int:\n    \"\"\"\n    Stops all running processes with a specific name.\n\n    Parameters:\n    process_name (str): The name of the processes to be stopped.\n\n    Returns:\n    int: The number of processes stopped. If no processes are found, returns 0.\n\n    Requirements:\n    - subprocess\n    - os\n    - signal\n    - time\n\n    Note:\n    - The function uses `pgrep -f <process_name>` to find process IDs matching the given name.\n      The output is a newline-separated list of PIDs (e.g., '1234\\n5678\\n').\n    - The function sends a termination signal to the processes and waits for 1 second. \n      There is no guarantee that all processes will have terminated within this time.\n\n    Example:\n    >>> pids = task_func('test_name') # Dummy example, should return 0\n    >>> pids\n    0\n    \"\"\"",
+    "test": "import unittest\nfrom unittest.mock import patch\nimport doctest\nclass TestCases(unittest.TestCase):\n    @patch('subprocess.check_output')\n    @patch('os.kill')\n    def test_case_1(self, mock_os_kill, mock_subprocess_check_output):\n        # Mock the subprocess output to simulate 3 processes with the name 'python'\n        mock_subprocess_check_output.return_value = b'1234\\n5678\\n91011\\n'\n        \n        result = task_func('python')\n        self.assertEqual(result, 3)\n    @patch('subprocess.check_output')\n    @patch('os.kill')\n    def test_case_2(self, mock_os_kill, mock_subprocess_check_output):\n        # Mock the subprocess output to simulate no processes with the name 'java'\n        mock_subprocess_check_output.return_value = b''\n        \n        result = task_func('java')\n        self.assertEqual(result, 0)\n    @patch('subprocess.check_output')\n    @patch('os.kill')\n    def test_case_3(self, mock_os_kill, mock_subprocess_check_output):\n        # Mock the subprocess output to simulate 2 processes with the name 'node'\n        mock_subprocess_check_output.return_value = b'1234\\n5678\\n'\n        \n        result = task_func('node')\n        self.assertEqual(result, 2)\n    @patch('subprocess.check_output')\n    @patch('os.kill')\n    def test_case_4(self, mock_os_kill, mock_subprocess_check_output):\n        # Mock the subprocess output to simulate 1 process with the name 'ruby'\n        mock_subprocess_check_output.return_value = b'1234\\n'\n        \n        result = task_func('ruby')\n        self.assertEqual(result, 1)\n    @patch('subprocess.check_output')\n    @patch('os.kill')\n    def test_case_5(self, mock_os_kill, mock_subprocess_check_output):\n        # Mock the subprocess output to simulate 4 processes with the name 'go'\n        mock_subprocess_check_output.return_value = b'1234\\n5678\\n91011\\n1213\\n'\n        \n        result = task_func('go')\n        self.assertEqual(result, 4)",
+    "entry_point": "task_func",
+    "libs": [
+      "subprocess",
+      "time",
+      "signal",
+      "os"
+    ],
+    "instruct_prompt": "Stops all running processes with a specific name.\nNote that: The function sends a termination signal to the processes and waits for 1 second. There is no guarantee that all processes will have terminated within this time.\nThe function should output with:\n    int: The number of processes stopped. If no processes are found, returns 0.\nYou should write self-contained code starting with:\n```\nimport subprocess\nimport os\nimport signal\nimport time\ndef task_func(process_name: str) -> int:\n```",
+    "code_prompt": "import subprocess\nimport os\nimport signal\nimport time\ndef task_func(process_name: str) -> int:",
+    "canonical_solution": "    # Find all processes with the given name, and get their PIDs\n    try:\n        pids = subprocess.check_output(['pgrep', '-f', process_name]).decode().split('\\n')[:-1] \n    except subprocess.CalledProcessError:\n        pids = []\n\n    # Send SIGTERM signal to each process\n    for pid in pids:\n        os.kill(int(pid), signal.SIGTERM)\n\n    # Wait for processes to stop\n    time.sleep(1)\n\n    return len(pids)"
+  }
+}

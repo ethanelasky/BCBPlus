@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/991",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127182257_802dce65",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import binascii\nimport string\nimport random\n\ndef task_func(length):\n    \"\"\"\n    Generate a random hexadecimal string of a given length and then attempt to decode it in ASCII.\n    The resulting ASCII string may contain non-printable characters\n    or be shorter than the input length.\n\n    Parameters:\n    length (int): The length of the hexadecimal string.\n\n    Returns:\n    str: The decoded ASCII string.\n\n    Requirements:\n    - binascii\n    - string\n    - random\n\n    Example:\n    >>> random.seed(0)\n    >>> task_func(6)\n    '\\\\x18'\n    >>> task_func(8)\n    '\u01a4'\n    \"\"\"",
+    "test": "import unittest\nimport string\nimport random\n\nclass TestCases(unittest.TestCase):\n    \"\"\"Test cases for task_func\"\"\"\n    \n    def test_correct_length(self):\n        \"\"\"Test that the function produces reproducible output for the same seed.\"\"\"\n        random.seed(2)\n        result1 = task_func(8)\n        random.seed(2)\n        result2 = task_func(8)\n        # Same seed should produce same output\n        self.assertEqual(result1, result2)\n        # Result should be a string\n        self.assertIsInstance(result1, str)\n    \n    def test_correct_type(self):\n        \"\"\"Test the type of the output.\"\"\"\n        random.seed(4)\n        result = task_func(6)\n        self.assertIsInstance(result, str)\n    \n    def test_non_empty_string_positive_length(self):\n        \"\"\"Test the output for a positive length.\"\"\"\n        random.seed(6)\n        result = task_func(6)\n        # With 6 hex chars (3 bytes after unhexlify), we may get 0-3 ASCII chars\n        # depending on which bytes are valid ASCII\n        self.assertIsInstance(result, str)\n        # Reproducibility check\n        random.seed(6)\n        result2 = task_func(6)\n        self.assertEqual(result, result2)\n    \n    def test_zero_length(self):\n        \"\"\"Test the output for a zero length.\"\"\"\n        random.seed(8)\n        result = task_func(0)\n        self.assertEqual(result, \"\")\n    \n    def test_negative_length_handling(self):\n        \"\"\"Test the output for a negative length.\"\"\"\n        random.seed(10)\n        result = task_func(-1)\n        self.assertEqual(result, \"\")\n    \n    def test_reproducibility(self):\n        \"\"\"Test that same seed produces same output.\"\"\"\n        for seed in [0, 42, 100]:\n            for length in [4, 8, 16]:\n                random.seed(seed)\n                result1 = task_func(length)\n                random.seed(seed)\n                result2 = task_func(length)\n                self.assertEqual(result1, result2, \n                    f\"Results should be reproducible for seed={seed}, length={length}\")",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "string",
+      "binascii"
+    ],
+    "instruct_prompt": "Generate a random hexadecimal string of a given length and then attempt to decode it in ASCII. The resulting ASCII string may contain non-printable characters or be shorter than the input length.\nThe function should output with:\n    str: The decoded ASCII string.\nYou should write self-contained code starting with:\n```\nimport binascii\nimport string\nimport random\ndef task_func(length):\n```",
+    "code_prompt": "import binascii\nimport string\nimport random\ndef task_func(length):",
+    "canonical_solution": "    HEX_CHARS = string.hexdigits.lower()\n    hex_string = \"\".join(random.choice(HEX_CHARS) for _ in range(length))\n    return binascii.unhexlify(hex_string).decode(\"utf-8\", \"ignore\")"
+  }
+}

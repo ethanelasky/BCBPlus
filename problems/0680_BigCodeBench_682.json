@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/682",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from collections import Counter\nimport math\n\ndef task_func(nested_dict):\n    \"\"\"\n    Aggregate the values of the same keys from a nested dictionary and remove the \"ele\" key. For each remaining key take the sine.\n    \n    Parameters:\n    - nested_dict (dict): The nested dictionary. Default is NESTED_DICT constant.\n    \n    Returns:\n    - dict: A dictionary with aggregated values.\n\n    Requirements:\n    - math\n    - collections\n\n    Example:\n    >>> task_func({\n    ...     'dict1': {'ale': 1, 'ele': 2, 'ile': 3},\n    ...     'dict2': {'ele': 4, 'ole': 5, 'ule': 6},\n    ...     'dict3': {'ile': 7, 'ale': 8, 'ele': 9}\n    ... })\n    {'ale': 0.4121184852417566, 'ile': -0.5440211108893698, 'ole': -0.9589242746631385, 'ule': -0.27941549819892586}\n    \"\"\"\n",
+    "instruct_prompt": "Aggregate the values of the same keys from a nested dictionary and remove the \"ele\" key. For each remaining key take the sine.\nThe function should output with:\n    dict: A dictionary with aggregated values.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport math\ndef task_func(nested_dict):\n```",
+    "code_prompt": "from collections import Counter\nimport math\ndef task_func(nested_dict):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        self.assertEqual(task_func({\n            'dict1': {'ale': 1, 'ele': 2, 'ile': 3},\n            'dict2': {'ele': 4, 'ole': 5, 'ule': 6},\n            'dict3': {'ile': 7, 'ale': 8, 'ele': 9}\n        }), {'ale': math.sin(9), 'ile': math.sin(10), 'ole': math.sin(5), 'ule': math.sin(6)})\n    def test_case_2(self):\n        self.assertEqual(task_func({\n            'aaa': {'zzz': 1, 'yyy': 2, 'xxx': 3},\n            'bbb': {'yyy': 4, 'xxx': 5, 'www': 6},\n            'ccc': {'xxx': 7, 'www': 8, 'ele': 9},\n            'ddd': {'www': 10, 'ele': 11, 'zzz': 12}\n        }), {'zzz': math.sin(13), 'yyy': math.sin(6), 'xxx': math.sin(15), 'www': math.sin(24)})\n    def test_case_3(self):\n        self.assertEqual(task_func({\n            'x': {'a': 1, 'b': 2, 'c': 3},\n            'y': {'b': 4, 'c': 5, 'd': 6},\n            'z': {'c': 7, 'd': 8, 'e': 9}\n        }), {'a': math.sin(1), 'b': math.sin(6), 'c': math.sin(15), 'd': math.sin(14), 'e': math.sin(9)})\n    def test_case_4(self):\n        self.assertEqual(task_func({\n            'x': {'a': 1, 'b': 2, 'c': 3},\n            'y': {'b': 4, 'c': 5, 'd': 6},\n            'z': {'c': 7, 'd': 8, 'ele': 9}\n        }), {'a': math.sin(1), 'b': math.sin(6), 'c': math.sin(15), 'd': math.sin(14)})\n    def test_case_5(self):\n        self.assertEqual(task_func({\n            1: {1: 1, 2: 2, 3: 3},\n            2: {2: 4, 3: 5, 4: 6},\n            3: {3: 7, 4: 8, 5: 9}\n        }), {1: math.sin(1), 2: math.sin(6), 3: math.sin(15), 4: math.sin(14), 5: math.sin(9)})",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "collections"
+    ],
+    "canonical_solution": "    counter = Counter()\n    for sub_dict in nested_dict.values():\n        counter.update(sub_dict)\n\n    counter.pop('ele', None)\n\n    return {k: math.sin(v) for k,v in counter.items()}"
+  }
+}

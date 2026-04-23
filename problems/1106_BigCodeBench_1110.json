@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/1110",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from collections import Counter\nfrom operator import itemgetter\nimport itertools\n\n\ndef task_func(word_dict):\n    \"\"\"\n    Given a dictionary of words as keys and letters as values, count the frequency of each letter in the words.\n    \n    Parameters:\n    word_dict (dict): The dictionary with words as keys and their letters as values.\n    \n    Returns:\n    dict: A dictionary with letters as keys and their frequencies as values.\n    \n    Requirements:\n    - collections.Counter\n    - operator.itemgetter\n    - itertools\n    \n    Example:\n    >>> word_dict = {'apple': 'a', 'banana': 'b', 'cherry': 'c', 'date': 'd', 'elderberry': 'e', 'fig': 'f', 'grape': 'g', 'honeydew': 'h'}\n    >>> counts = task_func(word_dict)\n    >>> print(counts)\n    {'e': 9, 'a': 6, 'r': 6, 'p': 3, 'n': 3, 'y': 3, 'd': 3, 'l': 2, 'b': 2, 'h': 2, 'g': 2, 'c': 1, 't': 1, 'f': 1, 'i': 1, 'o': 1, 'w': 1}\n    \"\"\"\n",
+    "instruct_prompt": "Given a dictionary of words as keys and letters as values, count the frequency of each letter in the words.\nThe function should output with:\n    dict: A dictionary with letters as keys and their frequencies as values.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nfrom operator import itemgetter\nimport itertools\ndef task_func(word_dict):\n```",
+    "code_prompt": "from collections import Counter\nfrom operator import itemgetter\nimport itertools\ndef task_func(word_dict):\n",
+    "test": "import unittest\nfrom collections import Counter\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        input_dict = {'apple': 'a', 'banana': 'b', 'cherry': 'c', 'date': 'd'}\n        expected_output = dict(Counter('apple' + 'banana' + 'cherry' + 'date'))\n        result = task_func(input_dict)\n        self.assertDictEqual(result, expected_output)\n        \n    def test_case_2(self):\n        input_dict = {'fig': 'f', 'grape': 'g', 'honeydew': 'h'}\n        expected_output = dict(Counter('fig' + 'grape' + 'honeydew'))\n        result = task_func(input_dict)\n        self.assertDictEqual(result, expected_output)\n    \n    def test_case_3(self):\n        input_dict = {'apple': 'a', 'elderberry': 'e', 'grape': 'g'}\n        expected_output = dict(Counter('apple' + 'elderberry' + 'grape'))\n        result = task_func(input_dict)\n        self.assertDictEqual(result, expected_output)\n    \n    def test_case_4(self):\n        input_dict = {'date': 'd', 'fig': 'f'}\n        expected_output = dict(Counter('date' + 'fig'))\n        result = task_func(input_dict)\n        self.assertDictEqual(result, expected_output)\n        \n    def test_case_5(self):\n        input_dict = {'apple': 'a', 'banana': 'b', 'cherry': 'c', 'date': 'd', 'elderberry': 'e', 'fig': 'f', 'grape': 'g', 'honeydew': 'h'}\n        expected_output = dict(Counter('apple' + 'banana' + 'cherry' + 'date' + 'elderberry' + 'fig' + 'grape' + 'honeydew'))\n        result = task_func(input_dict)\n        self.assertDictEqual(result, expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "operator",
+      "collections",
+      "itertools"
+    ],
+    "canonical_solution": "    letters = list(itertools.chain.from_iterable(word_dict.keys()))\n    count_dict = dict(Counter(letters))\n    \n    sorted_dict = dict(sorted(count_dict.items(), key=itemgetter(1), reverse=True))\n    \n    return sorted_dict"
+  }
+}

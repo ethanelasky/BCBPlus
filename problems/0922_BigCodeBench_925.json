@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/925",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport numpy as np\n\ndef task_func(data_size=1000, column_names=['A', 'B', 'C', 'D', 'E'], seed=0):\n    \"\"\"\n    Generate a Pandas DataFrame with random numeric values between 1 and 100, inclusive, and replace all occurrences of values less than 10 with -1.\n    \n    Requirements:\n    - pandas\n    - numpy\n    \n    Parameters:\n    - data_size (int, optional): The number of rows in the DataFrame. Defaults to 1000.\n    - column_names (list of str, optional): Names of the DataFrame columns. Defaults to ['A', 'B', 'C', 'D', 'E'].\n\n    Returns:\n    - DataFrame: The modified Pandas DataFrame.\n    \n    Examples:\n    >>> df = task_func(data_size=100, column_names=['X', 'Y', 'Z'], seed=42)\n    >>> df.shape\n    (100, 3)\n    \"\"\"\n",
+    "instruct_prompt": "Generate a Pandas DataFrame with random numeric values between 1 and 100, inclusive, and replace all occurrences of values less than 10 with -1.\nThe function should output with:\n    DataFrame: The modified Pandas DataFrame.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport numpy as np\ndef task_func(data_size=1000, column_names=['A', 'B', 'C', 'D', 'E'], seed=0):\n```",
+    "code_prompt": "import pandas as pd\nimport numpy as np\ndef task_func(data_size=1000, column_names=['A', 'B', 'C', 'D', 'E'], seed=0):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_default_parameters(self):\n        df = task_func(seed=42)\n        self.assertEqual(df.shape, (1000, 5))\n        # Check that there are no values < 10 except -1\n        condition = ((df >= 10) | (df == -1)).all().all()\n        self.assertTrue(condition, \"DataFrame contains values less than 10 that were not replaced with -1\")\n    def test_custom_data_size_and_columns(self):\n        df = task_func(data_size=10, column_names=['X', 'Y'], seed=55)\n        self.assertEqual(df.shape, (10, 2))\n        # Check that there are no values < 10 except -1\n        condition = ((df >= 10) | (df == -1)).all().all()\n        self.assertTrue(condition, \"DataFrame contains values less than 10 that were not replaced with -1\")\n    def test_correct_replacement_of_values(self):\n        df = task_func(data_size=100, seed=0)\n        self.assertTrue(((df >= 10) | (df == -1)).all().all(), \"Not all values less than 10 were replaced with -1\")\n    \n    def test_correct_dataframe_dimensions(self):\n        rows, columns = 50, 3\n        df = task_func(data_size=rows, column_names=['P', 'Q', 'R'], seed=1)\n        self.assertEqual(df.shape, (rows, columns), \"DataFrame dimensions are incorrect\")\n    \n    def test_with_minimum_data_size(self):\n        df = task_func(data_size=1, column_names=['Single'], seed=2)\n        self.assertEqual(df.shape, (1, 1), \"DataFrame does not handle minimum data size correctly\")",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy"
+    ],
+    "canonical_solution": "    np.random.seed(seed)\n    df = pd.DataFrame(np.random.randint(1, 101, size=(data_size, len(column_names))), columns=column_names)\n    df[df < 10] = -1  # Correctly replace values less than 10 with -1\n    return df"
+  }
+}

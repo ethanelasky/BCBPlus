@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/893",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127154759_b03a959d",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nfrom datetime import time\n\ndef task_func(logs: list):\n    \"\"\"\n    Analyze the given list of logs for the occurrence of errors and calculate the average time of occurrence of errors.\n\n    Parameters:\n    - logs (list): A list of log strings.\n\n    Returns:\n    - list: A list of times when errors occurred.\n    - time: The average time of occurrence of these errors. If no errors are found, returns time(0, 0).\n\n    Requirements:\n    - re\n    - datetime\n\n    Example:\n    >>> task_func(['2021-06-15 09:45:00 ERROR: Failed to connect to database',\\\n            '2021-06-15 10:15:00 WARNING: Low disk space',\\\n            '2021-06-15 10:35:00 INFO: Backup completed successfully'])\n    ([datetime.time(9, 45)], datetime.time(9, 45))\n    \"\"\"\n",
+    "test": "import unittest\nfrom datetime import time\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        logs = ['2021-06-15 09:45:00 ERROR: Failed to connect to database',\n                '2021-06-15 10:15:00 WARNING: Low disk space',\n                '2021-06-15 10:35:00 INFO: Backup completed successfully']\n        result = task_func(logs)\n        self.assertEqual(result, ([time(9, 45)], time(9, 45)))\n    def test_case_2(self):\n        logs = ['2021-06-15 08:45:00 ERROR: Failed to authenticate',\n                '2021-06-15 09:15:00 ERROR: Failed to connect to database',\n                '2021-06-15 10:35:00 INFO: Backup completed successfully']\n        result = task_func(logs)\n        self.assertEqual(result, ([time(8, 45), time(9, 15)], time(9, 0)))\n    def test_case_3(self):\n        logs = ['2021-06-15 07:45:00 INFO: Backup started',\n                '2021-06-15 08:15:00 WARNING: Low memory',\n                '2021-06-15 09:35:00 INFO: Backup completed successfully']\n        result = task_func(logs)\n        self.assertEqual(result, ([], time(0, 0)))\n    def test_case_4(self):\n        logs = []\n        result = task_func(logs)\n        self.assertEqual(result, ([], time(0, 0)))\n    def test_case_5(self):\n        logs = ['2021-06-15 09:45:00 ERROR: Failed to connect to database',\n                '2021-06-15 10:15:00 WARNING: Low disk space',\n                '2021-06-15 11:45:00 ERROR: Failed to authenticate']\n        result = task_func(logs)\n        self.assertEqual(result, ([time(9, 45), time(11, 45)], time(10, 45)))\n    def test_case_invalid_format(self):\n        logs = ['Invalid log format',\n                'Another invalid log format',\n                'Yet another invalid log format']\n        result = task_func(logs)\n        self.assertEqual(result, ([], time(0, 0)))",
+    "entry_point": "task_func",
+    "libs": [
+      "datetime",
+      "re"
+    ],
+    "instruct_prompt": "Analyze the given list of logs for the occurrence of errors and calculate the average time of occurrence of errors.\nThe function should output with:\n    list: A list of times when errors occurred.\n    time: The average time of occurrence of these errors.\nYou should write self-contained code starting with:\n```\nimport re\nfrom datetime import time\ndef task_func(logs: list):\n```",
+    "code_prompt": "import re\nfrom datetime import time\ndef task_func(logs: list):",
+    "canonical_solution": "    \n    error_times = []\n    total_time = 0\n\n    for log in logs:\n        if \"ERROR\" in log:\n            time_match = re.search(r'(\\d{2}):(\\d{2}):\\d{2}', log)\n            if time_match:\n                hour, minute = map(int, time_match.groups())\n                error_times.append(time(hour, minute))\n                total_time += hour * 60 + minute\n\n    if error_times:\n        avg_hour = (total_time // len(error_times)) // 60\n        avg_minute = (total_time // len(error_times)) % 60\n        avg_time = time(avg_hour, avg_minute)\n    else:\n        avg_time = time(0, 0)\n\n    return error_times, avg_time"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/690",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\n\nROWS = 100\nCOLUMNS = ['X', 'Y']\n\ndef task_func(df):\n    \"\"\"\n    Given a Pandas DataFrame with random numeric values and columns X & Y, use sklearn's linear regression to match the data to a linear model.\n\n    Parameters:\n    - df (DataFrame): The DataFrame to use.\n\n    Returns:\n    - model (LinearRegression): The fitted linear model.\n\n    Requirements:\n    - pandas\n    - sklearn\n\n    Example:\n    >>> import numpy as np\n    >>> np.random.seed(42)\n    >>> df = pd.DataFrame(np.random.normal(size=(100, 2)), columns=['X', 'Y'])\n    >>> model = task_func(df)\n    >>> print(model)\n    LinearRegression()\n    \"\"\"\n",
+    "instruct_prompt": "Given a Pandas DataFrame with random numeric values and columns X & Y, use sklearn's linear regression to match the data to a linear model.\nThe function should output with:\n    model (LinearRegression): The fitted linear model.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.linear_model import LinearRegression\nROWS = 100\nCOLUMNS = ['X', 'Y']\ndef task_func(df):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.linear_model import LinearRegression\nROWS = 100\nCOLUMNS = ['X', 'Y']\ndef task_func(df):\n",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        df = pd.DataFrame(np.random.normal(size=(ROWS, len(COLUMNS))), columns=COLUMNS)\n        model = task_func(df)\n        self.assertTrue(model is not None)\n    \n    def test_case_2(self):\n        df = pd.DataFrame(np.random.normal(size=(ROWS, len(COLUMNS))), columns=COLUMNS)\n        model = task_func(df)\n        self.assertTrue(model is not None)\n        self.assertTrue(model.coef_ is not None)\n    def test_case_3(self):\n        df = pd.DataFrame(np.random.normal(size=(ROWS, len(COLUMNS))), columns=COLUMNS)\n        model = task_func(df)\n        self.assertTrue(model is not None)\n        self.assertTrue(model.coef_ is not None)\n        self.assertTrue(model.intercept_ is not None)\n    def test_case_4(self):\n        df = pd.DataFrame(np.random.normal(size=(ROWS, len(COLUMNS))), columns=COLUMNS)\n        model = task_func(df)\n        self.assertTrue(model is not None)\n        self.assertTrue(model.coef_ is not None)\n        self.assertTrue(model.intercept_ is not None)\n        self.assertTrue(model.score(df[['X']], df['Y']) is not None)\n    def test_case_5(self):\n        df = pd.DataFrame(np.random.normal(size=(ROWS, len(COLUMNS))), columns=COLUMNS)\n        model = task_func(df)\n        self.assertTrue(model is not None)\n        self.assertTrue(model.coef_ is not None)\n        self.assertTrue(model.intercept_ is not None)\n        self.assertTrue(model.score(df[['X']], df['Y']) is not None)\n        self.assertTrue(model.score(df[['X']], df['Y']) >= 0)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "    X = pd.DataFrame(df[['X']])  # Extracting column 'X' as a DataFrame\n    y = pd.Series(df['Y'])       # Extracting column 'Y' as a Series\n    \n    # Fitting the linear regression model\n    model = LinearRegression().fit(X, y)\n    \n    return model"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/648",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from dateutil.parser import parse\nfrom datetime import timedelta\n\n\ndef task_func(date_str):\n    \"\"\"\n    Get the next business day (Mon-Fri) after a certain date string. Implemented by dateutil.parser and datetime.\n\n    Parameters:\n    date_str (str): The date string in \"yyyy-mm-dd\" format.\n\n    Returns:\n    datetime: The datetime object of the next business day.\n\n    Requirements:\n    - datetime\n    - dateutil.parser\n\n    Example:\n    >>> task_func('2022-10-22')\n    datetime.datetime(2022, 10, 24, 0, 0)\n    >>> task_func('2022-10-28')\n    datetime.datetime(2022, 10, 31, 0, 0)\n    \"\"\"\n",
+    "instruct_prompt": "Get the next business day (Mon-Fri) after a certain date string. Implemented by dateutil.parser and datetime.\nThe function should output with:\n    datetime: The datetime object of the next business day.\nYou should write self-contained code starting with:\n```\nfrom dateutil.parser import parse\nfrom datetime import timedelta\ndef task_func(date_str):\n```",
+    "code_prompt": "from dateutil.parser import parse\nfrom datetime import timedelta\ndef task_func(date_str):\n",
+    "test": "import unittest\nfrom datetime import datetime\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        result = task_func('2022-10-22')\n        self.assertEqual(result, datetime(2022, 10, 24, 0, 0))\n    \n    def test_case_2(self):\n        result = task_func('2022-10-28')\n        self.assertEqual(result, datetime(2022, 10, 31, 0, 0))\n    \n    def test_case_3(self):\n        result = task_func('2022-10-30')\n        self.assertEqual(result, datetime(2022, 10, 31, 0, 0))\n    \n    def test_case_4(self):\n        result = task_func('2022-10-31')\n        self.assertEqual(result, datetime(2022, 11, 1, 0, 0))\n    \n    def test_case_5(self):\n        result = task_func('2022-11-02')\n        self.assertEqual(result, datetime(2022, 11, 3, 0, 0))",
+    "entry_point": "task_func",
+    "libs": [
+      "dateutil",
+      "datetime"
+    ],
+    "canonical_solution": "    given_date = parse(date_str)\n    next_day = given_date\n\n    while True:\n        next_day = next_day + timedelta(days=1)\n\n        # Monday to Friday are business days\n        if 0 <= next_day.weekday() < 5:\n            break\n\n    return next_day"
+  }
+}

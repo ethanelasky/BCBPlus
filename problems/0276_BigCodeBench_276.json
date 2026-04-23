@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/276",
+  "dataset": "bigcodebench",
+  "version": 3,
+  "version_id": "v3_20260130094544_0711f95b",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom scipy import stats\nimport matplotlib.pyplot as plt\n\n\ndef task_func(matrix):\n    \"\"\"\n    Calculate the distribution of the maximum values of each row in the matrix, \n    record the histogram and the estimate of the core density of the distribution, \n    and return the skew, kurtosis, and the histogram plot of the distribution.\n    \n    Parameters:\n    matrix (list): A list of lists representing a matrix.\n    \n    Returns:\n    tuple: The skewness, the kurtosis of the distribution, and the histogram plot (matplotlib Axes object).\n    \n    Requirements:\n    - numpy\n    - scipy.stats\n    - matplotlib.pyplot\n    \n    Example:\n    >>> skew, kurtosis, ax = task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n    >>> type(ax)\n    <class 'matplotlib.axes._axes.Axes'>\n    >>> round(skew, 2)\n    0.0\n    >>> round(kurtosis, 2)\n    -1.5\n    \"\"\"",
+    "test": "import unittest\nimport doctest\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Test with a small matrix\n        matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\n        skew, kurtosis, ax = task_func(matrix)\n\n        self.assertEqual(skew, 0.0)\n        self.assertEqual(kurtosis, -1.5)\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_2(self):\n        # Test with negative values\n        matrix = [[-1, -2, -3], [-4, -5, -6], [-7, -8, -9]]\n        skew, kurtosis, ax = task_func(matrix)\n\n        self.assertEqual(skew, 0.0)\n        self.assertEqual(kurtosis, -1.5)\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_3(self):\n        # Test with larger numbers\n        matrix = [[100, 200, 300], [400, 500, 600], [700, 800, 900]]\n        skew, kurtosis, ax = task_func(matrix)\n\n        self.assertEqual(skew, 0.0)\n        self.assertEqual(kurtosis, -1.5)\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_4(self):\n        # Test with identical rows\n        matrix = [[5, 5, 5], [5, 5, 5], [5, 5, 5]]\n        skew, kurtosis, ax = task_func(matrix)\n\n        # Check that values are returned (scipy returns NaN for constant data)\n        self.assertIsInstance(skew, (int, float))\n        self.assertIsInstance(kurtosis, (int, float))\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_5(self):\n        # Test with a single row\n        matrix = [[1, 2, 3]]\n        skew, kurtosis, ax = task_func(matrix)\n\n        # Check that values are returned (scipy returns NaN for n=1)\n        self.assertIsInstance(skew, (int, float))\n        self.assertIsInstance(kurtosis, (int, float))\n        self.assertIsInstance(ax, plt.Axes)\n\n",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib",
+      "scipy"
+    ],
+    "instruct_prompt": "Calculate the distribution of the maximum values of each row in the matrix, record the histogram and the estimate of the core density of the distribution, and return the skew, kurtosis, and the histogram plot of the distribution.\nThe function should output with:\n    tuple: The skewness, the kurtosis of the distribution, and the histogram plot (matplotlib Axes object).\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom scipy import stats\nimport matplotlib.pyplot as plt\ndef task_func(matrix):\n```",
+    "code_prompt": "import numpy as np\nfrom scipy import stats\nimport matplotlib.pyplot as plt\ndef task_func(matrix):",
+    "canonical_solution": "    max_values = [max(row) for row in matrix]\n    \n    fig, ax = plt.subplots()\n    ax.hist(max_values, bins=10, density=True, alpha=0.6, color='g')\n    \n    xmin, xmax = plt.xlim()\n    x = np.linspace(xmin, xmax, 100)\n    p = stats.norm.pdf(x, np.mean(max_values), np.std(max_values))\n    ax.plot(x, p, 'k', linewidth=2)\n\n    skewness = stats.skew(max_values)\n    kurtosis = stats.kurtosis(max_values)\n\n    return skewness, kurtosis, ax"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/783",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import os\nimport shutil\n\ndef task_func(src_dir, dest_dir, extension):\n    \"\"\"\n    Move all files with a particular extension from one directory to another.\n\n    Parameters:\n    - src_dir (str): The source directory.\n    - dest_dir (str): The destination directory.\n    - extension (str): The file extension.\n\n    Returns:\n    - files_moved (int): The number of files moved.\n\n    Requirements:\n    - os\n    - shutil\n\n    Example:\n    >>> task_func('/path/to/src', '/path/to/dest', '.txt')\n    \"\"\"\n",
+    "instruct_prompt": "Move all files with a particular extension from one directory to another.\nThe function should output with:\n    files_moved (int): The number of files moved.\nYou should write self-contained code starting with:\n```\nimport os\nimport shutil\ndef task_func(src_dir, dest_dir, extension):\n```",
+    "code_prompt": "import os\nimport shutil\ndef task_func(src_dir, dest_dir, extension):\n",
+    "test": "import os\nimport shutil\nimport tempfile\nimport unittest\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.src_dir = tempfile.mkdtemp()\n        self.dest_dir = tempfile.mkdtemp()\n    def tearDown(self):\n        shutil.rmtree(self.src_dir)\n        shutil.rmtree(self.dest_dir)\n    def test_case_1(self):\n        # Testing with .txt files to ensure correct number of .txt files are moved\n        file_names = [\"file1.txt\", \"file2.txt\", \"file3.doc\", \"file4.txt\", \"file5.png\"]\n        for fname in file_names:\n            open(os.path.join(self.src_dir, fname), 'a').close()\n        moved_files_count = task_func(self.src_dir, self.dest_dir, \".txt\")\n        self.assertEqual(moved_files_count, 3)\n    def test_case_2(self):\n        # Testing with .doc files to ensure correct number of .doc files are moved\n        file_names = [\"file1.doc\", \"file2.doc\", \"file3.doc\", \"file4.doc\"]\n        for fname in file_names:\n            open(os.path.join(self.src_dir, fname), 'a').close()\n        moved_files_count = task_func(self.src_dir, self.dest_dir, \".doc\")\n        self.assertEqual(moved_files_count, 4)\n    def test_case_3(self):\n        # Testing with no matching files to ensure zero files are moved\n        file_names = [\"file1.png\", \"file2.jpg\", \"file3.jpeg\"]\n        for fname in file_names:\n            open(os.path.join(self.src_dir, fname), 'a').close()\n        moved_files_count = task_func(self.src_dir, self.dest_dir, \".txt\")\n        self.assertEqual(moved_files_count, 0)\n    def test_case_4(self):\n        # Testing with empty source directory to ensure zero files are moved\n        moved_files_count = task_func(self.src_dir, self.dest_dir, \".txt\")\n        self.assertEqual(moved_files_count, 0)\n    def test_case_5(self):\n        # Testing with mixed file extensions to ensure correct number of .txt files are moved\n        file_names = [\"file1.txt\", \"file2.txt\", \"file3.doc\", \"file4.jpeg\", \"file5.txt\", \"file6.png\"]\n        for fname in file_names:\n            open(os.path.join(self.src_dir, fname), 'a').close()\n        moved_files_count = task_func(self.src_dir, self.dest_dir, \".txt\")\n        self.assertEqual(moved_files_count, 3)",
+    "entry_point": "task_func",
+    "libs": [
+      "shutil",
+      "os"
+    ],
+    "canonical_solution": "    files_moved = 0\n\n    for file_name in os.listdir(src_dir):\n        if file_name.endswith(extension):\n            shutil.move(os.path.join(src_dir, file_name), os.path.join(dest_dir, file_name))\n            files_moved += 1\n\n    return files_moved"
+  }
+}

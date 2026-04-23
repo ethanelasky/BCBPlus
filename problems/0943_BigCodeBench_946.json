@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/946",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129150950_60eca71b",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nimport pandas as pd\nimport random\n\ndef task_func(rows=3, cols=2, min_val=0, max_val=100, seed=0):\n    \"\"\"\n    Creates a matrix of specified dimensions with random integers within a given range,\n    and then converts it into a pandas DataFrame.\n    \n    Parameters:\n    - rows (int): Number of rows in the matrix. Default is 3.\n    - cols (int): Number of columns in the matrix. Default is 2.\n    - min_val (int): Minimum integer value for the random integers. Default is 0.\n    - max_val (int): Maximum integer value for the random integers. Default is 100.\n    \n    Returns:\n    DataFrame: A pandas DataFrame containing random integers within the specified range.\n    \n    Requirements:\n    - numpy\n    - pandas\n    - random\n\n    Example:\n    >>> df = task_func(3, 2, 0, 100)\n    >>> print(type(df))\n    <class 'pandas.core.frame.DataFrame'>\n    >>> print(df.shape)\n    (3, 2)\n    \"\"\"",
+    "test": "import unittest\nimport pandas as pd\nimport random\n\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        df = task_func()\n        self.assertIsInstance(df, pd.DataFrame)\n        self.assertEqual(df.shape, (3, 2))\n        # Check all values are in valid range\n        self.assertTrue((df >= 0).all().all())\n        self.assertTrue((df <= 100).all().all())\n        # Check reproducibility: same seed produces same output\n        df2 = task_func()\n        pd.testing.assert_frame_equal(df, df2)\n\n    def test_case_2(self):\n        df = task_func(rows=5, cols=4)\n        self.assertIsInstance(df, pd.DataFrame)\n        self.assertEqual(df.shape, (5, 4))\n        self.assertTrue((df >= 0).all().all())\n        self.assertTrue((df <= 100).all().all())\n        # Check reproducibility\n        df2 = task_func(rows=5, cols=4)\n        pd.testing.assert_frame_equal(df, df2)\n\n    def test_case_3(self):\n        df = task_func(min_val=10, max_val=20)\n        self.assertEqual(df.shape, (3, 2))\n        # Check all values are in valid range [10, 20]\n        self.assertTrue((df >= 10).all().all())\n        self.assertTrue((df <= 20).all().all())\n        # Check reproducibility\n        df2 = task_func(min_val=10, max_val=20)\n        pd.testing.assert_frame_equal(df, df2)\n\n    def test_case_4(self):\n        df = task_func(min_val=50, max_val=50)\n        # When min == max, all values should be that value\n        self.assertEqual(df.iloc[:, 0].tolist(), [50, 50, 50])\n        self.assertEqual(df.iloc[:, 1].tolist(), [50, 50, 50])\n\n    def test_case_5(self):\n        df = task_func(rows=0, cols=2)\n        self.assertTrue(df.empty)\n",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy",
+      "random"
+    ],
+    "instruct_prompt": "Creates a matrix of specified dimensions with random integers within a given range, and then converts it into a pandas DataFrame.\nThe function should output with:\n    DataFrame: A pandas DataFrame containing random integers within the specified range.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport pandas as pd\nimport random\ndef task_func(rows=3, cols=2, min_val=0, max_val=100, seed=0):\n```",
+    "code_prompt": "import numpy as np\nimport pandas as pd\nimport random\ndef task_func(rows=3, cols=2, min_val=0, max_val=100, seed=0):",
+    "canonical_solution": "    random.seed(seed)\n    if min_val == max_val:\n        matrix = np.full((rows, cols), min_val)\n    else:\n        matrix = np.array([[random.randrange(min_val, max_val) for j in range(cols)] for i in range(rows)])\n    df = pd.DataFrame(matrix)\n    return df"
+  }
+}

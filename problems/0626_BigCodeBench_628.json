@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/628",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import math\nfrom random import randint\nimport matplotlib.pyplot as plt\n\n\ndef task_func():\n    \"\"\"\n    Create and draw a sine wave with random frequency, amplitude and phase shift. The return ax object\n    has 'Random Sine Wave' title, 'Time' on the x axis and 'Amplitude' on the y axis.\n\n    Parameters:\n    None\n\n    Returns:\n    ax (matplotlib.axes._axes.Axes): The axis object of the generated sine wave plot.\n\n    Requirements:\n    - math\n    - random\n    - matplotlib.pyplot\n\n    Example:\n    >>> ax = task_func()\n    \"\"\"\n",
+    "instruct_prompt": "Create and draw a sine wave with random frequency, amplitude and phase shift. The return ax object has 'Random Sine Wave' title, 'Time' on the x axis and 'Amplitude' on the y axis.\nThe function should output with:\n    ax (matplotlib.axes._axes.Axes): The axis object of the generated sine wave plot.\nYou should write self-contained code starting with:\n```\nimport math\nfrom random import randint\nimport matplotlib.pyplot as plt\ndef task_func():\n```",
+    "code_prompt": "import math\nfrom random import randint\nimport matplotlib.pyplot as plt\ndef task_func():\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        ax = task_func()\n        self.assertEqual(ax.get_title(), 'Random Sine Wave')\n        self.assertEqual(ax.get_xlabel(), 'Time')\n        self.assertEqual(ax.get_ylabel(), 'Amplitude')\n        \n    def test_case_2(self):\n        ax = task_func()\n        self.assertEqual(ax.get_title(), 'Random Sine Wave')\n        self.assertEqual(ax.get_xlabel(), 'Time')\n        self.assertEqual(ax.get_ylabel(), 'Amplitude')\n        \n    def test_case_3(self):\n        ax = task_func()\n        self.assertEqual(ax.get_title(), 'Random Sine Wave')\n        self.assertEqual(ax.get_xlabel(), 'Time')\n        self.assertEqual(ax.get_ylabel(), 'Amplitude')\n        \n    def test_case_4(self):\n        ax = task_func()\n        self.assertEqual(ax.get_title(), 'Random Sine Wave')\n        self.assertEqual(ax.get_xlabel(), 'Time')\n        self.assertEqual(ax.get_ylabel(), 'Amplitude')\n        \n    def test_case_5(self):\n        ax = task_func()\n        self.assertEqual(ax.get_title(), 'Random Sine Wave')\n        self.assertEqual(ax.get_xlabel(), 'Time')\n        self.assertEqual(ax.get_ylabel(), 'Amplitude')",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "random",
+      "matplotlib"
+    ],
+    "canonical_solution": "    x = [i/100 for i in range(1000)]\n    frequency = randint(1, 5)\n    amplitude = randint(1, 5)\n    phase_shift = randint(0, 360)\n\n    y = [amplitude * math.sin(2 * math.pi * frequency * (xi + phase_shift)) for xi in x]\n\n    fig, ax = plt.subplots()\n    ax.plot(x, y)\n    ax.set_title('Random Sine Wave')\n    ax.set_xlabel('Time')\n    ax.set_ylabel('Amplitude')\n    ax.grid(True)\n    \n    return ax  # Return the axis object for testing"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/849",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130100825_13e6ad33",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nfrom nltk.corpus import stopwords\nfrom collections import Counter\n\nSTOPWORDS = set(stopwords.words('english'))\n\ndef task_func(input_string):\n    \"\"\"\n    Divide a multi-line string into individual lines, remove stopwords, and count the frequency of each word.\n\n    Parameters:\n    - input_string (str): The multi-line string.\n\n    Returns:\n    - dict: A dictionary with word frequencies where each key is a unique word and the value is its frequency.\n\n    Note:\n    - Words are extracted preserving their original case in the output.\n    - Stopword matching is case-sensitive (e.g., \"This\" is NOT removed because the STOPWORDS set contains lowercase \"this\", not \"This\").\n\n    Requirements:\n    - re\n    - nltk.corpus\n    - collections\n\n    Example:\n    >>> task_func('line a\\\\nfollows by line b\\\\n...bye\\\\n')\n    {'line': 2, 'follows': 1, 'b': 1, 'bye': 1}\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        input_string = \"This is line one.\\nThis is line two.\"\n        expected_output = {'This': 2, 'line': 2, 'one': 1, 'two': 1}\n        self.assertEqual(task_func(input_string), expected_output)\n    def test_case_2(self):\n        input_string = \"apple orange apple\\norange apple\\napple\"\n        expected_output = {'apple': 4, 'orange': 2}\n        self.assertEqual(task_func(input_string), expected_output)\n    def test_case_3(self):\n        input_string = \"This\\nThis\\nThis\"\n        expected_output = {'This': 3}\n        self.assertEqual(task_func(input_string), expected_output)\n    def test_case_4(self):\n        input_string = \"This is a test.\\nThis is only a test.\"\n        expected_output = {'This': 2, 'test': 2}\n        self.assertEqual(task_func(input_string), expected_output)\n    def test_case_5(self):\n        input_string = \"Stop this\\nStop\"\n        expected_output = {'Stop': 2}\n        self.assertEqual(task_func(input_string), expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "nltk",
+      "collections",
+      "re"
+    ],
+    "instruct_prompt": "Divide a multi-line string into individual lines, remove stopwords, and count the frequency of each word.\nThe function should output with:\n    dict: A dictionary with word frequencies where each key is a unique word and the value is its frequency.\nYou should write self-contained code starting with:\n```\nimport re\nfrom nltk.corpus import stopwords\nfrom collections import Counter\nSTOPWORDS = set(stopwords.words('english'))\ndef task_func(input_string):\n```",
+    "code_prompt": "import re\nfrom nltk.corpus import stopwords\nfrom collections import Counter\nSTOPWORDS = set(stopwords.words('english'))\ndef task_func(input_string):",
+    "canonical_solution": "    lines = input_string.split('\\n')\n    word_count = Counter()\n    for line in lines:\n        words = re.findall(r'\\b\\w+\\b', line)\n        words = [word for word in words if word not in STOPWORDS]\n        word_count.update(words)\n    return dict(word_count)"
+  }
+}

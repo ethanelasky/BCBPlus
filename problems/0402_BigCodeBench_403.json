@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/403",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129234210_d4e0aabf",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from PIL import Image, ImageFilter\nimport cv2\nimport numpy as np\nimport os\n\ndef task_func(img_path, blur_radius=5):\n    \"\"\"\n    Open an RGB image from a specific path, apply a blur filter, and convert it to grayscale.\n    Returns numpy arrays representing both the original and the processed images.\n\n    Parameters:\n    - img_path (str): The path of the image file.\n    - blur_radius (int): The radius of the Gaussian blur filter. Default is 5.\n\n    Returns:\n    - tuple: A tuple containing two numpy arrays, the first representing the original image and\n             the second representing the blurred and grayscaled image.\n\n    Raises:\n    - FileNotFoundError: If the image file does not exist at the specified path.\n\n    Requirements:\n    - PIL\n    - opencv-python\n    - numpy\n    - os\n\n    Example:\n    >>> image_path = 'sample.png'\n    >>> create_dummy_image(image_path=image_path)\n    >>> original, processed = task_func(image_path)\n    >>> os.remove(image_path)\n    \"\"\"\n",
+    "test": "import unittest\nimport numpy as np\nfrom PIL import Image, ImageDraw\nimport os\n\ndef create_dummy_image(image_path='test_image.jpg', size=(10, 10)):\n    img = Image.new('RGB', size, color='white')\n    draw = ImageDraw.Draw(img)\n    draw.rectangle([2, 2, 8, 8], fill='black')\n    img.save(image_path)\n\nclass TestCases(unittest.TestCase):\n    def setUp(cls):\n        create_dummy_image()\n\n    def tearDown(cls):\n        os.remove('test_image.jpg')\n\n    def test_normal_functionality(self):\n        original, processed = task_func('test_image.jpg')\n        self.assertIsInstance(original, np.ndarray)\n        self.assertIsInstance(processed, np.ndarray)\n\n        # Check that images have the expected structure\n        self.assertEqual(original.shape, (10, 10, 3))\n        self.assertEqual(processed.shape, (10, 10))\n\n        # Check that the grayscale image is actually grayscale (2D array)\n        self.assertEqual(len(processed.shape), 2)\n\n        # Verify blur was applied - processed should be grayscale values\n        self.assertTrue(np.all(processed >= 0) and np.all(processed <= 255))\n\n    def test_non_existent_file(self):\n        with self.assertRaises(FileNotFoundError):\n            task_func('non_existent.jpg')\n\n    def test_blur_effectiveness(self):\n        _, processed = task_func('test_image.jpg')\n        self.assertNotEqual(np.mean(processed), 255)  # Ensuring it's not all white\n\n    def test_returned_image_shapes(self):\n        original, processed = task_func('test_image.jpg')\n        self.assertEqual(original.shape, (10, 10, 3))\n        self.assertEqual(processed.shape, (10, 10))\n\n    def test_different_blur_radius(self):\n        _, processed_default = task_func('test_image.jpg')\n        _, processed_custom = task_func('test_image.jpg', blur_radius=10)\n        self.assertFalse(np.array_equal(processed_default, processed_custom))\n\n",
+    "entry_point": "task_func",
+    "libs": [
+      "cv2",
+      "numpy",
+      "PIL",
+      "os"
+    ],
+    "instruct_prompt": "Open an RGB image from a specific path, apply a blur filter, convert it to grayscale, and then display both the original and the edited images side by side. Returns numpy arrays representing both the original and the processed images.\nThe function should raise the exception for: FileNotFoundError: If the image file does not exist at the specified path.\nThe function should output with:\n    tuple: A tuple containing two numpy arrays, the first representing the original image and\n    the second representing the blurred and grayscaled image.\nYou should write self-contained code starting with:\n```\nfrom PIL import Image, ImageFilter\nimport cv2\nimport numpy as np\nimport os\ndef task_func(img_path, blur_radius=5):\n```",
+    "code_prompt": "from PIL import Image, ImageFilter\nimport cv2\nimport numpy as np\nimport os\ndef task_func(img_path, blur_radius=5):",
+    "canonical_solution": "    if not os.path.exists(img_path):\n        raise FileNotFoundError(f\"No file found at {img_path}\")\n\n    img = Image.open(img_path)\n    img = img.convert(\"RGB\")\n\n    blurred_img = img.filter(ImageFilter.GaussianBlur(blur_radius))\n    grey_img = cv2.cvtColor(np.array(blurred_img), cv2.COLOR_RGB2GRAY)\n\n    return np.array(img), np.array(grey_img)"
+  }
+}

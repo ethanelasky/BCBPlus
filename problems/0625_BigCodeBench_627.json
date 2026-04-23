@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/627",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129142528_f9c3f42b",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from random import randint\nfrom statistics import mean\nimport pandas as pd\n\n\ndef task_func(products_list):\n    \"\"\"\n    This function takes in a list of product names and generates random sales data for each product over a period of\n    12 months. It then calculates the average sales for each product and returns the results as a pandas DataFrame with\n    columns: 'Product', 'Month 1', 'Month 2', ..., 'Month 12', 'Average Sales'..\n    \n    Parameters:\n    products_list (list): A list of product names.\n    \n    Returns:\n    DataFrame: A pandas DataFrame with columns: 'Product', 'Month 1', 'Month 2', ..., 'Month 12', 'Average Sales'.\n    \n    Note:\n    Random sales values are integers in the range [100, 500] inclusive.\n    \n    Requirements:\n    - pandas\n    - random\n    - statistics\n    \n    Example:\n    >>> products = ['Apples', 'Bananas', 'Grapes', 'Oranges', 'Pineapples']\n    >>> sales_data = task_func(products)\n    >>> type(sales_data)\n    <class 'pandas.core.frame.DataFrame'>\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Test with a single product\n        products = [\"Apples\"]\n        sales_data = task_func(products)\n        \n        # Checking if returned DataFrame has the correct structure\n        expected_columns = ['Product'] + [f'Month {i+1}' for i in range(12)] + ['Average Sales']\n        self.assertEqual(list(sales_data.columns), expected_columns)\n        \n        # Checking the correctness of average sales\n        avg_sales = sales_data['Average Sales'].iloc[0]\n        self.assertAlmostEqual(avg_sales, sales_data.iloc[0, 1:13].mean(), places=2)\n        \n        # Checking if sales values are within the expected range\n        self.assertTrue((sales_data.iloc[0, 1:13] >= 100).all() and (sales_data.iloc[0, 1:13] <= 500).all())\n    def test_case_2(self):\n        # Test with multiple products\n        products = [\"Apples\", \"Bananas\", \"Grapes\"]\n        sales_data = task_func(products)\n        self.assertEqual(len(sales_data), 3)\n    def test_case_3(self):\n        # Test with no products\n        products = []\n        sales_data = task_func(products)\n        self.assertEqual(len(sales_data), 0)\n    def test_case_4(self):\n        # Test with a long product name\n        products = [\"A\" * 100]\n        sales_data = task_func(products)\n        self.assertEqual(sales_data['Product'].iloc[0], \"A\" * 100)\n    def test_case_5(self):\n        # Test with products having special characters\n        products = [\"@pples\", \"!Bananas\", \"#Grapes\"]\n        sales_data = task_func(products)\n        self.assertTrue(all(item in sales_data['Product'].tolist() for item in products))",
+    "entry_point": "task_func",
+    "libs": [
+      "statistics",
+      "pandas",
+      "random"
+    ],
+    "instruct_prompt": "This function takes in a list of product names and generates random sales data for each product over a period of 12 months. It then calculates the average sales for each product and returns the results as a pandas DataFrame with columns: 'Product', 'Month 1', 'Month 2', ..., 'Month 12', 'Average Sales'..\nThe function should output with:\n    DataFrame: A pandas DataFrame with columns: 'Product', 'Month 1', 'Month 2', ..., 'Month 12', 'Average Sales'.\nYou should write self-contained code starting with:\n```\nfrom random import randint\nfrom statistics import mean\nimport pandas as pd\ndef task_func(products_list):\n```",
+    "code_prompt": "from random import randint\nfrom statistics import mean\nimport pandas as pd\ndef task_func(products_list):",
+    "canonical_solution": "    sales_data = []\n\n    for product in products_list:\n        sales = [randint(100, 500) for _ in range(12)]\n        avg_sales = mean(sales)\n        sales.append(avg_sales)\n        sales_data.append([product] + sales)\n\n    sales_df = pd.DataFrame(sales_data, columns=['Product'] + [f'Month {i+1}' for i in range(12)] + ['Average Sales'])\n\n    return sales_df"
+  }
+}

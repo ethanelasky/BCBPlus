@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/747",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import re\nimport math\n\ndef task_func(s):\n    '''\n    Count the number of integers and floating-point numbers in a comma-separated string and calculate the sum of their square roots.\n\n    Parameters:\n    - s (str): The comma-separated string.\n\n    Returns:\n    - count (int): The number of integers and floats in the string.\n    - sqrt_sum (float): The sum of the square roots of the integers and floats.\n    \n    Requirements:\n    - re\n    - math\n    \n    Example:\n    >>> count, sqrt_sum = task_func('1,2,3.5,abc,4,5.6')\n    >>> print(count)  # Ensure this matches exactly with expected output\n    5\n    >>> print(\"{:.2f}\".format(sqrt_sum))  # Ensure this matches exactly with expected output\n    8.65\n    '''\n",
+    "instruct_prompt": "Count the number of integers and floating-point numbers in a comma-separated string and calculate the sum of their square roots.\nThe function should output with:\n    count (int): The number of integers and floats in the string.\n    sqrt_sum (float): The sum of the square roots of the integers and floats.\nYou should write self-contained code starting with:\n```\nimport re\nimport math\ndef task_func(s):\n```",
+    "code_prompt": "import re\nimport math\ndef task_func(s):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_1(self):\n        count, sqrt_sum = task_func('1,2,3.5,abc,4,5.6')\n        self.assertEqual(count, 5)\n        self.assertAlmostEqual(sqrt_sum, sum(math.sqrt(x) for x in [1, 2, 3.5, 4, 5.6]))\n    def test_2(self):\n        count, sqrt_sum = task_func('a,b,c,10,20.5')\n        self.assertEqual(count, 2)\n        self.assertAlmostEqual(sqrt_sum, sum(math.sqrt(x) for x in [10, 20.5]))\n    def test_3(self):\n        count, sqrt_sum = task_func('1.1,2.2,3.3')\n        self.assertEqual(count, 3)\n        self.assertAlmostEqual(sqrt_sum, sum(math.sqrt(x) for x in [1.1, 2.2, 3.3]))\n    def test_4(self):\n        count, sqrt_sum = task_func('')\n        self.assertEqual(count, 0)\n        self.assertEqual(sqrt_sum, 0.0)\n    def test_5(self):\n        count, sqrt_sum = task_func('apple,banana,3.14,15,grape,1001')\n        self.assertEqual(count, 3)\n        self.assertAlmostEqual(sqrt_sum, sum(math.sqrt(x) for x in [3.14, 15, 1001]))",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "re"
+    ],
+    "canonical_solution": "    numbers = re.findall(r'\\b\\d+(?:\\.\\d+)?\\b', s)  # Use non-capturing group for decimals\n    count = len(numbers)\n    sqrt_sum = sum(math.sqrt(float(num)) for num in numbers if num)  # Ensure conversion to float\n    return count, sqrt_sum"
+  }
+}

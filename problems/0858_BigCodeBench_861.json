@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/861",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from collections import Counter\nfrom random import choice, seed\n\n# Constants\nPOSSIBLE_ITEMS = ['apple', 'banana', 'cherry', 'date', 'elderberry']\n\ndef task_func(list_of_lists):\n    \"\"\"\n    Create a \"shopping cart\" (Counter object) for each list in list_of_lists. \n    The items in the cart are randomly selected from a predefined list of possible items (POSSIBLE_ITEMS).\n    The frequency of each item in the cart corresponds to the length of the list.\n\n    Parameters:\n    - list_of_lists (list): A list of lists, each representing a 'basket'.\n\n    Returns:\n    - baskets (list): A list of Counters, each representing a 'shopping cart'.\n\n    Requirements:\n    - collections\n    - random\n\n    Example:\n    >>> baskets = task_func([[1, 2, 3], [4, 5]])\n    >>> all(isinstance(basket, Counter) for basket in baskets) # Illustrative, actual items will vary due to randomness\n    True\n    >>> sum(len(basket) for basket in baskets) # The sum of lengths of all baskets; illustrative example\n    3\n    \"\"\"\n",
+    "instruct_prompt": "Create a \"shopping cart\" (Counter object) for each list in list_of_lists. The items in the cart are randomly selected from a predefined list of possible items (POSSIBLE_ITEMS). The frequency of each item in the cart corresponds to the length of the list.\nThe function should output with:\n    baskets (list): A list of Counters, each representing a 'shopping cart'.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nfrom random import choice, seed\n# Constants\nPOSSIBLE_ITEMS = ['apple', 'banana', 'cherry', 'date', 'elderberry']\ndef task_func(list_of_lists):\n```",
+    "code_prompt": "from collections import Counter\nfrom random import choice, seed\n# Constants\nPOSSIBLE_ITEMS = ['apple', 'banana', 'cherry', 'date', 'elderberry']\ndef task_func(list_of_lists):\n",
+    "test": "import unittest\nfrom collections import Counter\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Testing with empty list\n        result = task_func([])\n        self.assertEqual(result, [])\n    def test_case_2(self):\n        # Testing with empty sublists\n        result = task_func([[], [], []])\n        for basket in result:\n            self.assertEqual(basket, Counter())\n        \n    def test_case_3(self):\n        # Testing with sublists of different lengths\n        result = task_func([[1], [1, 2], [1, 2, 3]])\n        self.assertEqual(len(result), 3)\n        self.assertEqual(sum(result[0].values()), 1)\n        self.assertEqual(sum(result[1].values()), 2)\n        self.assertEqual(sum(result[2].values()), 3)\n    def test_case_4(self):\n        # Testing with sublists containing the same element\n        result = task_func([[1, 1, 1], [2, 2, 2, 2]])\n        self.assertEqual(len(result), 2)\n        self.assertEqual(sum(result[0].values()), 3)\n        self.assertEqual(sum(result[1].values()), 4)\n        \n    def test_case_5(self):\n        # Testing with large sublists\n        result = task_func([[1]*100, [2]*200])\n        self.assertEqual(len(result), 2)\n        self.assertEqual(sum(result[0].values()), 100)\n        self.assertEqual(sum(result[1].values()), 200)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "random"
+    ],
+    "canonical_solution": "    seed(42)  # Set the seed for reproducibility\n    baskets = []\n    for list_ in list_of_lists:\n        basket = Counter()\n        for _ in list_:\n            basket[choice(POSSIBLE_ITEMS)] += 1\n        baskets.append(basket)\n\n    return baskets"
+  }
+}

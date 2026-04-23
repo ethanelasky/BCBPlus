@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/736",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260422114446_baead145",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom scipy import stats\n\ndef task_func(L):\n    '''\n    Calculate the mode of all elements in a nested list 'L'.\n\n    Parameters:\n    L (list): The nested list.\n\n    Returns:\n    - mode (int): The mode.\n\n    Requirements:\n    - numpy\n    - scipy.stats\n\n    Note:\n    - Raises an exception if the flattened list contains no elements.\n\n    Example:\n    >>> task_func([[1,2,3],[4,5,6]])\n    1\n    '''\n",
+    "test": "import unittest\nimport numpy as np\nfrom scipy import stats\n\nclass TestCases(unittest.TestCase):\n\n    def test_1(self):\n        result = task_func([[1, 2, 3], [4, 5, 6]])\n        expected = 1\n        self.assertEqual(result, expected)\n\n    def test_2(self):\n        result = task_func([[1, 2, 3], [4, 5, 6, 6]])\n        expected = 6\n        self.assertEqual(result, expected)\n\n    def test_3(self):\n        result = task_func([[1, 1, 2, 2], [3, 4, 5]])\n        expected = 1\n        self.assertEqual(result, expected)\n\n    def test_4(self):\n        result = task_func([[1, 1, 2, 2]])\n        expected = 1\n        self.assertEqual(result, expected)\n\n    def test_5(self):\n        result = task_func([[-1, -1, -2, -3], [0, 1, 2, 3]])\n        expected = -1\n        self.assertEqual(result, expected)\n\n    def test_6_empty_outer_list(self):\n        with self.assertRaises(Exception):\n            task_func([])\n\n    def test_7_all_empty_sublists(self):\n        with self.assertRaises(Exception):\n            task_func([[], [], []])\n\n    def test_8_single_element_list(self):\n        result = task_func([[7]])\n        expected = 7\n        self.assertEqual(result, expected)\n\n    def test_9_mixed_empty_and_non_empty_sublists(self):\n        result = task_func([[], [1, 2], []])\n        expected = 1\n        self.assertEqual(result, expected)\n",
+    "entry_point": "task_func",
+    "libs": "['numpy', 'scipy']",
+    "instruct_prompt": "Calculate the mode of all elements in a nested list 'L'.\nThe function should output with:\n    mode (int): The mode.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom scipy import stats\ndef task_func(L):\n```",
+    "code_prompt": "import numpy as np\nfrom scipy import stats\ndef task_func(L):",
+    "canonical_solution": "    flattened = np.hstack(L)  \n    mode = stats.mode(flattened)[0][0]\n    return mode"
+  }
+}

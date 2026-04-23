@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/1094",
+  "dataset": "bigcodebench",
+  "version": 2,
+  "version_id": "v2_20260129233550_162583d5",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "from nltk.tokenize import RegexpTokenizer\nfrom collections import Counter\n\n\ndef task_func(text):\n    \"\"\"\n    Identifies and counts words in a given text that start with the \"$\" symbol. It returns the five most frequent\n    dollar-prefixed words along with their counts.\n\n    Parameters:\n    - text (str): The input text to analyze.\n\n    Returns:\n    - list of tuples: Each tuple contains a dollar-prefixed word (excluding the \"$\" symbol) and its frequency,\n                      ordered by most to least common.\n\n    Requirements:\n    - nltk.tokenize.RegexpTokenizer\n    - collections.Counter\n\n    Example:\n    >>> text = \"$abc def $efg $hij klm $ $abc $abc $hij $hij\"\n    >>> task_func(text)\n    [('abc', 3), ('hij', 3), ('efg', 1)]\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        text = \"$abc def $efg $hij klm $ $abc $abc $hij $hij\"\n        expected_output = [('abc', 3), ('hij', 3), ('efg', 1)]\n        result = task_func(text)\n        self.assertEqual(result, expected_output)\n    def test_case_2(self):\n        text = \"This is a test without any $ prefixed words.\"\n        expected_output = []\n        result = task_func(text)\n        self.assertEqual(result, expected_output)\n    def test_case_3(self):\n        text = \"$apple $banana $apple $cherry $cherry $cherry\"\n        expected_output = [('cherry', 3), ('apple', 2), ('banana', 1)]\n        result = task_func(text)\n        self.assertEqual(result, expected_output)\n    def test_case_4(self):\n        # Per spec: \"Words solely consisting of '$' symbols without any following alphanumeric characters are ignored\"\n        # So '$$ $$ $$ $$' should return empty list since '$$' has no alphanumeric characters\n        text = \"$$ $$ $$ $$\"\n        expected_output = []\n        result = task_func(text)\n        self.assertEqual(result, expected_output)\n    def test_case_5(self):\n        text = \"$word1 $word2 $word3 $word4 $word5 $word6\"\n        expected_output = [('word1', 1), ('word2', 1), ('word3', 1), ('word4', 1), ('word5', 1)]\n        result = task_func(text)\n        self.assertEqual(result, expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "nltk",
+      "collections"
+    ],
+    "instruct_prompt": "Identifies and counts words in a given text that start with the \"$\" symbol. It returns the five most frequent dollar-prefixed words along with their counts. Words solely consisting of \"$\" symbols without any following alphanumeric characters are ignored in the frequency count.\nThe function should output with:\n    list of tuples: Each tuple contains a dollar-prefixed word (excluding the \"$\" symbol) and its frequency,\n    ordered by most to least common.\nYou should write self-contained code starting with:\n```\nfrom nltk.tokenize import RegexpTokenizer\nfrom collections import Counter\ndef task_func(text):\n```",
+    "code_prompt": "from nltk.tokenize import RegexpTokenizer\nfrom collections import Counter\ndef task_func(text):",
+    "canonical_solution": "\n    tokenizer = RegexpTokenizer(r'\\$\\$+\\w*|\\$\\w+')\n    dollar_prefixed_words = tokenizer.tokenize(text)\n    normalized_words = [word.lstrip(\"$\") if len(word.lstrip(\"$\")) > 0 else word for word in dollar_prefixed_words]\n    word_counts = Counter(normalized_words)\n    return word_counts.most_common(5)"
+  }
+}

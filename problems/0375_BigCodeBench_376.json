@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/376",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130100417_0a6a121d",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import nltk\nimport re\nfrom collections import Counter\n\n\n# Constants\nSTOPWORDS = nltk.corpus.stopwords.words('english')\n\ndef task_func(text):\n    \"\"\"\n    Calculate the frequency of continuous words in a text string. The function splits the text into words,\n    converts them to lowercase, removes punctuation marks and common stopwords (provided as a constant),\n    and then calculates the frequency of each word.\n\n    A \"word\" is defined as a continuous sequence of alphanumeric characters (letters and digits).\n    Punctuation marks are removed, but digits are preserved as part of words.\n\n    Parameters:\n    text (str): The input text string.\n\n    Returns:\n    dict: A dictionary with words as keys and their frequencies as values.\n\n    Requirements:\n    - nltk for stopwords (ensure the stopwords dataset is downloaded using nltk.download('stopwords'))\n    - re for regular expressions\n    - collections.Counter for counting occurrences\n\n    Example:\n    >>> task_func('This is a sample text. This text is for testing.')\n    {'sample': 1, 'text': 2, 'testing': 1}\n    \"\"\"\n",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Basic test\n        text = 'This is a sample text. This text is for testing.'\n        expected_output = {'sample': 1, 'text': 2, 'testing': 1}\n        self.assertEqual(task_func(text), expected_output)\n    def test_case_2(self):\n        # Test with stopwords\n        text = 'The quick brown fox jumped over the lazy dog.'\n        expected_output = {'quick': 1, 'brown': 1, 'fox': 1, 'jumped': 1, 'lazy': 1, 'dog': 1}\n        self.assertEqual(task_func(text), expected_output)\n    def test_case_3(self):\n        # Test with punctuation\n        text = 'Hello, world! How are you today?'\n        expected_output = {'hello': 1, 'world': 1, 'today': 1}\n        self.assertEqual(task_func(text), expected_output)\n    def test_case_4(self):\n        # Test with empty string\n        text = ''\n        expected_output = {}\n        self.assertEqual(task_func(text), expected_output)\n    def test_case_5(self):\n        # Test with numeric values and special characters\n        text = 'Python3 is better than Python2. I love Python3.5!'\n        expected_output = {'python3': 2, 'better': 1, 'python2': 1, 'love': 1, '5': 1}\n        self.assertEqual(task_func(text), expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "nltk",
+      "collections",
+      "re"
+    ],
+    "instruct_prompt": "Calculate the frequency of continuous words in a text string. The function splits the text into words, converts them to lowercase, removes punctuation marks and common stopwords (provided as a constant), and then calculates the frequency of each word.\nThe function should output with:\n    dict: A dictionary with words as keys and their frequencies as values.\nYou should write self-contained code starting with:\n```\nimport nltk\nimport re\nfrom collections import Counter\n# Constants\nSTOPWORDS = nltk.corpus.stopwords.words('english')\ndef task_func(text):\n```",
+    "code_prompt": "import nltk\nimport re\nfrom collections import Counter\n# Constants\nSTOPWORDS = nltk.corpus.stopwords.words('english')\ndef task_func(text):",
+    "canonical_solution": "    words = re.split(r'\\W+', text.lower())\n    words = [word for word in words if word not in STOPWORDS and word != '']\n    word_freq = dict(Counter(words))\n\n    return word_freq"
+  }
+}

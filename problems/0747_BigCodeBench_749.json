@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/749",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from sklearn.preprocessing import MinMaxScaler\nimport numpy as np\n\ndef task_func(myList):\n    \"\"\"\n    Normalize a list of numeric values to the range [0, 1] using min-max scaling.\n\n    Parameters:\n    - myList (list): List of numerical values to normalize.\n\n    Returns:\n    - ndarray: An array of normalized values.\n\n    Requirements:\n    - sklearn.preprocessing.MinMaxScaler\n    - numpy\n\n    Example:\n    >>> myList = [10, 20, 30, 40, 50]\n    >>> task_func(myList)\n    array([0.  , 0.25, 0.5 , 0.75, 1.  ])\n    \"\"\"\n",
+    "instruct_prompt": "Normalize a list of numeric values to the range [0, 1] using min-max scaling.\nThe function should output with:\n    ndarray: An array of normalized values.\nYou should write self-contained code starting with:\n```\nfrom sklearn.preprocessing import MinMaxScaler\nimport numpy as np\ndef task_func(myList):\n```",
+    "code_prompt": "from sklearn.preprocessing import MinMaxScaler\nimport numpy as np\ndef task_func(myList):\n",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def test_1(self):\n        # Testing basic functionality\n        input_data = [10, 20, 30, 40, 50]\n        expected_output = np.array([0. , 0.25, 0.5 , 0.75, 1. ])\n        np.testing.assert_array_almost_equal(task_func(input_data), expected_output, decimal=2)\n    def test_2(self):\n        # Testing with negative values\n        input_data = [-50, -40, -30, -20, -10]\n        expected_output = np.array([0. , 0.25, 0.5 , 0.75, 1. ])\n        np.testing.assert_array_almost_equal(task_func(input_data), expected_output, decimal=2)\n    def test_3(self):\n        # Testing with mixed negative and positive values\n        input_data = [-50, -25, 0, 25, 50]\n        expected_output = np.array([0. , 0.25, 0.5 , 0.75, 1. ])\n        np.testing.assert_array_almost_equal(task_func(input_data), expected_output, decimal=2)\n    def test_4(self):\n        # Testing with single value\n        input_data = [100]\n        expected_output = np.array([0.])\n        np.testing.assert_array_almost_equal(task_func(input_data), expected_output, decimal=2)\n    def test_5(self):\n        # Testing with all zeros\n        input_data = [0, 0, 0, 0, 0]\n        expected_output = np.array([0., 0., 0., 0., 0.])\n        np.testing.assert_array_almost_equal(task_func(input_data), expected_output, decimal=2)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "sklearn"
+    ],
+    "canonical_solution": "    myList = np.array(myList).reshape(-1, 1)\n    scaler = MinMaxScaler()\n    normalized_list = scaler.fit_transform(myList)\n\n    return normalized_list.flatten()"
+  }
+}

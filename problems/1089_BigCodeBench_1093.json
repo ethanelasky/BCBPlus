@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/1093",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import ast\nimport re\n\ndef task_func(text_file: str) -> list:\n    \"\"\"\n    Extract all string representations of dictionaries from a text file using regular expressions and \n    convert them to Python dictionaries.\n\n    Parameters:\n    - text_file (str): The path to the text file.\n\n    Returns:\n    - list: A list of dictionaries. Each dictionary is parsed from the text file using regular expressions.\n\n    Requirements:\n    - ast\n    - re\n\n    Examples:\n    >>> f_1008(\"sample.txt\")\n    [{'key1': 'value1'}, {'key2': 'value2'}]\n\n    >>> f_1008(\"another_sample.txt\")\n    [{'name': 'John', 'age': 30}, {'name': 'Jane', 'age': 25}]\n    \"\"\"\n",
+    "instruct_prompt": "Extract all string representations of dictionaries from a text file using regular expressions and convert them to Python dictionaries. >>> f_1008(\"another_sample.txt\") [{'name': 'John', 'age': 30}, {'name': 'Jane', 'age': 25}]\nThe function should output with:\n    list: A list of dictionaries. Each dictionary is parsed from the text file using regular expressions.\nYou should write self-contained code starting with:\n```\nimport ast\nimport re\ndef task_func(text_file: str) -> list:\n```",
+    "code_prompt": "import ast\nimport re\ndef task_func(text_file: str) -> list:\n",
+    "test": "import unittest\nimport os\nimport shutil\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.test_dir = 'testdir_task_func'\n        os.makedirs(self.test_dir, exist_ok=True)\n        \n        f = open(self.test_dir+\"/sample.txt\",\"w\")\n        f.write(\"{'key1': 'value1'}\\n{'key2': 'value2'}\")\n        f.close()\n        f = open(self.test_dir+\"/another_sample.txt\",\"w\")\n        f.write(\"{'name': 'John', 'age': 30}\\n{'name': 'Jane', 'age': 25}\")\n        f.close()\n        f = open(self.test_dir+\"/nested_dicts.txt\",\"w\")\n        f.write(\"{'outer': {'inner': 'value'}}\")\n        f.close()\n        f = open(self.test_dir+\"/empty.txt\",\"w\")\n        f.close()\n        \n        \n        f = open(self.test_dir+\"/no_dicts.txt\",\"w\")\n        f.close()\n        \n    def tearDown(self):\n        # Clean up the test directory\n        shutil.rmtree(self.test_dir)\n    def test_case_1(self):\n        result = task_func(self.test_dir+\"/sample.txt\")\n        self.assertEqual(len(result), 2)\n        self.assertEqual(result[0], {'key1': 'value1'})\n        self.assertEqual(result[1], {'key2': 'value2'})\n    def test_case_2(self):\n        result = task_func(self.test_dir+\"/another_sample.txt\")\n        self.assertEqual(len(result), 2)\n        self.assertEqual(result[0], {'name': 'John', 'age': 30})\n        self.assertEqual(result[1], {'name': 'Jane', 'age': 25})\n    def test_case_3(self):\n        result = task_func(self.test_dir+\"/empty.txt\")\n        self.assertEqual(len(result), 0)\n    def test_case_4(self):\n        result = task_func(self.test_dir+\"/no_dicts.txt\")\n        self.assertEqual(len(result), 0)\n    def test_case_5(self):\n        result = task_func(self.test_dir+\"/nested_dicts.txt\")\n        self.assertEqual(len(result), 1)\n        self.assertEqual(result[0], {'outer': {'inner': 'value'}})",
+    "entry_point": "task_func",
+    "libs": [
+      "ast",
+      "re"
+    ],
+    "canonical_solution": "    with open(text_file, 'r') as file:\n        text = file.read()\n\n    # Updated regex pattern to handle nested dictionaries more robustly\n    pattern = re.compile(r\"\\{[^{}]*\\{[^{}]*\\}[^{}]*\\}|\\{[^{}]*\\}\")\n    matches = pattern.findall(text)\n\n    results = [ast.literal_eval(match) for match in matches]\n\n    return results"
+  }
+}

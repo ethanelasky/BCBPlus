@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/671",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260123124039_27667d56",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import os\nimport random\nimport json\n\ndef task_func(directory, n):\n    \"\"\"\n    Create n random files in a directory with json content with the key 'number' and a random integer value between 1 and 100 (inclusive), and then reset the cursor to the beginning of each file.\n\n    Files should be named sequentially without using additional random numbers in the filename (e.g., \"file_0.json\", \"file_1.json\", etc.). Each file should contain exactly one call to random.randint(1, 100) for the 'number' value.\n\n    Parameters:\n    - directory (str): The directory in which to generate the files.\n    - n (int): The number of files to generate.\n\n    Returns:\n    - directory (str): The directory in which the files were generated.\n\n    Requirements:\n    - os\n    - random\n    - json\n\n    Example:\n    >>> task_func('/path/to/directory', 1)\n    '/path/to/directory'\n    \"\"\"",
+    "test": "import unittest\nimport shutil\nclass TestCases(unittest.TestCase):\n    def tearDown(self):\n        shutil.rmtree('./source', ignore_errors=True)\n        shutil.rmtree('./src', ignore_errors=True)\n        shutil.rmtree('./s', ignore_errors=True)\n    def test_case_1(self):\n        random.seed(0)\n        directory = task_func('./source', 10)\n        self.assertTrue(os.path.exists(directory))\n        read_data = []\n        for file in sorted(os.listdir(directory)):\n            with open(os.path.join(directory, file), 'r') as f:\n                read_data.append(json.load(f))\n        self.assertEqual(read_data, [{'number': 50}, {'number': 98}, {'number': 54}, {'number': 6}, {'number': 34}, {'number': 66}, {'number': 63}, {'number': 52}, {'number': 39}, {'number': 62}])\n        shutil.rmtree(directory)\n    def test_case_2(self):\n        random.seed(1)\n        directory = task_func('./src', 1)\n        self.assertTrue(os.path.exists(directory))\n        read_data = []\n        for file in os.listdir(directory):\n            with open(os.path.join(directory, file), 'r') as f:\n                read_data.append(json.load(f))\n        self.assertEqual(read_data, [{'number': 18}])\n        shutil.rmtree(directory)\n    def test_case_3(self):\n        directory = task_func('./s', 100)\n        self.assertTrue(os.path.exists(directory))\n        self.assertEqual(len(os.listdir(directory)), 100)\n        shutil.rmtree(directory)\n    def test_case_4(self):\n        directory = task_func('./s', 0)\n        self.assertTrue(os.path.exists(directory))\n        self.assertEqual(len(os.listdir(directory)), 0)\n        shutil.rmtree(directory)\n    def test_case_5(self):\n        random.seed(2)\n        directory = task_func('./source', 1)\n        self.assertTrue(os.path.exists(directory))\n        read_data = []\n        for file in os.listdir(directory):\n            with open(os.path.join(directory, file), 'r') as f:\n                read_data.append(json.load(f))\n        self.assertEqual(read_data, [{'number': 8}])\n        shutil.rmtree(directory)",
+    "entry_point": "task_func",
+    "libs": [
+      "json",
+      "random",
+      "os"
+    ],
+    "instruct_prompt": "Create n random files in a directory with json content with the key 'number' and a random integer value between 1 and 100, and then reset the cursor to the beginning of each file.\nThe function should output with:\n    directory (str): The directory in which the files were generated.\nYou should write self-contained code starting with:\n```\nimport os\nimport random\nimport json\ndef task_func(directory, n):\n```",
+    "code_prompt": "import os\nimport random\nimport json\ndef task_func(directory, n):",
+    "canonical_solution": "    if not os.path.exists(directory):\n        os.makedirs(directory)\n\n    for i in range(n):\n        filename = str(i) + \".json\"\n        filepath = os.path.join(directory, filename)\n\n        with open(filepath, 'w') as file:\n            json.dump({'number': random.randint(1, 100)}, file)\n            file.seek(0)\n\n    return directory"
+  }
+}

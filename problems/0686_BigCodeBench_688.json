@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/688",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.preprocessing import StandardScaler\n\ndef task_func(df):\n    \"\"\"\n    Given a Pandas DataFrame with random numeric values, standardize it with the standard scaler from sklearn.\n\n    Parameters:\n    - df (DataFrame): The DataFrame to be standardized.\n    \n    Returns:\n    - df_standardized (DataFrame): The standardized DataFrame.\n\n    Requirements:\n    - pandas\n    - sklearn\n\n    Example:\n    >>> df = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6]})\n    >>> task_func(df)\n              a         b\n    0 -1.224745 -1.224745\n    1  0.000000  0.000000\n    2  1.224745  1.224745\n    \"\"\"\n",
+    "instruct_prompt": "Given a Pandas DataFrame with random numeric values, standardize it with the standard scaler from sklearn.\nThe function should output with:\n    df_standardized (DataFrame): The standardized DataFrame.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(df):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(df):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        df = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6]})\n        df_standardized = task_func(df)\n        self.assertAlmostEqual(df_standardized['a'].mean(), 0)\n        self.assertAlmostEqual(df_standardized['a'].std(), 1.224744871391589)\n    def test_case_2(self):\n        df = pd.DataFrame({'a': [1, 1, 1], 'b': [1, 1, 1]})\n        df_standardized = task_func(df)\n        self.assertAlmostEqual(df_standardized['a'].mean(), 0)\n        self.assertAlmostEqual(df_standardized['a'].std(), 0)\n    def test_case_3(self):\n        df = pd.DataFrame({'a': [1, 0, -1], 'b': [0, 1, 0]})\n        df_standardized = task_func(df)\n        print(df_standardized)\n        self.assertAlmostEqual(df_standardized['a'].mean(), 0)\n        self.assertAlmostEqual(df_standardized['a'].std(), 1.224744871391589)\n    def test_case_4(self):\n        df = pd.DataFrame({'z': [1, 2, 3], 'y': [4, 5, 6]})\n        df_standardized = task_func(df)\n        self.assertAlmostEqual(df_standardized['z'].mean(), 0)\n        self.assertAlmostEqual(df_standardized['z'].std(), 1.224744871391589)\n    def test_case_5(self):\n        df = pd.DataFrame({'z': [1, 2, 3], 'y': [4, 5, 6]})\n        df_standardized = task_func(df)\n        self.assertAlmostEqual(df_standardized['y'].mean(), 0)\n        self.assertAlmostEqual(df_standardized['y'].std(), 1.224744871391589)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "    # Standardize data\n    scaler = StandardScaler()\n    df_standardized = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)\n    return df_standardized"
+  }
+}

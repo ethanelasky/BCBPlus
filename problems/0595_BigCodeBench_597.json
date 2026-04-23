@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/597",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130101846_da2c85c9",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport time\n# Constants\nLETTERS = list('abcdefghijklmnopqrstuvwxyz')\n\n\ndef task_func(data, letter):\n    \"\"\"\n    Filters rows in a dictionary or DataFrame where the 'Name' column values start with a specified letter.\n    If input is a dict, first convert it to a DataFrame, then filter rows.\n\n    Parameters:\n    - data (dict or pd.DataFrame): The input data. It should have a 'Name' key/column.\n    - letter (str): The letter to filter the 'Name' column by. Filtering is case-insensitive.\n\n    Returns:\n    - pd.Series: A Series of filtered 'Name' values, with the index set to the name values themselves\n      (so that result.index[i] equals the name string at position i).\n\n    Requirements:\n    - pandas\n    - time\n\n    Example:\n    >>> data = {'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva', 'Fiona']}\n    >>> filtered_names = task_func(data, 'a')\n    >>> filtered_names.index[0].startswith('A')\n    True\n    >>> len(filtered_names)\n    1\n    \"\"\"",
+    "test": "### Unit Tests\nfrom random import choice, randint\nimport unittest\nimport pandas as pd\n\nLETTERS = list('abcdefghijklmnopqrstuvwxyz')\n\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        \"\"\"Generate a dict for testing.\"\"\"\n        self.df = {'Name': [choice(LETTERS) + 'name' + str(randint(1, 100)) for _ in range(100)]}\n    def test_filter_letter_a(self):\n        \"\"\"Test filtering by letter 'a'.\"\"\"\n        result = task_func(self.df, 'a')\n        all_start_with_a = all(name.startswith('a') for name in result.index)\n        self.assertTrue(all_start_with_a)\n    def test_filter_returns_series(self):\n        \"\"\"Test that the function returns a pandas Series.\"\"\"\n        result = task_func(self.df, 'b')\n        self.assertIsInstance(result, pd.Series)\n    def test_series_sorted_by_value_counts(self):\n        \"\"\"Test that the Series is sorted by value counts.\"\"\"\n        result = task_func(self.df, 'c')\n        self.assertTrue(result.equals(result.sort_values(ascending=False)))\n    def test_nonexistent_letter(self):\n        \"\"\"Test filtering by a letter not present.\"\"\"\n        # Use a fixed dict with known values that do not start with 'z'\n        data = {'Name': ['Apple', 'Banana', 'Cherry', 'Date']}\n        result = task_func(data, 'z')\n        # Expecting the length of the result to be 0 since no names start with 'z'\n        self.assertEqual(len(result), 0)\n    def test_case_insensitivity(self):\n        \"\"\"Test case insensitivity of the filter.\"\"\"\n        data = {'Name': ['Apple', 'apple', 'banana', 'Banana']}\n        result = task_func(data, 'a')\n        self.assertEqual(sum(result), 2)\n",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "time"
+    ],
+    "instruct_prompt": "Filters rows in a dictionary where the 'Name' column values start with a specified letter. First, convert the dict to a DataFrame and then filter rows in this DataFrame.\nThe function should output with:\n    pd.Series: A Series of filtered 'Name' column.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport time\n# Constants\nLETTERS = list('abcdefghijklmnopqrstuvwxyz')\ndef task_func(data, letter):\n```",
+    "code_prompt": "import pandas as pd\nimport time\n# Constants\nLETTERS = list('abcdefghijklmnopqrstuvwxyz')\ndef task_func(data, letter):",
+    "canonical_solution": "    df = pd.DataFrame(data)\n    start_time = time.time()\n    regex = f'^{letter}'\n    filtered_df = df[df['Name'].str.contains(regex, case=False, regex=True)]\n    end_time = time.time()  # End timing\n    cost = f\"Operation completed in {end_time - start_time} seconds.\"\n    return filtered_df['Name'].value_counts()"
+  }
+}

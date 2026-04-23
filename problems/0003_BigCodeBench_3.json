@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/3",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import random\nimport numpy as np\n\ndef task_func(LETTERS):\n    \"\"\"\n    Create a dictionary where keys are specified letters and values are lists of random integers.\n    Then calculate the mean of these integers for each key and return a dictionary of these means.\n\n    Parameters:\n        LETTERS (list of str): List of single-character strings to be used as keys in the output dictionary.\n    \n    Returns:\n        dict: A dictionary where each key is a letter from the input list and the value is the mean of \n              a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).\n    \n    Requirements:\n    - random\n    - np (numpy)\n    \n    Example:\n    >>> LETTERS = ['a', 'b', 'c']\n    >>> mean_dict = task_func(LETTERS)\n    >>> isinstance(mean_dict, dict)\n    True\n    >>> 'a' in mean_dict.keys() and 'b' in mean_dict.keys() and 'c' in mean_dict.keys()\n    True\n    >>> all(isinstance(v, float) for v in mean_dict.values())  # Check if all values are floats\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Create a dictionary where keys are specified letters and values are lists of random integers. Then calculate the mean of these integers for each key and return a dictionary of these means.\nThe function should output with:\n    dict: A dictionary where each key is a letter from the input list and the value is the mean of\n    a randomly generated list of integers (with each list having 1 to 10 integers ranging from 0 to 100).\nYou should write self-contained code starting with:\n```\nimport random\nimport numpy as np\ndef task_func(LETTERS):\n```",
+    "code_prompt": "import random\nimport numpy as np\ndef task_func(LETTERS):\n",
+    "test": "import unittest\n    \nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        # Common setup for all tests: explicitly define the list of letters\n        self.letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']\n    def test_case_1(self):\n        # Test if the function returns a dictionary\n        mean_dict = task_func(self.letters)\n        self.assertIsInstance(mean_dict, dict)\n    def test_case_2(self):\n        # Test if the dictionary contains all letters of the alphabet\n        mean_dict = task_func(self.letters)\n        self.assertTrue(all(letter in mean_dict for letter in self.letters))\n        \n    def test_case_3(self):\n        # Test if the values in the dictionary are floats (means of lists of integers)\n        mean_dict = task_func(self.letters)\n        self.assertTrue(all(isinstance(val, float) for val in mean_dict.values()))\n    def test_case_4(self):\n        # Test if the mean values are reasonable given the range of random integers (0-100)\n        mean_dict = task_func(self.letters)\n        self.assertTrue(all(0 <= val <= 100 for val in mean_dict.values()))\n    def test_case_5(self):\n        # Test if the dictionary has 26 keys (one for each letter of the alphabet)\n        mean_dict = task_func(self.letters)\n        self.assertEqual(len(mean_dict), 26)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "random"
+    ],
+    "canonical_solution": "    random_dict = {k: [random.randint(0, 100) for _ in range(random.randint(1, 10))] for k in LETTERS}\n    mean_dict = {k: np.mean(v) for k, v in random_dict.items()}\n    return mean_dict"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/739",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import struct\nimport random\n\n# Constants\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\n\ndef task_func(hex_key=None):\n    \"\"\"\n    Generate a random float number from a list of hexadecimal strings and then round the float number to 2 decimal places.\n\n    Parameters:\n    - None\n\n    Returns:\n    - rounded_float (float): The rounded float number.\n\n    Requirements:\n    - struct\n    - random\n\n    Example:\n    >>> random.seed(42)\n    >>> print(repr(f\"{task_func():.1f}\"))\n    '36806.1'\n\n    \"\"\"\n",
+    "instruct_prompt": "Generate a random float number from a list of hexadecimal strings and then round the float number to 2 decimal places.\nThe function should output with:\n    rounded_float (float): The rounded float number.\nYou should write self-contained code starting with:\n```\nimport struct\nimport random\n# Constants\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\ndef task_func(hex_key=None):\n```",
+    "code_prompt": "import struct\nimport random\n# Constants\nKEYS = ['470FC614', '4A0FC614', '4B9FC614', '4C8FC614', '4D7FC614']\ndef task_func(hex_key=None):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \n    def test_return_type(self):\n        result = task_func()\n        self.assertIsInstance(result, float)\n    def test_rounded_two_decimal(self):\n        result = task_func()\n        decimal_part = str(result).split('.')[1]\n        self.assertTrue(len(decimal_part) <= 2)\n    def test_randomness(self):\n        random.seed()  # Reset the seed to ensure randomness\n        results = {task_func() for _ in range(100)}\n        self.assertTrue(len(results) > 1)\n    def test_specific_hex_keys(self):\n        for hex_key in KEYS:\n            expected_result = round(struct.unpack('!f', bytes.fromhex(hex_key))[0], 2)\n            result = task_func(hex_key)\n            self.assertEqual(result, expected_result)\n    def test_no_seed(self):\n        random.seed()  # Reset the random seed\n        results = {task_func() for _ in range(100)}\n        self.assertTrue(len(results) > 1)",
+    "entry_point": "task_func",
+    "libs": [
+      "struct",
+      "random"
+    ],
+    "canonical_solution": "    if hex_key is None:\n        hex_key = random.choice(KEYS)\n    float_num = struct.unpack('!f', bytes.fromhex(hex_key))[0]\n    rounded_float = round(float_num, 2)\n    return rounded_float"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/301",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130142356_897ccd67",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pytz\nimport numpy as np\nfrom dateutil.parser import parse\nimport math\n\n\nSOLAR_CYCLE_YEARS = np.array([1986, 1996, 2008, 2019])\n\ndef task_func(date_str, from_tz, to_tz):\n    \"\"\"\n    Calculate solar activity based on the date and time, taking into account the solar cycle of 11 years.\n\n    Parameters:\n    date_str (str): The date string in \"yyyy-mm-dd hh:mm:ss\" format.\n    from_tz (str): The timezone of the given date string.\n    to_tz (str): The timezone to which the given date and time should be converted.\n\n    Returns:\n    float: The solar activity between 0 and 1. The value represents the solar activity\n           calculated using a cosine function based on the years since the closest solar cycle year.\n\n    Note:\n    The solar activity is computed by: (1) parsing the date string and converting from from_tz\n    to to_tz, (2) extracting the integer year from the converted datetime, (3) finding the\n    closest solar cycle year from SOLAR_CYCLE_YEARS, and (4) returning\n    math.cos(math.pi * years_since / 11) where years_since is the absolute difference between\n    the converted year and the closest cycle year.\n\n    Requirements:\n    - pytz\n    - numpy\n    - dateutil.parser\n    - math\n\n    Example:\n    >>> task_func('1970-01-01 00:00:00', 'UTC', 'America/New_York')\n    0.14231483827328487\n    >>> task_func('1990-01-01 00:00:00', 'UTC', 'America/New_York')\n    0.6548607339452851\n    \"\"\"\n",
+    "test": "import unittest\nimport math\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Input 1: Testing with a date from the first solar cycle year\n        result = task_func('1986-01-01 00:00:00', 'UTC', 'America/New_York')\n        expected = 0.95949\n        self.assertAlmostEqual(result, expected, places=5)\n        \n    def test_case_2(self):\n        # Input 2: Testing with a date from a year halfway between two solar cycle years\n        result = task_func('1991-01-01 00:00:00', 'UTC', 'America/New_York')\n        expected = 0.415415\n        self.assertAlmostEqual(result, expected, places=5)\n    def test_case_3(self):\n        # Input 3: Testing with a date from the third solar cycle year\n        result = task_func('2008-01-01 00:00:00', 'UTC', 'America/New_York')\n        expected = 0.959492\n        self.assertAlmostEqual(result, expected, places=5)\n    def test_case_4(self):\n        # Input 4: Testing with a date from a recent year\n        result = task_func('2023-01-01 00:00:00', 'UTC', 'America/New_York')\n        expected = 0.654860\n        self.assertAlmostEqual(result, expected, places=5)\n    def test_case_5(self):\n        # Input 5: Testing with a date from a year close to a solar cycle year\n        result = task_func('2018-01-01 00:00:00', 'UTC', 'America/New_York')\n        expected = 0.841253\n        self.assertAlmostEqual(result, expected, places=5)",
+    "entry_point": "task_func",
+    "libs": [
+      "dateutil",
+      "math",
+      "numpy",
+      "pytz"
+    ],
+    "instruct_prompt": "Calculate solar activity based on the date and time, taking into account the solar cycle of 11 years.\nThe function should output with:\n    float: The solar activity between 0 and 1. The value represents the solar activity\n    calculated using a cosine function based on the years since the closest solar cycle year.\nYou should write self-contained code starting with:\n```\nimport pytz\nimport numpy as np\nfrom dateutil.parser import parse\nimport math\nSOLAR_CYCLE_YEARS = np.array([1986, 1996, 2008, 2019])\ndef task_func(date_str, from_tz, to_tz):\n```",
+    "code_prompt": "import pytz\nimport numpy as np\nfrom dateutil.parser import parse\nimport math\nSOLAR_CYCLE_YEARS = np.array([1986, 1996, 2008, 2019])\ndef task_func(date_str, from_tz, to_tz):",
+    "canonical_solution": "    from_tz = pytz.timezone(from_tz)\n    to_tz = pytz.timezone(to_tz)\n    given_date = parse(date_str).replace(tzinfo=from_tz)\n    converted_date = given_date.astimezone(to_tz)\n\n    solar_cycle_year = SOLAR_CYCLE_YEARS[np.argmin(np.abs(SOLAR_CYCLE_YEARS - converted_date.year))]\n    years_since_solar_cycle_year = abs(converted_date.year - solar_cycle_year)\n\n    solar_activity = math.cos(math.pi * years_since_solar_cycle_year / 11)\n\n    return solar_activity"
+  }
+}

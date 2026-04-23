@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/892",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260130103016_37fe59d5",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import random\nfrom collections import Counter\n\ndef task_func(strings: list) -> dict:\n    \"\"\"\n    Analyzes a given list of strings by randomly sampling and counting occurrences of the '}' character.\n\n    The function randomly selects 10 strings from the input list (with replacement) and counts how many\n    '}' characters appear in each selected string. It returns a Counter where keys are the per-string\n    counts of '}' and values are how many times that count appeared across the 10 samples.\n\n    Parameters:\n    - strings (list): A list of strings to be analyzed.\n\n    Returns:\n    dict: A Counter mapping per-string '}' counts to their frequency across 10 random samples.\n          Returns an empty Counter if the input list is empty.\n\n    Requirements:\n    - random\n    - collections\n\n    Example:\n    >>> task_func(['abcd}def}', 'pqrs}tuv}', 'wxyz}123}', '456}789}', '0ab}cde}'])\n    Counter({2: 10})  # All 5 strings have 2 '}' each, so all 10 samples return count 2\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        result = task_func(['abcd}def}', 'pqrs}tuv}', 'wxyz}123}', '456}789}', '0ab}cde}'])\n        total_counts = sum(result.values())\n        self.assertEqual(total_counts, 10)\n        for key in result:\n            self.assertTrue(1 <= key <= 2)\n    def test_case_2(self):\n        result = task_func(['abcd', 'pqrs', 'wxyz', '456', '0ab'])\n        total_counts = sum(result.values())\n        self.assertEqual(total_counts, 10)\n        self.assertTrue(0 in result)\n        self.assertEqual(result[0], 10)\n    def test_case_3(self):\n        result = task_func(['a}b}c}d', 'p}q}r}s', 'w}x}y}z', '4}5}6', '0}a}b'])\n        total_counts = sum(result.values())\n        self.assertEqual(total_counts, 10)\n        for key in result:\n            self.assertTrue(2 <= key <= 4)\n    def test_case_4(self):\n        result = task_func([])\n        self.assertEqual(result, Counter())\n    def test_case_5(self):\n        result = task_func(['a}b}c}d}e}f}g}h}i}j}k}l}'])\n        total_counts = sum(result.values())\n        self.assertEqual(total_counts, 10)\n        self.assertTrue(12 in result)\n        self.assertEqual(result[12], 10)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "random"
+    ],
+    "instruct_prompt": "Analyzes a given list of strings for the occurrence of a specific pattern and counts the occurrences.\nThe function should output with:\n    dict: A dictionary with results of string analysis showing counts of the pattern.\nYou should write self-contained code starting with:\n```\nimport random\nfrom collections import Counter\ndef task_func(strings: list) -> dict:\n```",
+    "code_prompt": "import random\nfrom collections import Counter\ndef task_func(strings: list) -> dict:",
+    "canonical_solution": "    if not strings:\n        return Counter()\n\n    pattern = '}'\n    random_choices = random.choices(strings, k=10)\n    pattern_counts = Counter([string.count(pattern) for string in random_choices])\n\n    return pattern_counts"
+  }
+}

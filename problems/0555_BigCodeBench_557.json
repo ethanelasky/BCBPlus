@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/557",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129143322_46739249",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom difflib import SequenceMatcher\nimport matplotlib.pyplot as plt\n\ndef task_func(s_list, plot_path=None):\n    \"\"\"\n    Analyze and plot the average similarity scores of strings in a list.\n\n    This function calculates the average similarity score of each string compared to all other strings in the list using the SequenceMatcher ratio. If a plot path is provided, it saves the plot of these scores; otherwise, it just returns the scores.\n\n    Parameters:\n    s_list (list of str): List of strings to analyze.\n    plot_path (str, optional): Path to save the plot. If None, plot is not saved.\n\n    Returns:\n    list: List of average similarity scores for each string in `s_list`.\n          If the list contains a single element, returns [numpy.nan] (a list containing numpy.nan).\n\n    Raises:\n    ValueError: If `s_list` is not a list of strings.\n\n    Requirements:\n    - numpy\n    - difflib\n    - matplotlib.pyplot as plt\n\n    Example:\n    >>> s_list = ['apple', 'apples', 'ape', 'app', 'april']\n    >>> avg_scores = task_func(s_list, 'similarity_plot.png')\n    >>> expect = [0.7522727272727273, 0.6969696969696969, 0.6458333333333333, 0.6458333333333333, 0.5363636363636364]\n    >>> np.all(np.isclose(avg_scores, expect, atol=1e-4))\n    True\n    >>> os.remove('similarity_plot.png')\n    \"\"\"\n",
+    "test": "import unittest\nimport os \nclass TestCases(unittest.TestCase):\n    def test_average_similarity(self):\n        s_list = ['apple', 'apples', 'ape', 'app', 'april']\n        expected_length = len(s_list)\n        result = task_func(s_list)\n        expect = [0.7522727272727273, 0.6969696969696969, 0.6458333333333333, 0.6458333333333333, 0.5363636363636364]\n        self.assertEqual(len(result), expected_length)\n        self.assertTrue(all(isinstance(score, float) for score in result))\n        self.assertAlmostEqual(result, expect,)\n    def test_invalid_input(self):\n        with self.assertRaises(ValueError):\n            task_func([1, 2, 3])\n    def test_empty_list(self):\n        result = task_func([])\n        self.assertEqual(result, [])\n    def test_single_string(self):\n        result = task_func(['apple'])\n        self.assertTrue(np.isnan(result[0])) \n    def test_plot_saving(self):\n        s_list = ['apple', 'apples', 'ape']\n        plot_path = 'test_plot.png'\n        task_func(s_list, plot_path)\n        self.assertTrue(os.path.exists(plot_path))\n        os.remove(plot_path)",
+    "entry_point": "task_func",
+    "libs": [
+      "difflib",
+      "numpy",
+      "matplotlib"
+    ],
+    "instruct_prompt": "Analyze and plot the average similarity scores of strings in a list. This function calculates the average similarity score of each string compared to all other strings in the list using the SequenceMatcher ratio. If a plot path is provided, it saves the plot of these scores; otherwise, it just returns the scores.\nThe function should raise the exception for: ValueError: If `s_list` is not a list of strings. Return numpy.nan if the list contains a single element\nThe function should output with:\n    list: List of average similarity scores for each string in `s_list`.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom difflib import SequenceMatcher\nimport matplotlib.pyplot as plt\ndef task_func(s_list, plot_path=None):\n```",
+    "code_prompt": "import numpy as np\nfrom difflib import SequenceMatcher\nimport matplotlib.pyplot as plt\ndef task_func(s_list, plot_path=None):",
+    "canonical_solution": "    if not all(isinstance(item, str) for item in s_list):\n        raise ValueError(\"All items in s_list must be strings.\")\n\n    avg_scores = []\n    for s in s_list:\n        scores = [SequenceMatcher(None, s, other_s).ratio() for other_s in s_list if s != other_s]\n        avg_score = np.mean(scores)\n        avg_scores.append(avg_score)\n\n    if plot_path:\n        plt.bar(s_list, avg_scores)\n        plt.savefig(plot_path)\n    \n    return avg_scores"
+  }
+}

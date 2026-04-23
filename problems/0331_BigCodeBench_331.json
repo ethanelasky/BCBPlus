@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/331",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import bisect\nimport random\n\ndef task_func(num, list_length = 5, min_value = 0, max_value = 0):\n    \"\"\"\n    Insert a number into a randomly generated sorted list and return the new sorted list.\n\n    Parameters:\n    num (int): The integer number to insert.\n    list_length (int): The length of the randomly generated list of integers.\n    min_value (int): The minimum value for randomly generated integers.\n    max_value (int): The maximum value for randomly generated integers.\n\n    Returns:\n    tuple: A tuple containing two lists: \n        list[int]: The randomly generated list of integers with the specified length.\n        list[int]: A new sorted list containing the original elements and the inserted number.\n    \n    Requirements:\n    - bisect\n    - random\n\n    Example:\n    >>> random.seed(0)\n    >>> task_func(4, 5, 100, 100)\n    ([100, 100, 100, 100, 100], [4, 100, 100, 100, 100, 100])\n    >>> task_func(15, 0, 10, 20)\n    ([], [15])\n    \"\"\"\n",
+    "instruct_prompt": "Insert a number into a randomly generated sorted list and return the new sorted list.\nThe function should output with:\n    tuple: A tuple containing two lists:\n    list[int]: The randomly generated list of integers with the specified length.\n    list[int]: A new sorted list containing the original elements and the inserted number.\nYou should write self-contained code starting with:\n```\nimport bisect\nimport random\ndef task_func(num, list_length = 5, min_value = 0, max_value = 0):\n```",
+    "code_prompt": "import bisect\nimport random\ndef task_func(num, list_length = 5, min_value = 0, max_value = 0):\n",
+    "test": "import unittest\nfrom unittest.mock import patch\nimport random\nclass TestCases(unittest.TestCase):\n    @patch('random.randint', side_effect=[12, 23, 34, 45, 56])\n    def test_insert_into_empty_list(self, mock_randint):\n        random.seed(0)\n        result = task_func(15, 0, 5, 60)\n        self.assertEqual(result, ([], [15]))\n    @patch('random.randint', side_effect=[12, 23, 34, 45, 56])\n    def test_insert_into_existing_list(self, mock_randint):\n        random.seed(0)\n        result = task_func(15, 5, 10, 60)\n        self.assertEqual(result, ([12, 23, 34, 45, 56], [12, 15, 23, 34, 45, 56]))\n    @patch('random.randint', side_effect=[12, 23, 34, 45, 56])\n    def test_insert_at_beginning(self, mock_randint):\n        random.seed(0)\n        result = task_func(4, 4, 10, 60)\n        self.assertEqual(result, ([12, 23, 34, 45], [4, 12, 23, 34, 45]))\n    # @patch('random.randint', side_effect=[12, 23, 34, 45, 56])\n    def test_insert_at_end(self):\n        random.seed(0)\n        result = task_func(15, 4, 10, 10)\n        self.assertEqual(result, ([10, 10, 10, 10], [10, 10, 10, 10, 15]))\n    @patch('random.randint', side_effect=[12, 34, 56])\n    def test_insert_in_middle(self, mock_randint):\n        random.seed(0)\n        result = task_func(15, 3, 10, 60)\n        self.assertEqual(result, ([12, 34, 56], [12, 15, 34, 56]))\n    @patch('random.randint', side_effect=[12, 23, 34, 45, 56])\n    def test_random_list_length(self, mock_randint):\n        random.seed(0)\n        result = task_func(15, 5, 10, 20)\n        self.assertEqual(len(result[0]), 5)\n        self.assertIn(15, result[1])",
+    "entry_point": "task_func",
+    "libs": [
+      "bisect",
+      "random"
+    ],
+    "canonical_solution": "\n    numbers = [random.randint(min_value, max_value) for _ in range(list_length)]\n    sorted_list = numbers.copy()\n    bisect.insort(sorted_list, num)\n    return numbers, sorted_list"
+  }
+}

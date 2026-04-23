@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/558",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260127184704_e493db22",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\n\n\ndef task_func(a, b, columns=['A', 'B']):\n    \"\"\"\n    Standardize two lists of numbers using the StandardScaler from sklearn and visualize the standardized values using a bar plot.\n\n    Parameters:\n        a (list): A list of numbers.\n        b (list): Another list of numbers.\n        columns (list, optional): Column names for the resulting DataFrame. Defaults to ['A', 'B'].\n\n    Returns:\n        pd.DataFrame: A DataFrame containing the standardized values.\n        matplotlib.axes.Axes: Axes object of the displayed bar plot.\n\n    Note:\n        - If both input lists are empty, returns an empty DataFrame with the specified columns and an empty bar plot.\n        - Raises ValueError if the input lists have different lengths.\n\n    Requirements:\n        - numpy\n        - pandas\n        - sklearn.preprocessing\n        - matplotlib.pyplot\n\n    Example:\n        >>> df, ax = task_func([1, 2, 3, 4, 5], [2, 4, 6, 8, 10])\n        >>> isinstance(df, pd.DataFrame) and isinstance(ax, matplotlib.axes.Axes)\n        True\n    \"\"\"",
+    "test": "import unittest\nimport matplotlib\nclass TestCases(unittest.TestCase):\n    def test_standard_case(self):\n        \"\"\"Test the function with non-empty lists.\"\"\"\n        df, ax = task_func([1, 2, 3], [4, 5, 6])\n        self.assertIsInstance(df, pd.DataFrame)\n        self.assertEqual(df.shape, (3, 2))\n        self.assertIsInstance(ax, matplotlib.axes.Axes)\n    def test_empty_lists(self):\n        \"\"\"Test the function with empty lists.\"\"\"\n        df, ax = task_func([], [])\n        self.assertIsInstance(df, pd.DataFrame)\n        self.assertEqual(df.empty, True)\n        self.assertIsInstance(ax, matplotlib.axes.Axes)\n    def test_unequal_length_lists(self):\n        \"\"\"Test the function with lists of unequal length. Expecting an exception.\"\"\"\n        with self.assertRaises(ValueError):\n            task_func([1, 2, 3], [4, 5])\n    def test_single_value_lists(self):\n        \"\"\"Test the function with single-value lists.\"\"\"\n        df, ax = task_func([1], [1])\n        self.assertEqual(df.shape, (1, 2))\n        self.assertIsInstance(ax, matplotlib.axes.Axes)\n    def test_large_lists(self):\n        \"\"\"Test the function with large lists.\"\"\"\n        df, ax = task_func(list(range(100)), list(range(100, 200)))\n        self.assertEqual(df.shape, (100, 2))\n        self.assertIsInstance(ax, matplotlib.axes.Axes)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy",
+      "matplotlib",
+      "sklearn"
+    ],
+    "instruct_prompt": "Standardize two lists of numbers using the StandardScaler from sklearn and visualize the standardized values using a bar plot.\nThe function should output with:\n    pd.DataFrame: A DataFrame containing the standardized values.\n    matplotlib.axes.Axes: Axes object of the displayed bar plot.\nYou should write self-contained code starting with:\n```\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(a, b, columns=['A', 'B']):\n```",
+    "code_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(a, b, columns=['A', 'B']):",
+    "canonical_solution": "    # Handle empty input lists by returning an empty DataFrame and Axes object\n    if len(a) == 0 or len(b) == 0:\n        fig, ax = plt.subplots()\n        plt.close(fig)  # Prevent empty plot from displaying\n        return pd.DataFrame(), ax\n\n    scaler = StandardScaler()\n    standardized_values = scaler.fit_transform(np.array([a, b]).T)\n    df = pd.DataFrame(standardized_values, columns=columns)\n\n    ax = df.plot(kind='bar')\n    plt.show()\n    return df, ax"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/396",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import matplotlib\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy import stats\n\n\ndef task_func(mu, sigma, sample_size, seed=0):\n    \"\"\"\n    Create a Gaussian kernel density estimate diagram of a normal distribution with a given mean and a \n    standard deviation using a random sample of a size determined by the sample_size parameter. The density \n    diagram is plotted using default settings in a deterministic matplotlib plot. Return the axes object.\n    \n    Parameters:\n    mu (float): The mean of the normal distribution.\n    sigma (float): The standard deviation of the normal distribution.\n    sample_size (int): The size of the sample to generate. Must be a positive integer.\n    seed (int, Optional): The seed to be used for the random number generator. Default is 0.\n    \n    Returns:\n    matplotlib.axes._axes.Axes: Axes object containing the plot of the normal distribution.\n    \n    Requirements:\n    - numpy\n    - matplotlib\n    - scipy.stats\n    \n    Example:\n    >>> ax = task_func(0, 1, 1000)\n    >>> type(ax) # The result should be a matplotlib.axes._axes.Axes object\n    <class 'matplotlib.axes._axes.Axes'>\n    \"\"\"\n",
+    "instruct_prompt": "Create a Gaussian kernel density estimate diagram of a normal distribution with a given mean and a standard deviation using a random sample of a size determined by the sample_size parameter. The density diagram is plotted using default settings in a deterministic matplotlib plot. Return the axes object.\nThe function should output with:\n    matplotlib.axes._axes.Axes: Axes object containing the plot of the normal distribution.\nYou should write self-contained code starting with:\n```\nimport matplotlib\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy import stats\ndef task_func(mu, sigma, sample_size, seed=0):\n```",
+    "code_prompt": "import matplotlib\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom scipy import stats\ndef task_func(mu, sigma, sample_size, seed=0):\n",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        with self.assertRaises(ValueError):\n            ax = task_func(0, 1, 0, 77)        \n    def test_case_2(self):\n        mu, sigma, sample_size, seed = 0, 1, 10000, 42\n        ax = task_func(mu, sigma, sample_size, seed)\n        line = ax.lines[0]\n        x_data, y_data = line.get_data()\n        assert isinstance(ax, matplotlib.axes._axes.Axes)\n        assert min(x_data) < mu - 3*sigma and max(x_data) > mu + 3*sigma\n    def test_case_3(self):\n        ax = task_func(0, 1, 10000, 42)\n        xlim = ax.get_xlim()\n        ylim = ax.get_ylim()\n        assert xlim[0] < 0 and xlim[1] > 0\n        assert ylim[0] < 0 and ylim[1] > 0\n    def test_case_4(self):\n        ax = task_func(0, 1, 1000, 42)\n        assert len(ax.lines) == 1\n    def test_case_5(self):\n        ax1 = task_func(0, 1, 42)\n        ax2 = task_func(0, 1, 42)\n        line1 = ax1.lines[0]\n        line2 = ax2.lines[0]\n        x_data1, y_data1 = line1.get_data()\n        x_data2, y_data2 = line2.get_data()\n        assert np.array_equal(x_data1, x_data2) and np.array_equal(y_data1, y_data2)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib",
+      "scipy"
+    ],
+    "canonical_solution": "    if sample_size <= 0:\n        raise ValueError('sample_size must be a positive integer.')\n\n    np.random.seed(seed)\n    sample = np.random.normal(mu, sigma, sample_size)\n    density = stats.gaussian_kde(sample)\n\n    x = np.linspace(min(sample), max(sample), sample_size)\n    fig, ax = plt.subplots()\n    ax.plot(x, density(x))\n    \n    return ax"
+  }
+}

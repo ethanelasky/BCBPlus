@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/621",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from itertools import chain\nimport numpy as np\nfrom sklearn.preprocessing import StandardScaler\nimport matplotlib.pyplot as plt\n\n\ndef task_func(L):\n    '''\n    Convert a list of lists 'L' into a single list of integers, standardize the integers, and plot the standardized values.\n\n    Parameters:\n    L (list of lists): A list of lists where each sublist contains integers.\n    \n    Returns:\n    matplotlib.axes._axes.Axes: A plot displaying the standardized values.\n\n    Requirements:\n    - numpy\n    - itertools\n    - sklearn.preprocessing\n    - matplotlib.pyplot\n\n    Examples:\n    >>> ax = task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n    '''\n",
+    "instruct_prompt": "Convert a list of lists 'L' into a single list of integers, standardize the integers, and plot the standardized values.\nThe function should output with:\n    matplotlib.axes._axes.Axes: A plot displaying the standardized values.\nYou should write self-contained code starting with:\n```\nfrom itertools import chain\nimport numpy as np\nfrom sklearn.preprocessing import StandardScaler\nimport matplotlib.pyplot as plt\ndef task_func(L):\n```",
+    "code_prompt": "from itertools import chain\nimport numpy as np\nfrom sklearn.preprocessing import StandardScaler\nimport matplotlib.pyplot as plt\ndef task_func(L):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        ax = task_func([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 9)\n    def test_case_2(self):\n        ax = task_func([[-1, -2, -3], [-4, -5, -6], [-7, -8, -9]])\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 9)\n    def test_case_3(self):\n        ax = task_func([[1, -2, 3], [-4, 5, -6], [7, -8, 9]])\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 9)\n    def test_case_4(self):\n        ax = task_func([[1, 2, 3, 4, 5]])\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 5)\n    def test_case_5(self):\n        ax = task_func([[1, 2], [3, 4, 5, 6], [7]])\n        self.assertIsInstance(ax, plt.Axes)\n        self.assertEqual(len(ax.lines[0].get_ydata()), 7)",
+    "entry_point": "task_func",
+    "libs": [
+      "matplotlib",
+      "numpy",
+      "itertools",
+      "sklearn"
+    ],
+    "canonical_solution": "    data = list(chain(*L))\n    data = np.array(data).reshape(-1, 1)\n\n    scaler = StandardScaler()\n    standardized_data = scaler.fit_transform(data)\n\n    fig, ax = plt.subplots()\n    ax.plot(standardized_data)\n    plt.close(fig)\n    return ax"
+  }
+}

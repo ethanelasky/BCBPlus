@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/254",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129143544_3346f885",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import json\nimport math\n\n\ndef task_func(decimal_value, precision=2):\n    \"\"\"\n    Calculate the square root of the given decimal value to a certain precision and then encode the result as a JSON string.\n    \n    Parameters:\n    decimal_value: The numeric value (int, float, or Decimal) to compute the square root of.\n    precision (int, Optional): The maximum number of decimal places to display in the result. Trailing zeros after the decimal point may be stripped. Defaults to 2.\n    \n    Returns:\n    str: The square root of the decimal value encoded as a JSON string.\n    \n    Raises:\n    ValueError: If decimal_value is negative.\n    \n    Requirements:\n    - json\n    - math\n    \n    Example:\n    >>> from decimal import Decimal\n    >>> decimal_value = Decimal('3.9')\n    >>> json_str = task_func(decimal_value, 2)\n    >>> print(json_str)\n    \"1.97\"\n    \"\"\"\n",
+    "test": "import unittest\nimport json\nfrom decimal import Decimal\n\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        decimal_value = Decimal('4.0')\n        json_str = task_func(decimal_value)\n        result = json.loads(json_str)\n        # Accept either \"2.0\" or \"2.00\" - both are valid representations with up to 2 decimal places\n        self.assertIn(result, [\"2.0\", \"2.00\"])\n    \n    def test_case_2(self):\n        decimal_value = Decimal('0.0')\n        json_str = task_func(decimal_value)\n        result = json.loads(json_str)\n        self.assertIn(result, [\"0.0\", \"0.00\"])\n    \n    def test_case_3(self):\n        decimal_value = Decimal('0.0001')\n        json_str = task_func(decimal_value)\n        self.assertEqual(json.loads(json_str), \"0.01\")\n    \n    def test_case_4(self):\n        decimal_value = Decimal('1000000.0')\n        json_str = task_func(decimal_value)\n        result = json.loads(json_str)\n        self.assertIn(result, [\"1000.0\", \"1000.00\"])\n    \n    def test_case_5(self):\n        decimal_value = Decimal('-1.0')\n        with self.assertRaises(ValueError):\n            task_func(decimal_value)\n",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "json"
+    ],
+    "instruct_prompt": "Calculate the square root of the given decimal value to a certain precision and then encode the result as a JSON string.\nThe function should output with:\n    str: The square root of the decimal value encoded as a JSON string.\nYou should write self-contained code starting with:\n```\nimport json\nimport math\ndef task_func(decimal_value, precision=2):\n```",
+    "code_prompt": "import json\nimport math\ndef task_func(decimal_value, precision=2):",
+    "canonical_solution": "    # Calculate the square root of the decimal value\n    square_root = round(math.sqrt(decimal_value), 2)\n    \n    # Encode the result as a JSON string\n    json_str = json.dumps(str(square_root))\n    \n    return json_str"
+  }
+}

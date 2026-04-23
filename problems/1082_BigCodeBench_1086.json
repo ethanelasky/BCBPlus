@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/1086",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import string\nimport random\nimport pandas as pd\nimport numpy as np\n\n# Constants\nNUM_SAMPLES = 1000  # Number of samples\n\n\ndef task_func():\n    \"\"\"\n    Generates a DataFrame with two columns: a string field and a float field.\n    The string field contains randomly generated strings of 10 ASCII letters.\n    The float field contains randomly generated numbers between 0 and 10000,\n    formatted with two decimal places and a comma as the thousands separator.\n\n    Parameters:\n    - None\n\n    Returns:\n        DataFrame: A pandas DataFrame with NUM_SAMPLES rows. Each row contains a\n        random string in the 'String Field' column and a formatted float in the\n        'Float Field' column.\n\n    Requirements:\n    - string\n    - random\n    - pandas\n    - numpy\n\n    Example:\n    >>> random.seed(0)\n    >>> np.random.seed(0)\n    >>> dataset = task_func()\n    >>> print(dataset.head(1))\n      String Field Float Field\n    0   RNvnAvOpyE    5,488.14\n\n    Note: The exact values in the dataset will vary as they are randomly generated.\n    \"\"\"\n",
+    "instruct_prompt": "Generates a DataFrame with two columns: a string field and a float field. The string field contains randomly generated strings of 10 ASCII letters. The float field contains randomly generated numbers between 0 and 10000, formatted with two decimal places and a comma as the thousands separator.\nNote that: The exact values in the dataset will vary as they are randomly generated.\nThe function should output with:\n    DataFrame: A pandas DataFrame with NUM_SAMPLES rows. Each row contains a\n    random string in the 'String Field' column and a formatted float in the\n    'Float Field' column.\nYou should write self-contained code starting with:\n```\nimport string\nimport random\nimport pandas as pd\nimport numpy as np\n# Constants\nNUM_SAMPLES = 1000  # Number of samples\ndef task_func():\n```",
+    "code_prompt": "import string\nimport random\nimport pandas as pd\nimport numpy as np\n# Constants\nNUM_SAMPLES = 1000  # Number of samples\ndef task_func():\n",
+    "test": "import unittest\nimport pandas as pd\nimport random\nclass TestCases(unittest.TestCase):\n    \"\"\"Test cases for task_func.\"\"\"\n    def test_dataframe_creation(self):\n        \"\"\"\n        Test if the function returns a pandas DataFrame.\n        \"\"\"\n        random.seed(1)\n        result = task_func()\n        self.assertIsInstance(result, pd.DataFrame)\n    def test_row_count(self):\n        \"\"\"\n        Test if the DataFrame contains the correct number of rows.\n        \"\"\"\n        random.seed(2)\n        result = task_func()\n        self.assertEqual(len(result), NUM_SAMPLES)\n    def test_column_count(self):\n        \"\"\"\n        Test if the DataFrame contains exactly two columns.\n        \"\"\"\n        random.seed(3)\n        result = task_func()\n        self.assertEqual(len(result.columns), 2)\n    def test_string_field_format(self):\n        \"\"\"\n        Test if the 'String Field' contains strings of 10 ASCII letters.\n        \"\"\"\n        random.seed(4)\n        result = task_func()\n        all_strings = all(result[\"String Field\"].str.match(\"^[A-Za-z]{10}$\"))\n        self.assertTrue(all_strings)\n    def test_float_field_format(self):\n        \"\"\"\n        Test if the 'Float Field' contains formatted float strings.\n        \"\"\"\n        random.seed(5)\n        result = task_func()\n        all_floats = all(\n            isinstance(float(val.replace(\",\", \"\")), float)\n            for val in result[\"Float Field\"]\n        )\n        self.assertTrue(all_floats)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy",
+      "random",
+      "string"
+    ],
+    "canonical_solution": "    data = {\n        \"String Field\": [\n            \"\".join(random.choices(string.ascii_letters, k=10))\n            for _ in range(NUM_SAMPLES)\n        ],\n        \"Float Field\": [f\"{x:,.2f}\" for x in np.random.uniform(0, 10000, NUM_SAMPLES)],\n    }\n\n    df = pd.DataFrame(data)\n\n    return df"
+  }
+}

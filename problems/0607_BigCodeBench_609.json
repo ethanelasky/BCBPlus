@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/609",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from itertools import combinations\nfrom random import sample\n\n\ndef task_func(df, tuples, n_plots):\n    \"\"\"\n    Removes rows from a DataFrame based on a list of tuples, each representing row values to match and remove.\n    Generates up to 'n_plots' scatter plots for random combinations of two columns from the remaining DataFrame.\n\n    Parameters:\n    - df (pd.DataFrame): The input DataFrame.\n    - tuples (list): A list of tuples, where each tuple contains values that, if matched, should result in the row being removed.\n    - n_plots (int): The maximum number of scatter plots to generate from the remaining data.\n\n    Returns:\n    - pd.DataFrame: The DataFrame after specified rows have been removed.\n    - list: A list of tuples, each containing a pair of column names used for the plot and the corresponding plot object.\n\n    Requirements:\n    - random\n    - itertools\n\n    Example:\n    >>> import numpy as np, pandas as pd\n    >>> df = pd.DataFrame(np.random.rand(10, 5), columns=['A', 'B', 'C', 'D', 'E'])\n    >>> tuples = [(0.1, 0.2, 0.3, 0.4, 0.5)]\n    >>> modified_df, plots = task_func(df, tuples, 3)\n    \"\"\"\n",
+    "instruct_prompt": "Removes rows from a DataFrame based on a list of tuples, each representing row values to match and remove. Generates up to 'n_plots' scatter plots for random combinations of two columns from the remaining DataFrame.\nThe function should output with:\n    pd.DataFrame: The DataFrame after specified rows have been removed.\n    list: A list of tuples, each containing a pair of column names used for the plot and the corresponding plot object.\nYou should write self-contained code starting with:\n```\nfrom itertools import combinations\nfrom random import sample\ndef task_func(df, tuples, n_plots):\n```",
+    "code_prompt": "from itertools import combinations\nfrom random import sample\ndef task_func(df, tuples, n_plots):\n",
+    "test": "import unittest\nimport pandas as pd\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        self.df = pd.DataFrame(np.random.randint(0,100,size=(100, 5)), columns=list('ABCDE'))\n    def test_case_1(self):\n        tuples = [(10, 20, 30, 40, 50), (60, 70, 80, 90, 100)]\n        modified_df, _ = task_func(self.df, tuples, 3)\n        self.assertFalse(any(modified_df.apply(tuple, axis=1).isin(tuples)))\n    def test_case_2(self):\n        n_plots = 4\n        _, plots = task_func(self.df, [], n_plots)\n        self.assertEqual(len(plots), n_plots)\n    def test_case_3(self):\n        _, plots = task_func(self.df, [], 5)\n        selected_columns = [plot[0] for plot in plots]\n        self.assertTrue(len(selected_columns) == len(set(tuple(item) for item in selected_columns)))\n    def test_case_4(self):\n        modified_df, plots = task_func(self.df, [], 2)\n        self.assertEqual(len(modified_df), len(self.df))\n        self.assertEqual(len(plots), 2)\n    def test_case_5(self):\n        tuples = [(101, 202, 303, 404, 505), (606, 707, 808, 909, 1000)]\n        modified_df, _ = task_func(self.df, tuples, 3)\n        self.assertEqual(len(modified_df), len(self.df))",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "itertools"
+    ],
+    "canonical_solution": "    COLUMNS = ['A', 'B', 'C', 'D', 'E']\n    df = df.set_index(list('ABCDE')).drop(tuples, errors='ignore').reset_index()\n    plots = []\n    possible_combinations = list(combinations(COLUMNS, 2))\n    for _ in range(min(n_plots, len(possible_combinations))):\n        selected_columns = sample(possible_combinations, 1)[0]\n        possible_combinations.remove(selected_columns)\n        ax = df.plot.scatter(x=selected_columns[0], y=selected_columns[1])\n        plots.append((selected_columns, ax))\n    return df, plots"
+  }
+}

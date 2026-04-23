@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/667",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import heapq\nimport collections\n\ndef task_func(x, n):\n    \"\"\"\n    Find the n most common letters in a dictionary, x, where the key letters and the values are their frequencies.\n\n    Parameters:\n    - x (dict): The dictionary of letter frequencies.\n    - n (int): The number of most frequent letters to return.\n\n    Returns:\n    - list: The n most frequent letters.\n\n    Requirements:\n    - heapq\n    - collections\n\n    Example:\n    >>> task_func({'a': 1, 'b': 2, 'c': 3}, 2)\n    ['c', 'b']\n    \"\"\"\n",
+    "instruct_prompt": "Find the n most common letters in a dictionary, x, where the key letters and the values are their frequencies.\nThe function should output with:\n    list: The n most frequent letters.\nYou should write self-contained code starting with:\n```\nimport heapq\nimport collections\ndef task_func(x, n):\n```",
+    "code_prompt": "import heapq\nimport collections\ndef task_func(x, n):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        self.assertEqual(task_func({'a': 1, 'b': 2, 'c': 3}, 2), ['c', 'b'])\n    def test_case_2(self):\n        self.assertEqual(task_func({'a': 1, 'b': 2, 'c': 3}, 1), ['c'])\n    def test_case_3(self):\n        self.assertEqual(task_func({'a': 1, 'b': 2, 'c': 3}, 3), ['c', 'b', 'a'])\n    def test_case_4(self):\n        self.assertEqual(task_func({'a': 1, 'b': 2, 'c': 3}, 0), [])\n    def test_case_5(self):\n        self.assertEqual(task_func({'a': 1, 'b': 2, 'c': 3}, 4), ['c', 'b', 'a'])",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "heapq"
+    ],
+    "canonical_solution": "    counter = collections.Counter(x)\n    most_frequent = heapq.nlargest(n, counter.keys(), key=counter.get)\n\n    return most_frequent"
+  }
+}

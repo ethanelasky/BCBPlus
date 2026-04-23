@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/194",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nimport matplotlib.pyplot as plt\n\n# Constants\nBAR_COLOR = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']\n\n\ndef task_func(data_size):\n    \"\"\"\n    Generates random numeric data and creates a histogram of the data.\n    The color of the histogram bars is randomly selected from a predefined list.\n\n    Parameters:\n    data_size (int): The number of data points to generate.\n\n    Returns:\n    tuple:\n        - ndarray: The array of randomly generated data.\n        - str: The color used for the histogram bars.\n\n    Requirements:\n    - numpy\n    - matplotlib\n\n    Example:\n    >>> data, color = task_func(5)\n    >>> print(data.shape)\n    (5,)\n    >>> print(color in ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black'])\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Generates random numeric data and creates a histogram of the data. The color of the histogram bars is randomly selected from a predefined list.\nThe function should output with:\n    tuple:\n    ndarray: The array of randomly generated data.\n    str: The color used for the histogram bars.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport matplotlib.pyplot as plt\n# Constants\nBAR_COLOR = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']\ndef task_func(data_size):\n```",
+    "code_prompt": "import numpy as np\nimport matplotlib.pyplot as plt\n# Constants\nBAR_COLOR = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']\ndef task_func(data_size):\n",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        data, color = task_func(100)\n        self.assertEqual(len(data), 100)\n        self.assertTrue(color in ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black'])\n    def test_case_2(self):\n        data, color = task_func(50)\n        self.assertEqual(len(data), 50)\n        self.assertTrue(color in ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black'])\n    def test_case_3(self):\n        data, color = task_func(150)\n        self.assertEqual(len(data), 150)\n        self.assertTrue(color in ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black'])\n    def test_case_4(self):\n        data, color = task_func(200)\n        self.assertEqual(len(data), 200)\n        self.assertTrue(color in ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black'])\n    def test_case_5(self):\n        data, color = task_func(250)\n        self.assertEqual(len(data), 250)\n        self.assertTrue(color in ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black'])",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib"
+    ],
+    "canonical_solution": "    np.random.seed(0)\n    data = np.random.randn(data_size)\n    color = np.random.choice(BAR_COLOR)\n    plt.hist(data, bins=np.arange(-3, 4, 0.5), color=color, edgecolor='black')\n    return data, color"
+  }
+}

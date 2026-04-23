@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/620",
+  "dataset": "bigcodebench",
+  "version": 2,
+  "version_id": "v2_20260130154158_2c85b57d",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nimport pandas as pd\n\n# Constants\nRANGE = (1, 100)\n\ndef task_func(L):\n    '''\n    Generates a DataFrame filled with random integers. The dimensions of the DataFrame (number of rows and columns)\n    are determined by multiplying the integers within each nested list: the product of the first sublist determines\n    the number of rows, and the product of the second sublist determines the number of columns.\n\n    Requirements:\n    - numpy\n    - pandas\n\n    Parameters:\n    L (list of lists): A list of lists where each sublist contains two integers.\n\n    Returns:\n    DataFrame: A pandas DataFrame with random integers.\n\n    Example:\n    >>> df = task_func([[2, 3], [5, 6]])\n    >>> type(df)\n    <class 'pandas.core.frame.DataFrame'>\n    >>> df.shape\n    (6, 30)  # rows = 2*3, cols = 5*6\n    '''\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        result = task_func([[2, 3], [5, 6]])\n        self.assertEqual(result.shape, (2*3, 5*6))\n        self.assertTrue((result.values >= 1).all())\n        self.assertTrue((result.values <= 100).all())\n    def test_case_2(self):\n        result = task_func([[1, 1], [1, 1]])\n        self.assertEqual(result.shape, (1*1, 1*1))\n        self.assertTrue((result.values >= 1).all())\n        self.assertTrue((result.values <= 100).all())\n    def test_case_3(self):\n        result = task_func([[4, 5], [2, 3]])\n        self.assertEqual(result.shape, (4*5, 2*3))\n        self.assertTrue((result.values >= 1).all())\n        self.assertTrue((result.values <= 100).all())\n    def test_case_4(self):\n        result = task_func([[3, 2], [6, 5]])\n        self.assertEqual(result.shape, (3*2, 6*5))\n        self.assertTrue((result.values >= 1).all())\n        self.assertTrue((result.values <= 100).all())\n    def test_case_5(self):\n        result = task_func([[7, 8], [1, 2]])\n        self.assertEqual(result.shape, (7*8, 1*2))\n        self.assertTrue((result.values >= 1).all())\n        self.assertTrue((result.values <= 100).all())",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy"
+    ],
+    "instruct_prompt": "Generates a DataFrame filled with random integers. The dimensions of the DataFrame (number of rows and columns) are determined by multiplying pairs of integers from nested lists within the input list of lists 'L'.\nThe function should output with:\n    DataFrame: A pandas DataFrame with random integers.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport pandas as pd\n# Constants\nRANGE = (1, 100)\ndef task_func(L):\n```",
+    "code_prompt": "import numpy as np\nimport pandas as pd\n# Constants\nRANGE = (1, 100)\ndef task_func(L):",
+    "canonical_solution": "    rows, columns = L[0][0] * L[0][1], L[1][0] * L[1][1]\n    random_array = np.random.randint(RANGE[0], RANGE[1], size=(rows, columns))\n    df = pd.DataFrame(random_array)\n    \n    return df"
+  }
+}

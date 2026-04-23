@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/122",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260123124112_90d0d229",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import numpy as np\nimport random\n\ndef task_func(my_list):\n    \"\"\"\n    Appends a randomly selected integer between 0 and 100 to the given list 'my_list' and \n    returns a numpy array of random floating-point numbers. The size of the returned array \n    is equal to the sum of the numbers in the modified list.\n\n    Parameters:\n        my_list (list): A list of integers to which a random number will be added.\n\n    Returns:\n        numpy.ndarray: An array of random floating-point numbers. The length of the array \n                       is equal to the sum of the integers in 'my_list' after a random \n                       number has been appended.\n\n    Requirements:\n    - numpy\n    - random\n                       \n    Examples:\n        >>> result = task_func([2, 3, 5])\n        >>> 10 <= len(result) <= 110  # Expecting the length to be within the range after adding a random number between 0 and 100\n        True\n        >>> isinstance(result, np.ndarray)\n        True\n    \"\"\"",
+    "test": "import unittest\nfrom unittest.mock import patch\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def test_return_type(self):\n        \"\"\" Test that the function returns a numpy array. \"\"\"\n        result = task_func([1, 2, 3])\n        self.assertIsInstance(result, np.ndarray)\n    @patch('random.randint', return_value=50)\n    def test_array_size(self, mock_randint):\n        \"\"\" Test that the returned array has the correct size. \"\"\"\n        input_list = [1, 2, 3]\n        expected_size = sum(input_list) + 50  # The function adds a mocked random number to the list\n        result = task_func(input_list)\n        self.assertEqual(len(result), expected_size)\n    @patch('random.randint', return_value=50)\n    def test_list_modification(self, mock_randint):\n        \"\"\" Test that the input list is modified correctly with a mocked random value. \"\"\"\n        input_list = [1, 2, 3]\n        task_func(input_list)\n        self.assertIn(50, input_list)  # Asserting the list contains the mocked random value\n    @patch('random.randint', return_value=50)\n    def test_empty_list(self, mock_randint):\n        \"\"\" Test the function with an empty list and a mocked random addition. \"\"\"\n        result = task_func([])\n        self.assertEqual(len(result), 50)  # Expecting the array size to be equal to the mocked random number\n    @patch('random.randint', return_value=50)\n    def test_array_values_are_floats(self, mock_randint):\n        \"\"\" Test that the returned array contains floating-point numbers in [0, 1). \"\"\"\n        input_list = [1, 2]\n        result = task_func(input_list)\n        # Check array has correct length (1 + 2 + 50 = 53)\n        self.assertEqual(len(result), 53)\n        # Check all values are floats in valid range\n        self.assertTrue(all(0 <= x < 1 for x in result))\n        self.assertEqual(result.dtype, np.float64)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "random"
+    ],
+    "instruct_prompt": "Appends a randomly selected integer between 0 and 100 to the given list 'my_list' and returns a numpy array of random floating-point numbers. The size of the returned array is equal to the sum of the numbers in the modified list.\nThe function should output with:\n    numpy.ndarray: An array of random floating-point numbers. The length of the array\n    is equal to the sum of the integers in 'my_list' after a random\n    number has been appended.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport random\ndef task_func(my_list):\n```",
+    "code_prompt": "import numpy as np\nimport random\ndef task_func(my_list):",
+    "canonical_solution": "    random_number = random.randint(0, 100)\n    my_list.append(random_number)\n\n    size = sum(my_list)\n    random_array = np.random.rand(size)\n\n    return random_array"
+  }
+}

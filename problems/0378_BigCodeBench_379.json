@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/379",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport numpy as np\n\n# Constants\nCOLUMNS = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\n\ndef task_func(length):\n    \"\"\"\n    Generate a Pandas DataFrame with specified length and random data and then record the data.\n\n    Parameters:\n    length (int): The length of the DataFrame to be generated.\n\n    Returns:\n    DataFrame: A pandas DataFrame with random data.\n\n    Requirements:\n    - pandas\n    - numpy\n\n    Example:\n    >>> np.random.seed(0)\n    >>> df = task_func(5)\n    >>> df.shape\n    (5, 5)\n    \"\"\"\n",
+    "instruct_prompt": "Generate a Pandas DataFrame with specified length and random data and then record the data.\nThe function should output with:\n    DataFrame: A pandas DataFrame with random data.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport numpy as np\n# Constants\nCOLUMNS = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\ndef task_func(length):\n```",
+    "code_prompt": "import pandas as pd\nimport numpy as np\n# Constants\nCOLUMNS = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\ndef task_func(length):\n",
+    "test": "import unittest\nimport pandas as pd\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        # Testing basic functionality\n        np.random.seed(0)\n        df = task_func(5)\n        self.assertIsInstance(df, pd.DataFrame, \"Output should be a DataFrame.\")\n        self.assertEqual(df.shape, (5, 5), \"DataFrame shape mismatch.\")\n        \n    def test_case_2(self):\n        # Testing custom columns\n        np.random.seed(0)\n        custom_columns = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\n        df = task_func(3)\n        self.assertListEqual(list(df.columns), custom_columns, \"Column names mismatch.\")\n        \n    def test_case_3(self):\n        # Testing return plot\n        np.random.seed(0)\n        df = task_func(4)\n        self.assertIsInstance(df, pd.DataFrame, \"Output should be a DataFrame.\")\n        \n    def test_case_4(self):\n        # Testing data range\n        np.random.seed(0)\n        df = task_func(10)\n        self.assertTrue((df.values >= 0).all() and (df.values < 100).all(), \"Data values should be between 0 and 99.\")\n        \n    def test_case_5(self):\n        # Testing default columns\n        np.random.seed(0)\n        df = task_func(7)\n        default_columns = ['Column1', 'Column2', 'Column3', 'Column4', 'Column5']\n        self.assertListEqual(list(df.columns), default_columns, \"Default column names mismatch.\")",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "numpy"
+    ],
+    "canonical_solution": "\n    data = np.random.randint(0,100,size=(length, len(COLUMNS)))\n    df = pd.DataFrame(data, columns=COLUMNS)\n\n    return df"
+  }
+}

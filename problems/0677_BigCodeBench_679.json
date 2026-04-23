@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/679",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom collections import Counter\n\ndef task_func(df):\n    \"\"\"\n    Calculate the frequency of combinations of elements in a DataFrame.\n    The function adds a 'combination' column to the DataFrame, which is the combination of items in each row.\n    It then calculates the frequency of each combination.\n    \n    Parameters:\n    - df (pandas.DataFrame): The input DataFrame with columns 'item1', 'item2', 'item3', 'item4', 'item5'.\n    \n    Returns:\n    - dict: A dictionary containing the frequency of all combination.\n\n    Requirements:\n    - pandas\n    - collections\n\n    Example:\n    >>> df = pd.DataFrame({'item1': ['a', 'b', 'a'], 'item2': ['b', 'c', 'b'], 'item3': ['c', 'd', 'c'], 'item4': ['d', 'e', 'd'], 'item5': ['e', 'f', 'e']})\n    >>> task_func(df)\n    {('a', 'b', 'c', 'd', 'e'): 2, ('b', 'c', 'd', 'e', 'f'): 1}\n    \"\"\"\n",
+    "instruct_prompt": "Calculate the frequency of combinations of elements in a DataFrame. The function adds a 'combination' column to the DataFrame, which is the combination of items in each row. It then calculates the frequency of each combination.\nThe function should output with:\n    dict: A dictionary containing the frequency of all combination.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom collections import Counter\ndef task_func(df):\n```",
+    "code_prompt": "import pandas as pd\nfrom collections import Counter\ndef task_func(df):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        df = pd.DataFrame({'item1': ['a', 'b', 'a'], 'item2': ['b', 'c', 'b'], 'item3': ['c', 'd', 'c'], 'item4': ['d', 'e', 'd'], 'item5': ['e', 'f', 'e']})\n        freq = task_func(df)\n        self.assertEqual(freq[('a', 'b', 'c', 'd', 'e')], 2)\n        self.assertEqual(freq[('b', 'c', 'd', 'e', 'f')], 1)\n    def test_case_2(self):\n        df = pd.DataFrame({'item1': ['c', 'b', 'a'], 'item2': ['b', 'c', 'b'], 'item3': ['c', 'd', 'c'], 'item4': ['d', 'e', 'd'], 'item5': ['e', 'f', 'e']})\n        freq = task_func(df)\n        print(freq)\n        self.assertEqual(freq[('a', 'b', 'c', 'd', 'e')], 1)\n        self.assertEqual(freq[('b', 'c', 'd', 'e', 'f')], 1)\n        if ('b', 'c', 'c', 'd', 'e') in freq:\n            self.assertEqual(freq[('b', 'c', 'c', 'd', 'e')], 1)\n        elif ('c', 'b', 'c', 'd', 'e') in freq:\n            self.assertEqual(freq[('c', 'b', 'c', 'd', 'e')], 1)\n    def test_case_3(self):\n        df = pd.DataFrame({'item1': ['a'], 'item2': ['a'], 'item3': ['a'], 'item4': ['a'], 'item5': ['a']})\n        freq = task_func(df)\n        self.assertEqual(freq[('a', 'a', 'a', 'a', 'a')], 1)\n    def test_case_4(self):\n        df = pd.DataFrame({'item1': ['a', 'b', 'c'], 'item2': ['b', 'c', 'd'], 'item3': ['c', 'd', 'e'], 'item4': ['d', 'e', 'f'], 'item5': ['e', 'f', 'g']})\n        freq = task_func(df)\n        self.assertEqual(freq[('a', 'b', 'c', 'd', 'e')], 1)\n        self.assertEqual(freq[('b', 'c', 'd', 'e', 'f')], 1)\n        self.assertEqual(freq[('c', 'd', 'e', 'f', 'g')], 1)\n    def test_case_5(self):\n        df = pd.DataFrame({'item1': ['a', 'a', 'a'], 'item2': ['b', 'b', 'b'], 'item3': ['c', 'c', 'c'], 'item4': ['d', 'd', 'd'], 'item5': ['e', 'e', 'e']})\n        freq = task_func(df)\n        self.assertEqual(freq[('a', 'b', 'c', 'd', 'e')], 3)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "collections"
+    ],
+    "canonical_solution": "    df['combination'] = pd.Series(df.apply(lambda row: tuple(sorted(row)), axis=1))\n    \n    # Using Counter from collections to calculate the frequency of each combination\n    combination_freq = Counter(df['combination'])\n    \n    return dict(combination_freq)"
+  }
+}

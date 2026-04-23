@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/757",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nimport datetime\n\ndef task_func(arr):\n    \"\"\"\n    Reverse the order of words separated by. \"\" in all strings of a numpy array.\n\n    Parameters:\n    - arr (numpy array): The numpy array.\n\n    Returns:\n    - numpy.ndarray: The numpy array with the strings reversed.\n\n    Requirements:\n    - numpy\n    - datetime\n\n    Example:\n    >>> arr = np.array(['apple.orange', 'red.green.yellow'])\n    >>> reversed_arr = task_func(arr)\n    >>> print(reversed_arr)\n    ['orange.apple' 'yellow.green.red']\n    \"\"\"\n",
+    "instruct_prompt": "Reverse the order of words separated by. \"\" in all strings of a numpy array.\nThe function should output with:\n    numpy.ndarray: The numpy array with the strings reversed.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nimport datetime\ndef task_func(arr):\n```",
+    "code_prompt": "import numpy as np\nimport datetime\ndef task_func(arr):\n",
+    "test": "import numpy as np\nimport unittest\nimport re\nclass TestCases(unittest.TestCase):\n    \"\"\"\n    Define test cases for the task_func function.\n    \"\"\"\n    \n    def test_case_1(self):\n        # Test description: \n        # Test reversing of words separated by '.' for a typical input.\n        arr = np.array(['apple.orange', 'red.green.yellow'])\n        result = task_func(arr)\n        expected = np.array(['orange.apple', 'yellow.green.red'])\n        np.testing.assert_array_equal(result, expected)\n    def test_case_2(self):\n        # Test description: \n        # Test reversing of words separated by '.' for another typical input.\n        arr = np.array(['hello.world', 'this.is.a.test'])\n        result = task_func(arr)\n        expected = np.array(['world.hello', 'test.a.is.this'])\n        np.testing.assert_array_equal(result, expected)\n    def test_case_3(self):\n        # Test description: \n        # Test input where words are not separated by '.', so they should remain unchanged.\n        arr = np.array(['hello', 'world'])\n        result = task_func(arr)\n        expected = np.array(['hello', 'world'])\n        np.testing.assert_array_equal(result, expected)\n    def test_case_4(self):\n        # Test description: \n        # Test input with empty strings. The result should also be empty strings.\n        arr = np.array(['', ''])\n        result = task_func(arr)\n        expected = np.array(['', ''])\n        np.testing.assert_array_equal(result, expected)\n    def test_case_5(self):\n        # Test description: \n        # Test reversing of words with a mix of uppercase and lowercase letters.\n        arr = np.array(['OpenAI.GPT', 'GPT-4.is.amazing'])\n        result = task_func(arr)\n        expected = np.array(['GPT.OpenAI', 'amazing.is.GPT-4'])\n        np.testing.assert_array_equal(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "datetime",
+      "numpy"
+    ],
+    "canonical_solution": "    vectorized_reverse = np.vectorize(lambda s: '.'.join(s.split('.')[::-1]))\n    \n    now = datetime.datetime.now()\n    \n    return vectorized_reverse(arr)"
+  }
+}

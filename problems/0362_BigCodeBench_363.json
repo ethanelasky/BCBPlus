@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/363",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from multiprocessing import Pool\nimport math\n\ndef calculate_factorial(number: int) -> tuple:\n    return number, math.factorial(number)\n    \ndef task_func(numbers: list) -> dict:\n    \"\"\"\n    Calculate factorials for a list of numbers in parallel using multiprocessing.\n\n    Parameters:\n    numbers (list[int]): List of numbers to calculate factorials.\n\n    Returns:\n    dict[int, int]: A dictionary with numbers as keys and their factorial as values.\n\n    Raises:\n    ValueError: If any element in the input list is not an integer or is negative.\n\n    Requirements:\n    - multiprocessing.Pool\n    - math.factorial\n\n    Example:\n    >>> factorials = task_func([5, 6, 7, 8, 9])\n    >>> factorials[5] == 120 and factorials[9] == 362880\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Calculate factorials for a list of numbers in parallel using multiprocessing.\nThe function should raise the exception for: ValueError: If any element in the input list is not an integer or is negative.\nThe function should output with:\n    dict[int, int]: A dictionary with numbers as keys and their factorial as values.\nYou should write self-contained code starting with:\n```\nfrom multiprocessing import Pool\nimport math\ndef calculate_factorial(number: int) -> tuple:\n    return number, math.factorial(number)\n    \ndef task_func(numbers: list) -> dict:\n```",
+    "code_prompt": "from multiprocessing import Pool\nimport math\ndef calculate_factorial(number: int) -> tuple:\n    return number, math.factorial(number)\n    \ndef task_func(numbers: list) -> dict:\n",
+    "test": "import unittest\nimport math\nclass TestCases(unittest.TestCase):\n    def test_return_type(self):\n        \"\"\"Test that the function returns a dictionary.\"\"\"\n        result = task_func([3, 4, 5])\n        self.assertIsInstance(result, dict)\n    def test_empty_list(self):\n        \"\"\"Test function with an empty list.\"\"\"\n        result = task_func([])\n        self.assertEqual(result, {})\n    def test_single_element(self):\n        \"\"\"Test function with a single-element list.\"\"\"\n        result = task_func([5])\n        self.assertEqual(result, {5: 120})\n    def test_non_integer_input(self):\n        \"\"\"Test function with non-integer input.\"\"\"\n        with self.assertRaises(ValueError):\n            task_func([\"a\"])\n    def test_large_numbers(self):\n        \"\"\"Test function with large numbers.\"\"\"\n        result = task_func([10])\n        self.assertEqual(result[10], math.factorial(10))\n    def test_negative_numbers(self):\n        \"\"\"Test function with a negative number.\"\"\"\n        with self.assertRaises(ValueError):\n            task_func([-1])  # Assuming we want to enforce non-negative integers only\n    def test_very_large_number(self):\n        \"\"\"Test function with a very large number to check for performance or overflow issues.\"\"\"\n        number = 20  # A reasonable choice to avoid excessive computation time in tests\n        result = task_func([number])\n        self.assertEqual(result[number], math.factorial(number))",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "multiprocessing"
+    ],
+    "canonical_solution": "    # Check input types\n    if not all(isinstance(n, int) and n >= 0 for n in numbers):\n        raise ValueError(\"All elements in the list must be integers\")\n    with Pool() as pool:\n        factorial_dict = dict(pool.starmap(calculate_factorial, [(i,) for i in numbers]))\n    return factorial_dict"
+  }
+}

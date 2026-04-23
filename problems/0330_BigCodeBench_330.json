@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/330",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129150911_a1a95f50",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import heapq\nimport random\n\n\ndef task_func(list_length: int, k: int):\n    \"\"\"\n    Find the k largest numbers in a random-generated list using heapq.\n\n    Parameters:\n    list_length (int): The length of the randomly generated list of integers.\n    k (int): The number of largest elements to find.\n\n    Returns:\n    tuple: A tuple containing two lists: \n        - list[int]: The randomly generated list of integers with the specified length.\n        - list[int]: The k largest numbers found using heapq.\n\n    Requirements:\n    - heapq\n    - random\n\n    Example:\n    >>> random.seed(0)\n    >>> rand_list, top_k = task_func(5, 3)\n    >>> top_k[0] in rand_list\n    True\n    \"\"\"\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_empty_list(self):\n        random.seed(0)\n        rand_list, top_k = task_func(0, 3)\n        self.assertEqual(rand_list, [])\n        self.assertEqual(top_k, [])\n    def test_k_larger_than_list_length(self):\n        random.seed(0)\n        rand_list, top_k = task_func(5, 10)\n        self.assertEqual(len(rand_list), 5)\n        self.assertEqual(len(top_k), 5)\n    def test_sorted_list(self):\n        random.seed(0)\n        rand_list, top_k = task_func(100, 3)\n        self.assertEqual(top_k, sorted(rand_list, reverse=True)[:3])\n    def test_top_k_sorted(self):\n        random.seed(0)\n        rand_list, top_k = task_func(100, 5)\n        self.assertEqual(top_k, sorted(top_k, reverse=True)[:5])\n    \n    def test_top_k_sorted_first(self):\n        random.seed(0)\n        rand_list, top_k = task_func(100, 5)\n        self.assertEqual(top_k[0], sorted(top_k, reverse=True)[0])",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "heapq"
+    ],
+    "instruct_prompt": "Find the k largest numbers in a random-generated list using heapq.\nThe function should output with:\n    tuple: A tuple containing two lists:\n    list[int]: The randomly generated list of integers with the specified length.\n    list[int]: The k largest numbers found using heapq.\nYou should write self-contained code starting with:\n```\nimport heapq\nimport random\ndef task_func(list_length:5, k:int):\n```",
+    "code_prompt": "import heapq\nimport random\ndef task_func(list_length:5, k:int):",
+    "canonical_solution": "\n    \n    numbers = [random.randint(0, 100) for _ in range(list_length)]\n    heapq.heapify(numbers)\n    largest_numbers = heapq.nlargest(k, numbers)\n   \n    return numbers, largest_numbers"
+  }
+}

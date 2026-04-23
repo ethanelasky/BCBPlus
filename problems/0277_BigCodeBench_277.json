@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/277",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import random\nfrom itertools import combinations\nimport math\n\ndef task_func(n):\n    \"\"\"\n    Generate n random dots within a unit square (0 to 1 on both axes) in a 2D space \n    and find the pair that comes closest to each other.\n\n    Parameters:\n    n (int): The number of points to generate. If n is less than 2, the function returns None.\n\n    Returns:\n    tuple or None: A tuple of the form ((x1, y1), (x2, y2)), which are the coordinates of the closest pair,\n                   or None if n is less than 2.\n    \n    Note:\n    - This function will return None if the input n less than 2.\n    \n    Requirements:\n    - random\n    - itertools.combinations\n    - math\n\n    Example:\n    >>> random.seed(0)\n    >>> print(task_func(2))\n    ((0.8444218515250481, 0.7579544029403025), (0.420571580830845, 0.25891675029296335))\n    \"\"\"\n",
+    "instruct_prompt": "Generate n random dots within a unit square (0 to 1 on both axes) in a 2D space and find the pair that comes closest to each other.\nNote that: This function will return None if the input n less than 2.\nThe function should output with:\n    tuple or None: A tuple of the form ((x1, y1), (x2, y2)), which are the coordinates of the closest pair,\n    or None if n is less than 2.\nYou should write self-contained code starting with:\n```\nimport random\nfrom itertools import combinations\nimport math\ndef task_func(n):\n```",
+    "code_prompt": "import random\nfrom itertools import combinations\nimport math\ndef task_func(n):\n",
+    "test": "import unittest\nimport random\nclass TestCases(unittest.TestCase):\n    def test_typical_use_case(self):\n        random.seed(0)\n        result = task_func(5)\n        self.assertIsInstance(result, tuple, \"Should return a tuple for 5 points\")\n    def test_zero_points(self):\n        random.seed(0)\n        result = task_func(0)\n        self.assertIsNone(result, \"Should return None for 0 points\")\n    def test_one_point(self):\n        random.seed(0)\n        result = task_func(1)\n        self.assertIsNone(result, \"Should return None for 1 point\")\n    def test_large_number_of_points(self):\n        random.seed(0)\n        result = task_func(1000)\n        self.assertIsInstance(result, tuple, \"Should return a tuple for 1000 points\")\n    def test_minimum_points(self):\n        random.seed(0)\n        result = task_func(2)\n        self.assertIsInstance(result, tuple, \"Should return a tuple for 2 points\")",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "random",
+      "itertools"
+    ],
+    "canonical_solution": "\n    if n < 2:\n        return None\n\n    points = [(random.random(), random.random()) for i in range(n)]\n    closest_pair = min(combinations(points, 2), key=lambda pair: math.hypot(pair[0][0] - pair[1][0], pair[0][1] - pair[1][1]))\n    return closest_pair"
+  }
+}

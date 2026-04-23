@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/294",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom sklearn.preprocessing import StandardScaler\n\ndef task_func(df):\n    \"\"\"\n    Standardize the 'age' and 'income' columns for each group by 'id' in a Pandas DataFrame, and return the standardized DataFrame.\n\n    Parameters:\n    df (DataFrame): A pandas DataFrame with columns ['id', 'age', 'income'].\n\n    Returns:\n    DataFrame: The pandas DataFrame after standardizing 'age' and 'income' columns.\n\n    Raises:\n    - This function will raise ValueError if the DataFrame does not have the 'id', 'age', and 'income' columns.\n\n    Requirements:\n    - pandas\n    - sklearn.preprocessing.StandardScaler\n\n    Example:\n    >>> df = pd.DataFrame({ 'id': [1, 1, 2, 2, 3, 3], 'age': [25, 26, 35, 36, 28, 29], 'income': [50000, 60000, 70000, 80000, 90000, 100000]})\n    >>> df_standardized = task_func(df)\n    >>> print(df_standardized.iloc[0]['age'] == 25)\n    False\n    \"\"\"\n",
+    "instruct_prompt": "Standardize the 'age' and 'income' columns for each group by 'id' in a Pandas DataFrame, and return the standardized DataFrame.\nThe function should raise the exception for: This function will raise ValueError if the DataFrame does not have the 'id', 'age', and 'income' columns.\nThe function should output with:\n    DataFrame: The pandas DataFrame after standardizing 'age' and 'income' columns.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(df):\n```",
+    "code_prompt": "import pandas as pd\nfrom sklearn.preprocessing import StandardScaler\ndef task_func(df):\n",
+    "test": "import pandas as pd\nfrom sklearn.preprocessing import StandardScaler\nimport unittest\nclass TestCases(unittest.TestCase):\n    def test_empty_dataframe(self):\n        df = pd.DataFrame(columns=['id', 'age', 'income'])\n        result = task_func(df)\n        self.assertEqual(len(result), 0)\n    def test_example_dataframe(self):\n        df = pd.DataFrame({\n            'id': [1, 1, 2, 2, 3, 3],\n            'age': [25, 26, 35, 36, 28, 29],\n            'income': [50000, 60000, 70000, 80000, 90000, 100000]\n        })\n        result = task_func(df)\n        scaler = StandardScaler()\n        #check random point\n        self.assertEqual(-1, result.iloc[0]['age'])\n    def test_single_group(self):\n        df = pd.DataFrame({'id': [1, 1], 'age': [30, 40], 'income': [50000, 60000]})\n        result = task_func(df)\n        self.assertEqual(len(result), 2)\n        self.assertNotEqual(result.iloc[0]['age'], 30)  # Checking if values are standardized\n    def test_multiple_groups(self):\n        df = pd.DataFrame({'id': [1, 1, 2, 2], 'age': [25, 35, 45, 55], 'income': [30000, 40000, 50000, 60000]})\n        result = task_func(df)\n        self.assertEqual(len(result), 4)\n    def test_negative_values(self):\n        df = pd.DataFrame({'id': [1, 1], 'age': [-20, -30], 'income': [-10000, -20000]})\n        result = task_func(df)\n        self.assertEqual(len(result), 2)\n    def test_large_data(self):\n        df = pd.DataFrame({'id': list(range(1000)), 'age': list(range(1000)), 'income': list(range(1000, 2000))})\n        result = task_func(df)\n        self.assertEqual(len(result), 1000)\n    \n    def test_invalid_df(self):\n        df = pd.DataFrame()\n        with self.assertRaises(ValueError):\n            task_func(df)",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "sklearn"
+    ],
+    "canonical_solution": "    try:\n        scaler = StandardScaler()\n\n        df_grouped = df.groupby('id').apply(lambda x: pd.DataFrame(scaler.fit_transform(x[['age', 'income']]), columns=['age', 'income'], index=x.index))\n\n        return df_grouped\n    except:\n        raise ValueError()"
+  }
+}

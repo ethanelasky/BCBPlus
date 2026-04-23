@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/683",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import math\nimport yaml\n\ndef task_func(yaml_path, key):\n    \"\"\"\n    Read a YAML file, apply the cosine to a specific key from the data, and then write the modified data back into the YAML file.\n    \n    Parameters:\n    - yaml_path (str): The path to the YAML file.\n    - key (str): The key to take the cosine of.\n    \n    Returns:\n    - data (dict): A dictionary representation of the modified YAML data.\n\n    Requirements:\n    - math\n    - yaml\n    \n    Example:\n    >>> yaml_data = task_func('data.yaml', 'ele')\n    \"\"\"\n",
+    "instruct_prompt": "Read a YAML file, apply the cosine to a specific key from the data, and then write the modified data back into the YAML file.\nThe function should output with:\n    data (dict): A dictionary representation of the modified YAML data.\nYou should write self-contained code starting with:\n```\nimport math\nimport yaml\ndef task_func(yaml_path, key):\n```",
+    "code_prompt": "import math\nimport yaml\ndef task_func(yaml_path, key):\n",
+    "test": "import unittest\nimport os\nclass TestCases(unittest.TestCase):\n    def base(self, yaml_path, key, contents, expected):\n        # Create YAML file\n        with open(yaml_path, 'w') as file:\n            yaml.safe_dump(contents, file)\n        # Run function\n        data = task_func(yaml_path, key)\n        # Check data\n        self.assertEqual(data, expected)\n        # Remove YAML file\n        os.remove(yaml_path)\n    def test_case_1(self):\n        self.base('./data.yaml', 'ele', {'ele': 1, 'ale': 2, 'ile': 3}, {'ele': math.cos(1), 'ale': 2, 'ile': 3})\n    def test_case_2(self):\n        self.base('./y.yaml', 'zzz', {'zzz': 1, 'yyy': 2, 'xxx': 3}, {'zzz': math.cos(1), 'yyy': 2, 'xxx': 3})\n    def test_case_3(self):\n        self.base('./data.yaml', 'ale', {'ele': 1, 'ale': 2, 'ile': 3}, {'ele': 1, 'ale': math.cos(2), 'ile': 3})\n    def test_case_4(self):\n        self.base('./y.yaml', 'yyy', {'zzz': 1, 'yyy': 2, 'xxx': 3}, {'zzz': 1, 'yyy': math.cos(2), 'xxx': 3})\n    def test_case_5(self):\n        self.base('./data.yaml', 'ile', {'ele': 1, 'ale': 2, 'ile': 3}, {'ele': 1, 'ale': 2, 'ile': math.cos(3)})",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "yaml"
+    ],
+    "canonical_solution": "    with open(yaml_path, 'r') as file:\n        data = yaml.safe_load(file)\n\n    if key in data:\n        data[key] = math.cos(data[key])\n\n    with open(yaml_path, 'w') as file:\n        yaml.safe_dump(data, file)\n\n    return data"
+  }
+}

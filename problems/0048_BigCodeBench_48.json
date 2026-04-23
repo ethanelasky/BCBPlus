@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/48",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import time\nfrom datetime import datetime\nimport random\nimport matplotlib.pyplot as plt\n\n# Constants\nDATE_FORMAT = \"%Y-%m-%d %H:%M:%S\"\n\n\ndef task_func(n, output_path=None):\n    \"\"\"\n    Generate n random Unix timestamps and convert them to strings formatted as UTC DATE_FORMAT.\n    Plot a histogram of the distribution of the generated timestamps. If an output path is provided,\n    save the histogram to the specified path. Otherwise, display the plot.\n\n    Parameters:\n    n (int): The number of timestamps to generate.\n    output_path (str, optional): Path to save the histogram plot. Defaults to None.\n\n    Returns:\n    list: The list of n formatted timestamps.\n\n    Requirements:\n    - time\n    - datetime\n    - random\n    - matplotlib.pyplot\n\n    Example:\n    >>> random.seed(42)\n    >>> timestamps = task_func(n=3, output_path=None)\n    >>> print(timestamps)\n    ['2013-07-06 20:56:46', '1977-07-29 23:34:23', '1971-09-14 11:29:44']\n    \"\"\"\n",
+    "instruct_prompt": "Generate n random Unix timestamps and convert them to strings formatted as UTC DATE_FORMAT. Plot a histogram of the distribution of the generated timestamps. If an output path is provided, save the histogram to the specified path. Otherwise, display the plot.\nThe function should output with:\n    list: The list of n formatted timestamps.\nYou should write self-contained code starting with:\n```\nimport time\nfrom datetime import datetime\nimport random\nimport matplotlib.pyplot as plt\n# Constants\nDATE_FORMAT = \"%Y-%m-%d %H:%M:%S\"\ndef task_func(n, output_path=None):\n```",
+    "code_prompt": "import time\nfrom datetime import datetime\nimport random\nimport matplotlib.pyplot as plt\n# Constants\nDATE_FORMAT = \"%Y-%m-%d %H:%M:%S\"\ndef task_func(n, output_path=None):\n",
+    "test": "import unittest\nimport os\nclass TestCases(unittest.TestCase):\n    \"\"\"Test cases for the task_func function.\"\"\"\n    def setUp(self):\n        self.test_dir = \"data/task_func\"\n        os.makedirs(self.test_dir, exist_ok=True)\n        self.o_1 = os.path.join(self.test_dir, \"histogram_1.png\")\n    def tearDown(self) -> None:\n        import shutil\n        try:\n            shutil.rmtree(self.test_dir)\n        except:\n            pass\n    def test_case_1(self):\n        random.seed(42)\n        result = task_func(10)\n        self.assertEqual(len(result), 10)\n    def test_case_2(self):\n        random.seed(42)\n        result = task_func(15)\n        for timestamp in result:\n            try:\n                datetime.strptime(timestamp, DATE_FORMAT)\n            except ValueError:\n                self.fail(f\"Timestamp {timestamp} doesn't match the specified format.\")\n    def test_case_3(self):\n        random.seed(42)\n        task_func(20, output_path=self.o_1)\n        self.assertTrue(os.path.exists(self.o_1))\n    def test_case_4(self):\n        result = task_func(50)\n        self.assertEqual(len(result), len(set(result)))\n    def test_case_5(self):\n        result = task_func(0)\n        self.assertEqual(len(result), 0)",
+    "entry_point": "task_func",
+    "libs": [
+      "datetime",
+      "random",
+      "matplotlib",
+      "time"
+    ],
+    "canonical_solution": "    timestamps = []\n    for _ in range(n):\n        timestamp = random.randint(0, int(time.time()))\n        formatted_time = datetime.utcfromtimestamp(timestamp).strftime(DATE_FORMAT)\n        timestamps.append(formatted_time)\n\n    plt.hist([datetime.strptime(t, DATE_FORMAT) for t in timestamps])\n\n    if output_path:\n        plt.savefig(output_path)\n    else:\n        plt.show()\n    return timestamps"
+  }
+}

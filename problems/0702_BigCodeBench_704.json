@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/704",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nfrom itertools import combinations\n\n# Constants\nMIN_PERCENTAGE = 0.75\n\ndef task_func(data, cols, percentage):\n    \"\"\"\n    Find all combinations of columns from a given DataFrame so that the absolute correlation between them is greater than a certain threshold.\n\n    Parameters:\n    - data (list): List of lists with the data, where the length of the inner list equals the number of columns\n    - cols (list): List of column names\n    - percentage (float): The threshold for the absolute correlation.\n\n    Returns:\n    - corr_combinations (list): A list of tuples where each tuple contains two column names.\n\n    Requirements:\n    - pandas\n    - itertools\n\n    Example:\n    >>> result = task_func([[5.1, 5.0, 1.4], [4.9, 4.8, 1.4], [4.7, 4.6, 2.0]], ['x', 'y', 'z'], 0.9)\n    >>> print(result)\n    [('x', 'y')]\n    \"\"\"\n",
+    "instruct_prompt": "Find all combinations of columns from a given DataFrame so that the absolute correlation between them is greater than a certain threshold.\nThe function should output with:\n    corr_combinations (list): A list of tuples where each tuple contains two column names.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nfrom itertools import combinations\n# Constants\nMIN_PERCENTAGE = 0.75\ndef task_func(data, cols, percentage):\n```",
+    "code_prompt": "import pandas as pd\nfrom itertools import combinations\n# Constants\nMIN_PERCENTAGE = 0.75\ndef task_func(data, cols, percentage):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        self.assertEqual(task_func([[5.1, 5.0, 1.4], [4.9, 4.8, 1.4], [4.7, 4.6, 2.0]], ['x', 'y', 'z'], 0.9), [('x', 'y')])\n    def test_case_2(self):\n        self.assertEqual(task_func([[5.1, 5.0, 1.4], [4.9, 4.8, 1.4], [4.7, 4.6, 2.0]], ['x', 'y', 'z'], 0.5), [('x', 'y'), ('x', 'z'), ('y', 'z')])\n    def test_case_3(self):\n        self.assertEqual(task_func([[5.1, 5.0, 1.4], [4.9, 4.8, 1.4], [4.7, 4.6, 2.0]], ['x', 'y', 'z'], 0.1), [('x', 'y'), ('x', 'z'), ('y', 'z')])\n    def test_case_4(self):\n        self.assertEqual(task_func([[5.1, 5.0, 1.4], [4.9, 4.8, 1.4], [4.7, 4.6, 2.0]], ['x', 'y', 'z'], 0.0), [('x', 'y'), ('x', 'z'), ('y', 'z')])\n    def test_case_5(self):\n        self.assertEqual(task_func([[5.1, 5.0, 1.4], [4.9, 4.8, 1.4], [4.7, 4.6, 2.0]], ['x', 'y', 'z'], 1.0), [])",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "itertools"
+    ],
+    "canonical_solution": "    if not 0 <= percentage <= 1:\n        raise ValueError('Percentage must be between 0 and 1')\n    df = pd.DataFrame(data, columns=cols)\n    corr_matrix = df.corr().abs()\n    columns = corr_matrix.columns\n    corr_combinations = []\n\n    for col1, col2 in combinations(columns, 2):\n        if corr_matrix.loc[col1, col2] > percentage:\n            corr_combinations.append((col1, col2))\n\n    return corr_combinations"
+  }
+}

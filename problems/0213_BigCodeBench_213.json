@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/213",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260123001232_fd881074",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import time\nimport random\nimport matplotlib.pyplot as plt\nfrom scipy.stats import kurtosis\n\n\ndef task_func(intervals=100, seed=0):\n    \"\"\"\n    Generates a series of random numbers over a specified number of intervals with a delay of 1 second after \n    each interval (including after the last one). It then plots these numbers as a function of elapsed time \n    and returns the Axes object along with the kurtosis value of the generated numbers.\n    \n    Parameters:\n    - intervals (int, optional): Number of intervals for generating random numbers. Default is 100.\n\n    Returns:\n    - matplotlib.axes.Axes: The Axes object representing the plot.\n    - float: The kurtosis value of the generated numbers.\n\n    Requirements:\n    - time\n    - random\n    - matplotlib.pyplot\n\n    Example:\n    >>> ax, kurtosis = task_func(5)\n    >>> type(ax)\n    <class 'matplotlib.axes._axes.Axes'>\n    \"\"\"",
+    "test": "import unittest\nimport doctest\nfrom unittest.mock import patch\nclass TestCases(unittest.TestCase):\n    \n    @patch('time.sleep', return_value=None)  # Mocking time.sleep\n    def test_case_1(self, mock_sleep):\n        ax, kurtosis = task_func(5)\n        self.assertIsInstance(ax, plt.Axes)\n        lines = ax.get_lines()\n        self.assertEqual(len(lines[0].get_xdata()), 5)\n        self.assertEqual(len(lines[0].get_ydata()), 5)\n        self.assertEqual(mock_sleep.call_count, 5)\n    @patch('time.sleep', return_value=None)\n    def test_case_2(self, mock_sleep):\n        ax, kurtosis = task_func(10, 44)\n        self.assertIsInstance(ax, plt.Axes)\n        lines = ax.get_lines()\n        self.assertEqual(len(lines[0].get_xdata()), 10)\n        self.assertEqual(len(lines[0].get_ydata()), 10)\n        self.assertNotAlmostEqual(kurtosis, -0.34024, places=5)\n    @patch('time.sleep', return_value=None)\n    def test_case_3(self, mock_sleep):\n        ax, kurtosis = task_func()  # Default intervals = 100\n        self.assertIsInstance(ax, plt.Axes)\n        lines = ax.get_lines()\n        self.assertEqual(len(lines[0].get_xdata()), 100)\n        self.assertEqual(len(lines[0].get_ydata()), 100)\n        \n    @patch('time.sleep', return_value=None)\n    def test_case_4(self, mock_sleep):\n        ax, kurtosis = task_func(1)\n        self.assertIsInstance(ax, plt.Axes)\n        lines = ax.get_lines()\n        self.assertEqual(len(lines[0].get_xdata()), 1)\n        self.assertEqual(len(lines[0].get_ydata()), 1)\n    @patch('time.sleep', return_value=None)\n    def test_case_5(self, mock_sleep):\n        ax, kurtosis = task_func(0)\n        self.assertIsInstance(ax, plt.Axes)\n        lines = ax.get_lines()\n        self.assertEqual(len(lines[0].get_xdata()), 0)\n        self.assertEqual(len(lines[0].get_ydata()), 0)",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "matplotlib",
+      "scipy",
+      "time"
+    ],
+    "instruct_prompt": "Generates a series of random numbers over a specified number of intervals with a delay of 1 second between each interval. It then plots these numbers as a function of elapsed time and returns the Axes object along with the kurtosis value of the generated numbers.\nThe function should output with:\n    matplotlib.axes.Axes: The Axes object representing the plot.\n    float: The kurtosis value of the generated numbers.\nYou should write self-contained code starting with:\n```\nimport time\nimport random\nimport matplotlib.pyplot as plt\nfrom scipy.stats import kurtosis\ndef task_func(intervals=100, seed=0):\n```",
+    "code_prompt": "import time\nimport random\nimport matplotlib.pyplot as plt\nfrom scipy.stats import kurtosis\ndef task_func(intervals=100, seed=0):",
+    "canonical_solution": "    random.seed(seed)\n    times = []\n    numbers = []\n\n    try:\n        for _ in range(intervals):\n            time.sleep(1)\n            times.append(time.time())\n            numbers.append(random.random())\n    except KeyboardInterrupt:\n        print('Interrupted by user')\n\n    kurtosis_value = kurtosis(numbers, nan_policy='omit')\n    # Initialize a fresh figure\n    plt.figure()\n    fig, ax = plt.subplots()\n    ax.plot(times, numbers)\n    return ax, kurtosis_value"
+  }
+}

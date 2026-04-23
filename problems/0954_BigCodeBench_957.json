@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/957",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import string\nimport re\n\n\ndef task_func(text: str) -> tuple:\n    \"\"\"\n    Counts the number of words, characters, and unique characters in a given text.\n\n    Parameters:\n    - text (str): The input text to be analyzed.\n\n    Returns:\n    - tuple: A tuple containing three integers: the number of words,\n                                                the number of characters,\n                                                the number of unique characters.\n\n    Requirements:\n    - string\n    - re\n\n    Note:\n    - This function considers whitespace-separated substrings as words.\n    - When counting characters, this function excludes whitespace and special\n      characters (i.e. string.punctuation).\n\n    Example:\n    >>> task_func('Hello, world!')\n    (2, 10, 7)\n    >>> task_func('Python is  awesome!  ')\n    (3, 15, 12)\n    \"\"\"\n",
+    "instruct_prompt": "Counts the number of words, characters, and unique characters in a given text.\nNote that: This function considers whitespace-separated substrings as words. When counting characters, this function excludes whitespace and special characters (i.e. string.punctuation).\nThe function should output with:\n    tuple: A tuple containing three integers: the number of words,\n    the number of characters,\n    the number of unique characters.\nYou should write self-contained code starting with:\n```\nimport string\nimport re\ndef task_func(text: str) -> tuple:\n```",
+    "code_prompt": "import string\nimport re\ndef task_func(text: str) -> tuple:\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Test simple text without any punctuation.\n        result = task_func(\"Hello world\")\n        self.assertEqual(result, (2, 10, 7))\n    def test_case_2(self):\n        # Test simple text that includes punctuation.\n        result = task_func(\"Hello, world!\")\n        self.assertEqual(result, (2, 10, 7))\n    def test_case_3(self):\n        # Test single word and no punctuation.\n        result = task_func(\"Hello\")\n        self.assertEqual(result, (1, 5, 4))\n    def test_case_4(self):\n        # Test single word that includes punctuation.\n        result = task_func(\"Hello!\")\n        self.assertEqual(result, (1, 5, 4))\n    def test_case_5(self):\n        # Test empty string.\n        result = task_func(\"\")\n        self.assertEqual(result, (0, 0, 0))\n    def test_case_6(self):\n        # Test text with numbers and punctuation.\n        result = task_func(\"There are 4 numbers here: 1, 2, 3, and 4.\")\n        self.assertEqual(result, (10, 27, 15))\n    def test_case_7(self):\n        # Test text with only whitespace and punctuation.\n        result = task_func(\"     , , !\")\n        self.assertEqual(result, (3, 0, 0))\n    def test_case_8(self):\n        # Test text with multiple spaces between words.\n        result = task_func(\"Multiple    spaces    here\")\n        self.assertEqual(result, (3, 18, 12))\n    def test_case_9(self):\n        # Test a long text.\n        long_text = \"This is a longer text designed to test the function's ability to handle more complex input, including a variety of characters and spaces.\"\n        result = task_func(long_text)\n        self.assertEqual(result, (23, 112, 22))",
+    "entry_point": "task_func",
+    "libs": [
+      "string",
+      "re"
+    ],
+    "canonical_solution": "    words = text.split()\n    chars = re.sub(\"\\s\", \"\", re.sub(f\"[{string.punctuation}]\", \"\", text))\n\n    return len(words), len(chars), len(set(chars))"
+  }
+}

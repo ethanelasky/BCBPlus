@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/912",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from collections import Counter\nimport itertools\n\ndef task_func(letters: list, repetitions: int) -> dict:\n    \"\"\"\n    Count the frequency of each letter in a list after repeating it a given number of times.\n\n    Parameters:\n    - letters (list): A list of single-character strings representing letters.\n    - repetitions (int): The number of times to repeat the list.\n\n    Returns:\n    Returns a dictionary where the keys are the letters and the values are their frequencies.\n\n    Requirements:\n    - collections.Counter\n    - itertools\n\n    Example:\n    >>> task_func(['A', 'B', 'C'], 2)\n    {'A': 2, 'B': 2, 'C': 2}\n    >>> task_func(['A', 'B'], 3)\n    {'A': 3, 'B': 3}\n    \"\"\"\n",
+    "instruct_prompt": "Count the frequency of each letter in a list after repeating it a given number of times.\nThe function should output with:\n    Returns a dictionary where the keys are the letters and the values are their frequencies.\nYou should write self-contained code starting with:\n```\nfrom collections import Counter\nimport itertools\ndef task_func(letters: list, repetitions: int) -> dict:\n```",
+    "code_prompt": "from collections import Counter\nimport itertools\ndef task_func(letters: list, repetitions: int) -> dict:\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    \n    def test_case_1(self):\n        result = task_func(['A', 'B', 'C'], 2)\n        expected = {'A': 2, 'B': 2, 'C': 2}\n        self.assertEqual(result, expected)\n        \n    def test_case_2(self):\n        result = task_func(['A', 'B'], 3)\n        expected = {'A': 3, 'B': 3}\n        self.assertEqual(result, expected)\n        \n    def test_case_3(self):\n        result = task_func([], 2)\n        expected = {}\n        self.assertEqual(result, expected)\n        \n    def test_case_4(self):\n        result = task_func(['A', 'B', 'A'], 2)\n        expected = {'A': 4, 'B': 2}\n        self.assertEqual(result, expected)\n        \n    def test_case_5(self):\n        result = task_func(['A'], 0)\n        expected = {}\n        self.assertEqual(result, expected)",
+    "entry_point": "task_func",
+    "libs": [
+      "collections",
+      "itertools"
+    ],
+    "canonical_solution": "    # Create a flattened list by repeating the original list\n    flattened_list = list(itertools.chain(*[letters for _ in range(repetitions)]))\n    \n    # Count the occurrences of each letter in the flattened list\n    counts = dict(Counter(flattened_list))\n    \n    return counts"
+  }
+}

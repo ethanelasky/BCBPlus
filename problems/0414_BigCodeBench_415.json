@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/415",
+  "dataset": "bigcodebench",
+  "version": 2,
+  "version_id": "v2_20260121105325_a16b246d",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport codecs\n\ndef task_func(dataframe: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"\n    Decodes all Unicode escape strings in a particular column (\"UnicodeString\") in a given Pandas DataFrame.\n\n    Parameters:\n    dataframe (pd.DataFrame): The pandas DataFrame which must contain the column \"UnicodeString\".\n\n    Returns:\n    pd.DataFrame: The DataFrame with decoded strings in the \"UnicodeString\" column.\n\n    Raises:\n    KeyError: If the column \"UnicodeString\" does not exist in the DataFrame.\n    TypeError: If the input is not a Pandas DataFrame.\n    Exception: If the \"UnicodeString\" column contains non-string values.\n\n    Example:\n    >>> df = pd.DataFrame({\n    ...     'Name': ['John', 'Anna', 'Peter'],\n    ...     'Age': [27, 23, 29],\n    ...     'Salary': [50000, 60000, 70000],\n    ...     'UnicodeString': ['\\u004A\\u006F\\u0068\\u006E', '\\u0041\\u006E\\u006E\\u0061', '\\u0050\\u0065\\u0074\\u0065\\u0072']\n    ... })\n    >>> task_func(df)\n        Name  Age  Salary UnicodeString\n    0   John   27   50000          John\n    1   Anna   23   60000          Anna\n    2  Peter   29   70000         Peter\n\n    Requirements:\n    - pandas\n    - codecs\n    \"\"\"",
+    "test": "import unittest\nimport pandas as pd\nclass TestCases(unittest.TestCase):\n    \n    def setUp(self):\n        self.test_data = pd.DataFrame({\n            'Name': ['John', 'Anna', 'Peter'],\n            'Age': [27, 23, 29],\n            'Salary': [50000, 60000, 70000],\n            'UnicodeString': ['\\u004A\\u006F\\u0068\\u006E', '\\u0041\\u006E\\u006E\\u0061', '\\u0050\\u0065\\u0074\\u0065\\u0072']\n        })\n    def test_unicode_decoding(self):\n        decoded_df = task_func(self.test_data)\n        expected_strings = ['John', 'Anna', 'Peter']\n        self.assertListEqual(list(decoded_df['UnicodeString']), expected_strings)\n    def test_missing_column(self):\n        with self.assertRaises(KeyError):\n            task_func(pd.DataFrame({'Name': ['John']}))\n    def test_non_dataframe_input(self):\n        with self.assertRaises(TypeError):\n            task_func(\"Not a DataFrame\")\n    def test_empty_dataframe(self):\n        empty_df = pd.DataFrame({'UnicodeString': []})\n        result_df = task_func(empty_df)\n        self.assertTrue(result_df['UnicodeString'].empty)\n    def test_non_string_unicode_values(self):\n        df_with_non_string = pd.DataFrame({'UnicodeString': [123, 456]})\n        with self.assertRaises(Exception):\n            task_func(df_with_non_string)",
+    "entry_point": "task_func",
+    "libs": [
+      "codecs",
+      "pandas"
+    ],
+    "instruct_prompt": "Decodes all Unicode escape strings in a particular column (\"UnicodeString\") in a given Pandas DataFrame.\nThe function should raise the exception for: KeyError: If the column \"UnicodeString\" does not exist in the DataFrame. TypeError: If the input is not a Pandas DataFrame.\nThe function should output with:\n    pd.DataFrame: The DataFrame with decoded strings in the \"UnicodeString\" column.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport codecs\ndef task_func(dataframe: pd.DataFrame) -> pd.DataFrame:\n```",
+    "code_prompt": "import pandas as pd\nimport codecs\ndef task_func(dataframe: pd.DataFrame) -> pd.DataFrame:",
+    "canonical_solution": "    if not isinstance(dataframe, pd.DataFrame):\n        raise TypeError(\"The input must be a pandas DataFrame.\")\n\n    if 'UnicodeString' not in dataframe.columns:\n        raise KeyError(\"'UnicodeString' column not found in the DataFrame.\")\n\n    dataframe['UnicodeString'] = dataframe['UnicodeString'].apply(lambda x: codecs.decode(x, 'unicode_escape'))\n\n    return dataframe"
+  }
+}

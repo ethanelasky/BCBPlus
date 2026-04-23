@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/196",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import random\nimport seaborn as sns\nimport numpy as np\nfrom matplotlib import pyplot as plt\n\ndef task_func(length, range_limit=100, seed=0):\n    \"\"\"\n    Create a list of random numbers, sort them and record the distribution of the numbers in a histogram using \n    default settings in a deterministic seaborn plot. Return the axes object and the list of random numbers.\n\n    Parameters:\n    length (int): The length of the list of random numbers.\n    range_limit (int, Optional): The range of the random numbers. Defaults to 100. Must be greater than 1.\n    seed (int, Optional): The seed value for the random number generator. Defaults to 0.\n\n    Returns:\n    Tuple[matplotlib.axes._axes.Axes, List[int]]: The axes object with the plot and the list of random numbers.\n\n    Requirements:\n    - random\n    - matplotlib.pyplot\n    - seaborn\n    - numpy\n\n    Raises:\n    ValueError: If range_limit is less than or equal to 1.\n\n    Example:\n    >>> import matplotlib.pyplot as plt\n    >>> ax, data = task_func(1000, 100, 24) # Generate a list of 1000 random numbers between 1 and 100\n    >>> isinstance(ax, plt.Axes)\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Create a list of random numbers, sort them and record the distribution of the numbers in a histogram using default settings in a deterministic seaborn plot. Return the axes object and the list of random numbers.\nThe function should raise the exception for: ValueError: If range_limit is less than or equal to 1.\nThe function should output with:\n    Tuple[matplotlib.axes._axes.Axes, List[int]]: The axes object with the plot and the list of random numbers.\nYou should write self-contained code starting with:\n```\nimport random\nimport seaborn as sns\nimport numpy as np\nfrom matplotlib import pyplot as plt\ndef task_func(length, range_limit=100, seed=0):\n```",
+    "code_prompt": "import random\nimport seaborn as sns\nimport numpy as np\nfrom matplotlib import pyplot as plt\ndef task_func(length, range_limit=100, seed=0):\n",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        _, data = task_func(1000)\n        self.assertEqual(len(data), 1000)\n    def test_case_2(self):\n        with self.assertRaises(ValueError):\n            _, data = task_func(1000, -3, 42)\n        \n    def test_case_3(self):\n        _, data = task_func(20, 75, 77)\n        self.assertEqual(data, [1, 4, 15, 19, 23, 25, 25, 26, 31, 31, 33, 36, 38, 42, 61, 64, 65, 65, 72, 72])\n        self.assertTrue(all(1 <= num <= 75 for num in data))\n    def test_case_4(self):\n        ax, data = task_func(1000, 75)\n        target = np.array([98, 103, 106, 73, 87, 92, 94, 84, 90, 95, 78])\n        self.assertTrue((ax.containers[0].datavalues == target).all()) \n    def test_case_5(self):\n        _, data1 = task_func(1000, seed=42)\n        _, data2 = task_func(1000, seed=42)\n        self.assertEqual(data1, data2)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib",
+      "random",
+      "seaborn"
+    ],
+    "canonical_solution": "    if range_limit <= 1:\n        raise ValueError(\"range_limit must be greater than 1\")\n\n    random.seed(seed)\n    np.random.seed(seed)\n\n    random_numbers = [random.randint(1, range_limit) for _ in range(length)]\n    random_numbers.sort()\n\n    # Initialize a fresh plot\n    plt.figure()\n    plot = sns.histplot(random_numbers, kde=False)\n\n    return plot.axes, random_numbers"
+  }
+}

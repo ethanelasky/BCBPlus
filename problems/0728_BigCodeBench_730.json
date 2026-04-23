@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/730",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260122170326_91295e5d",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pickle\nimport os\n\n# Constants\nFILE_NAME = 'save.pkl'\n\ndef task_func(dt):\n    \"\"\"\n    Save the date time object \"dt\" in the pickle file \"save.pkl\", read it back for validation,\n    and then delete the pickle file.\n\n    Parameters:\n    - dt (datetime): The datetime object to be saved.\n\n    Returns:\n    - loaded_dt (datetime): The loaded datetime object from 'save.pkl'.\n\n    Requirements:\n    - pickle\n    - os\n\n    Example:\n    >>> dt = datetime.now(pytz.UTC)\n    >>> loaded_dt = task_func(dt)\n    >>> assert dt == loaded_dt\n    \"\"\"",
+    "test": "import unittest\nfrom datetime import datetime\nimport pytz\nclass TestCases(unittest.TestCase):\n    def test_datetime_saving_and_loading(self):\n        # Test saving and loading the current datetime with UTC timezone\n        dt = datetime.now(pytz.UTC)\n        loaded_dt = task_func(dt)\n        self.assertEqual(dt, loaded_dt, \"The loaded datetime object should match the original\")\n    def test_timezone_awareness(self):\n        # Test saving and loading a timezone-aware datetime object\n        tz = pytz.timezone('Asia/Tokyo')\n        dt = datetime.now(tz)\n        loaded_dt = task_func(dt)\n        self.assertEqual(dt, loaded_dt, \"The loaded datetime object should be timezone aware and match the original\")\n    def test_file_cleanup(self):\n        # Test whether the pickle file is properly cleaned up\n        dt = datetime.now(pytz.UTC)\n        task_func(dt)\n        self.assertFalse(os.path.exists(FILE_NAME), \"The pickle file should be cleaned up after loading\")\n    def test_naive_datetime(self):\n        # Test saving and loading a naive datetime object\n        dt = datetime.now()\n        loaded_dt = task_func(dt)\n        self.assertEqual(dt, loaded_dt, \"The loaded datetime object should match the original naive datetime\")\n        self.assertIsNone(loaded_dt.tzinfo, \"The loaded datetime object should be naive (no timezone)\")\n    def test_different_timezones(self):\n        # Test saving and loading datetime objects with different timezones\n        tz1 = pytz.timezone('US/Eastern')\n        tz2 = pytz.timezone('Europe/London')\n        dt1 = datetime.now(tz1)\n        dt2 = datetime.now(tz2)\n        loaded_dt1 = task_func(dt1)\n        loaded_dt2 = task_func(dt2)\n        self.assertEqual(dt1, loaded_dt1, \"The loaded datetime object should match the original (US/Eastern)\")\n        self.assertEqual(dt2, loaded_dt2, \"The loaded datetime object should match the original (Europe/London)\")\n        self.assertEqual(dt1.tzinfo, loaded_dt1.tzinfo, \"The loaded datetime object should have the same timezone (US/Eastern)\")\n        self.assertEqual(dt2.tzinfo, loaded_dt2.tzinfo, \"The loaded datetime object should have the same timezone (Europe/London)\")",
+    "entry_point": "task_func",
+    "libs": [
+      "pickle",
+      "os"
+    ],
+    "instruct_prompt": "Save the date time object \"dt\" in the pickle file \"save.pkl\" and then read it back for validation.\nThe function should output with:\n    loaded_dt (datetime): The loaded datetime object from 'save.pkl'.\nYou should write self-contained code starting with:\n```\nimport pickle\nimport os\n# Constants\nFILE_NAME = 'save.pkl'\ndef task_func(dt):\n```",
+    "code_prompt": "import pickle\nimport os\n# Constants\nFILE_NAME = 'save.pkl'\ndef task_func(dt):",
+    "canonical_solution": "    with open(FILE_NAME, 'wb') as file:\n        pickle.dump(dt, file)\n    \n    with open(FILE_NAME, 'rb') as file:\n        loaded_dt = pickle.load(file)\n\n    os.remove(FILE_NAME)\n\n    return loaded_dt"
+  }
+}

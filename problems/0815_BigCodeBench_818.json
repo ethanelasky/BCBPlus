@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/818",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129145052_e6a97c51",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import re\nimport string\n\n# Constants\nPUNCTUATION = string.punctuation\n\ndef task_func(text):\n    \"\"\"\n    Divide a string into words, remove punctuation marks and convert them to lowercase letters.\n\n    Parameters:\n    - text (str): The input string.\n\n    Returns:\n    - cleaned_words (list): A list of cleaned words.\n\n    Requirements:\n    - re\n    - string\n\n    Example:\n    >>> task_func(\"Hello, world! This is a test.\")\n    ['hello', 'world', 'this', 'is', 'a', 'test']\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def _compare(self, result, expected_words):\n        \"\"\"Compare results, filtering out empty strings since they are not 'words'.\n        \n        The spec says 'cleaned words' and empty strings are not words.\n        Both implementations that include or exclude empty strings are acceptable.\n        \"\"\"\n        filtered = [w for w in result if w]\n        self.assertEqual(filtered, expected_words)\n    \n    def test_standard_input(self):\n        \"\"\"Test with standard input containing words, punctuation, and whitespaces\"\"\"\n        input_text = \"Hello, world! This is a test.\"\n        expected_output = ['hello', 'world', 'this', 'is', 'a', 'test']\n        self._compare(task_func(input_text), expected_output)\n    \n    def test_empty_string(self):\n        \"\"\"Test with an empty string\"\"\"\n        input_text = \"\"\n        expected_output = []\n        self._compare(task_func(input_text), expected_output)\n    \n    def test_string_with_no_punctuation(self):\n        \"\"\"Test with a string that has no punctuation marks\"\"\"\n        input_text = \"Python is great\"\n        expected_output = ['python', 'is', 'great']\n        self._compare(task_func(input_text), expected_output)\n    \n    def test_string_with_numbers(self):\n        \"\"\"Test with a string that includes numbers and punctuation\"\"\"\n        input_text = \"1234! Test with numbers.\"\n        expected_output = ['1234', 'test', 'with', 'numbers']\n        self._compare(task_func(input_text), expected_output)\n    \n    def test_string_with_special_characters(self):\n        \"\"\"Test with a string that includes special characters\"\"\"\n        input_text = \"Special chars @#$%^&*()\"\n        expected_output = ['special', 'chars']\n        self._compare(task_func(input_text), expected_output)\n    \n    def test_string_with_whitespaces(self):\n        \"\"\"Test with a string that includes extra whitespaces between words\"\"\"\n        input_text = \"   Extra   whitespaces   \"\n        expected_output = ['extra', 'whitespaces']\n        self._compare(task_func(input_text), expected_output)\n",
+    "entry_point": "task_func",
+    "libs": [
+      "string",
+      "re"
+    ],
+    "instruct_prompt": "Divide a string into words, remove punctuation marks and convert them to lowercase letters.\nThe function should output with:\n    cleaned_words (list): A list of cleaned words.\nYou should write self-contained code starting with:\n```\nimport re\nimport string\n# Constants\nPUNCTUATION = string.punctuation\ndef task_func(text):\n```",
+    "code_prompt": "import re\nimport string\n# Constants\nPUNCTUATION = string.punctuation\ndef task_func(text):",
+    "canonical_solution": "    words = re.split(r'\\s+', text)\n    cleaned_words = [re.sub(f'[{PUNCTUATION}]', '', word).lower() for word in words]\n\n    return cleaned_words"
+  }
+}

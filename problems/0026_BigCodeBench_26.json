@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/26",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import base64\nfrom cryptography.fernet import Fernet\n\ndef task_func(message, encryption_key):\n    \"\"\"\n    Encrypts a message with a symmetric encryption key using Fernet encryption, and then encode the \n    encrypted message using base64.\n\n    Parameters:\n    message (str): The message to be encrypted and encoded.\n    encryption_key (str): The key used for symmetric encryption. It should be a string, which will \n                          be encoded to bytes, then URL-safe base64 encoded to conform to the requirements \n                          for Fernet (32 bytes after encoding).\n\n    Returns:\n    str: The base64 encoded encrypted message. The message is first encrypted using Fernet encryption, \n         then the result is base64 encoded.\n\n    Requirements:\n    - base64\n    - cryptography.fernet\n\n    Example:\n    >>> encrypted_message = task_func('Hello, World!', '01234567890123456789012345678901')\n    >>> isinstance(encrypted_message, str)\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Encrypts a message with a symmetric encryption key using Fernet encryption, and then encode the encrypted message using base64.\nThe function should output with:\n    str: The base64 encoded encrypted message. The message is first encrypted using Fernet encryption,\n    then the result is base64 encoded.\nYou should write self-contained code starting with:\n```\nimport base64\nfrom cryptography.fernet import Fernet\ndef task_func(message, encryption_key):\n```",
+    "code_prompt": "import base64\nfrom cryptography.fernet import Fernet\ndef task_func(message, encryption_key):\n",
+    "test": "import unittest\nimport base64\nfrom cryptography.fernet import Fernet\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Test with a basic message and a valid encryption key.\n        result = task_func('Hello, World!', '01234567890123456789012345678901')\n        self.assertIsInstance(result, str)\n        self.assertNotEqual(result, 'Hello, World!')\n    def test_case_2(self):\n        # Test with an empty message and a valid encryption key.\n        result = task_func('', '01234567890123456789012345678901')\n        self.assertIsInstance(result, str)\n        self.assertNotEqual(result, '')\n    def test_case_3(self):\n        # Test with a numeric message and a valid encryption key.\n        result = task_func('1234567890', '01234567890123456789012345678901')\n        self.assertIsInstance(result, str)\n        self.assertNotEqual(result, '1234567890')\n    def test_case_4(self):\n        # Test with a long message and a valid encryption key.\n        long_message = 'A' * 500\n        result = task_func(long_message, '01234567890123456789012345678901')\n        self.assertIsInstance(result, str)\n        self.assertNotEqual(result, long_message)\n    def test_case_5(self):\n        # Test with a basic message and an incorrectly formatted encryption key.\n        with self.assertRaises(ValueError):\n            task_func('Hello, World!', '0123456789')\n    def test_case_6(self):\n        # Test with a non-base64 but correct length key.\n        with self.assertRaises(Exception):\n            task_func('Hello, World!', '01234567890123456789012345678901'*2)  # Not base64-encoded",
+    "entry_point": "task_func",
+    "libs": [
+      "base64",
+      "cryptography"
+    ],
+    "canonical_solution": "    fernet = Fernet(base64.urlsafe_b64encode(encryption_key.encode()))\n    encrypted_message = fernet.encrypt(message.encode())\n    return base64.b64encode(encrypted_message).decode()"
+  }
+}

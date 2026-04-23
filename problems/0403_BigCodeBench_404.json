@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/404",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260122133535_e41a382b",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import cv2\nimport numpy as np\nimport os\n\ndef task_func(img_path):\n    \"\"\"\n    Open an RGB image, convert it to grayscale, find contours using the cv2 library, and return the original image and contours.\n\n    Parameters:\n    - img_path (str): The path of the image file.\n\n    Returns:\n    - tuple: A tuple containing the original image as a numpy array and a list of contours.\n\n    Raises:\n    - FileNotFoundError: If the image file does not exist at the specified path.\n\n    Requirements:\n    - opencv-python\n    - numpy\n    - os\n\n    Example:\n    >>> img_path = 'sample.png'\n    >>> create_dummy_image(image_path=img_path)\n    >>> img, contours = task_func(img_path)\n    >>> os.remove(img_path)\n    \"\"\"",
+    "test": "import unittest\nimport numpy as np\nfrom PIL import Image, ImageDraw\nimport os\nimport cv2\n            \n            \ndef create_dummy_image(image_path='test_image.png', size=(10, 10)):\n    \"\"\"Create a lossless PNG image to avoid JPEG compression artifacts.\"\"\"\n    img = Image.new('RGB', size, color='white')\n    draw = ImageDraw.Draw(img)\n    draw.rectangle([2, 2, 8, 8], fill='black')\n    img.save(image_path)\n\n\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        create_dummy_image('test_image.png')\n\n    def tearDown(self):\n        if os.path.exists('test_image.png'):\n            os.remove('test_image.png')\n\n    def test_normal_functionality(self):\n        img, contours = task_func('test_image.png')\n        self.assertIsInstance(img, np.ndarray)\n        # Contours should be a tuple or list with at least one contour\n        self.assertTrue(isinstance(contours, (tuple, list)) and len(contours) > 0)\n        # Verify image has expected shape\n        self.assertEqual(img.shape, (10, 10, 3))\n        # Verify image is RGB (not BGR) by checking known pixel values\n        # The corners should be white (255, 255, 255) in RGB\n        self.assertTrue(np.array_equal(img[0, 0], [255, 255, 255]))\n        # The center area should be black (0, 0, 0)\n        self.assertTrue(np.array_equal(img[5, 5], [0, 0, 0]))\n        # Verify contours contain numpy arrays with point coordinates\n        for contour in contours:\n            self.assertIsInstance(contour, np.ndarray)\n            self.assertEqual(len(contour.shape), 3)  # Shape should be (N, 1, 2)\n\n    def test_non_existent_file(self):\n        with self.assertRaises(FileNotFoundError):\n            task_func('non_existent.jpg')\n\n    def test_image_shape(self):\n        img, _ = task_func('test_image.png')\n        self.assertEqual(img.shape, (10, 10, 3))\n\n    def test_contours_output_type(self):\n        _, contours = task_func('test_image.png')\n        # Accept both tuple and list since cv2.findContours returns tuple in OpenCV 4.x\n        self.assertIsInstance(contours, (tuple, list))\n\n    def test_invalid_img_path_type(self):\n        with self.assertRaises(FileNotFoundError):\n            task_func(123)  # Passing a non-string path",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "cv2",
+      "os"
+    ],
+    "instruct_prompt": "Open an RGB image, convert it to grayscale, find contours using the cv2 library, and return the original image and contours.\nThe function should raise the exception for: FileNotFoundError: If the image file does not exist at the specified path.\nThe function should output with:\n    tuple: A tuple containing the original image as a numpy array and a list of contours.\nYou should write self-contained code starting with:\n```\nimport cv2\nimport numpy as np\nimport os\ndef task_func(img_path):\n```",
+    "code_prompt": "import cv2\nimport numpy as np\nimport os\ndef task_func(img_path):",
+    "canonical_solution": "    if not os.path.exists(img_path):\n        raise FileNotFoundError(f\"No file found at {img_path}\")\n    \n    img = cv2.imread(img_path)\n    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)\n    \n    # Find contours\n    contours, _ = cv2.findContours(gray_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)\n\n    return np.array(img), contours"
+  }
+}

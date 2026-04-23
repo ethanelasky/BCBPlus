@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/1106",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from datetime import datetime\nimport os\nfrom pathlib import Path\n\n# Constants\nDATE_FORMAT = '%Y-%m-%d %H:%M:%S'\n\ndef task_func(file_path):\n    \"\"\"\n    Determine the creation time of a file and convert it to a formatted string '% Y-% m-% d% H:% M:% S'.\n    \n    Parameters:\n    file_path (str): The path to the file.\n    \n    Returns:\n    str: The creation time of the file in the format '%Y-%m-%d %H:%M:%S'.\n    \n    Requirements:\n    - datetime.datetime\n    - os\n    - pathlib.Path\n    \n    Example:\n    \n    Example:\n    >>> task_func('/path/to/file.txt')\n    '2023-09-28 12:30:45'\n    \"\"\"\n",
+    "instruct_prompt": "Determine the creation time of a file and convert it to a formatted string '% Y-% m-% d% H:% M:% S'.\nThe function should output with:\n    str: The creation time of the file in the format '%Y-%m-%d %H:%M:%S'.\nYou should write self-contained code starting with:\n```\nfrom datetime import datetime\nimport os\nfrom pathlib import Path\n# Constants\nDATE_FORMAT = '%Y-%m-%d %H:%M:%S'\ndef task_func(file_path):\n```",
+    "code_prompt": "from datetime import datetime\nimport os\nfrom pathlib import Path\n# Constants\nDATE_FORMAT = '%Y-%m-%d %H:%M:%S'\ndef task_func(file_path):\n",
+    "test": "import unittest\nfrom datetime import datetime\nimport os\nfrom pathlib import Path\nimport shutil\ndef create_dummy_file(filename):\n    \"\"\"Creates a dummy file and returns its creation time.\"\"\"\n    with open(filename, 'w') as f:\n        f.write(\"This is a dummy file.\")\n    return os.path.getctime(filename)\nclass TestCases(unittest.TestCase):\n    \n    def setUp(self):\n        \"\"\"Setup function to create dummy files for testing.\"\"\"\n        self.file1 = \"dummy_f954_1.txt\"\n        self.file2 = \"dummy_f954_2.txt\"\n        self.file3 = \"dummy_f954_3.txt\"\n        self.creation_time1 = create_dummy_file(self.file1)\n        self.creation_time2 = create_dummy_file(self.file2)\n        self.creation_time3 = create_dummy_file(self.file3)\n        self.test_dir = 'testdir_task_func/'\n        os.makedirs(self.test_dir, exist_ok=True)\n    \n    def tearDown(self):\n        \"\"\"Cleanup function to remove dummy files after testing.\"\"\"\n        os.remove(self.file1)\n        os.remove(self.file2)\n        os.remove(self.file3)\n        shutil.rmtree(self.test_dir)\n    def test_case_1(self):\n        expected_output = datetime.fromtimestamp(self.creation_time1).strftime('%Y-%m-%d %H:%M:%S')\n        self.assertEqual(task_func(self.file1), expected_output)\n        \n    def test_case_2(self):\n        expected_output = datetime.fromtimestamp(self.creation_time2).strftime('%Y-%m-%d %H:%M:%S')\n        self.assertEqual(task_func(self.file2), expected_output)\n        \n    def test_case_3(self):\n        expected_output = datetime.fromtimestamp(self.creation_time3).strftime('%Y-%m-%d %H:%M:%S')\n        self.assertEqual(task_func(self.file3), expected_output)\n        \n    def test_case_4(self):\n        # Test for non-existing file\n        with self.assertRaises(FileNotFoundError):\n            task_func(\"non_existing_file.txt\")\n    \n    def test_case_5(self):\n        # Test for a directory\n        dir_creation_time = os.path.getctime(self.test_dir)\n        expected_output = datetime.fromtimestamp(dir_creation_time).strftime('%Y-%m-%d %H:%M:%S')\n        self.assertEqual(task_func(self.test_dir), expected_output)",
+    "entry_point": "task_func",
+    "libs": [
+      "datetime",
+      "pathlib",
+      "os"
+    ],
+    "canonical_solution": "    if not Path(file_path).exists():\n        raise FileNotFoundError(f\"No such file or directory: '{file_path}'\")\n\n    creation_time = os.path.getctime(file_path)\n    formatted_time = datetime.fromtimestamp(creation_time).strftime(DATE_FORMAT)\n    \n    return formatted_time"
+  }
+}

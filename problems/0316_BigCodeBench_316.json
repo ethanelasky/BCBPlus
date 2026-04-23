@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/316",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport random\n\n# Constants\nCATEGORIES = ['A', 'B', 'C', 'D', 'E']\n\ndef task_func(value_range=(0, 100)):\n    \"\"\"\n    Generate a category distribution within a specified range and return as a DataFrame.\n\n    Parameters:\n    value_range (tuple): A tuple specifying the range (min, max) for generating random values for categories.\n    \n    Returns:\n    DataFrame: A pandas DataFrame that has two columns: 'Category' (category names) and 'Count' (count of each category). \n\n    Requirements:\n    - pandas\n    - random\n\n    Example:\n    >>> random.seed(0)\n    >>> df = task_func()\n    >>> df['Count'][0] >= 0\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Generate a category distribution within a specified range and return as a DataFrame.\nThe function should output with:\n    DataFrame: A pandas DataFrame that has two columns: 'Category' (category names) and 'Count' (count of each category).\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport random\n# Constants\nCATEGORIES = ['A', 'B', 'C', 'D', 'E']\ndef task_func(value_range=(0, 100)):\n```",
+    "code_prompt": "import pandas as pd\nimport random\n# Constants\nCATEGORIES = ['A', 'B', 'C', 'D', 'E']\ndef task_func(value_range=(0, 100)):\n",
+    "test": "import unittest\nimport pandas as pd\nimport random\nclass TestCases(unittest.TestCase):\n    def test_return_type(self):\n        \"\"\"Test if the function returns a DataFrame.\"\"\"\n        random.seed(0)\n        result = task_func()\n        self.assertIsInstance(result, pd.DataFrame)\n    def test_columns(self):\n        \"\"\"Test if the DataFrame has the correct columns.\"\"\"\n        random.seed(0)\n        result = task_func()\n        self.assertListEqual(list(result.columns), ['Category', 'Count'])\n    def test_value_range_default(self):\n        \"\"\"Test if the 'Count' values are within the default range.\"\"\"\n        random.seed(0)\n        result = task_func()\n        for count in result['Count']:\n            self.assertTrue(0 <= count <= 100)\n    def test_value_range_custom(self):\n        \"\"\"Test if the 'Count' values are within a custom range.\"\"\"\n        random.seed(0)\n        test_range = (10, 50)\n        result = task_func(value_range=test_range)\n        for count in result['Count']:\n            self.assertTrue(test_range[0] <= count <= test_range[1])\n    def test_number_of_rows(self):\n        \"\"\"Test if the DataFrame contains the expected number of rows.\"\"\"\n        random.seed(0)\n        result = task_func()\n        self.assertEqual(len(result), len(CATEGORIES))",
+    "entry_point": "task_func",
+    "libs": [
+      "pandas",
+      "random"
+    ],
+    "canonical_solution": "\n    distribution = {category: random.randint(*value_range) for category in CATEGORIES}\n    df = pd.DataFrame(list(distribution.items()), columns=['Category', 'Count'])\n\n    return df"
+  }
+}

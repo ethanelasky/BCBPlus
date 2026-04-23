@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/561",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import pytz\nfrom dateutil import parser\n\ndef task_func(date_str, from_tz, to_tz):\n    \"\"\"\n    Converts a date time from one timezone to another.\n\n    Parameters:\n    date_str (str): The date string in \"yyyy-mm-dd hh:mm:ss\" format.\n    from_tz (str): The timezone of the given date string.\n    to_tz (str): The timezone to which the date should be converted.\n\n    Returns:\n    str: The converted datetime string in \"yyyy-mm-dd hh:mm:ss\" format.\n\n    Requirements:\n    - pytz\n    - dateutil.parser\n\n    Example:\n    >>> task_func('2022-03-01 12:00:00', 'UTC', 'America/New_York')\n    '2022-03-01 07:00:00'\n    \"\"\"\n",
+    "instruct_prompt": "Converts a date time from one timezone to another.\nThe function should output with:\n    str: The converted datetime string in \"yyyy-mm-dd hh:mm:ss\" format.\nYou should write self-contained code starting with:\n```\nimport pytz\nfrom dateutil import parser\ndef task_func(date_str, from_tz, to_tz):\n```",
+    "code_prompt": "import pytz\nfrom dateutil import parser\ndef task_func(date_str, from_tz, to_tz):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_utc_to_new_york(self):\n        \"\"\"Test conversion from UTC to America/New_York timezone.\"\"\"\n        result = task_func('2022-03-01 12:00:00', 'UTC', 'America/New_York')\n        self.assertEqual(result, '2022-03-01 07:00:00')\n    def test_utc_to_los_angeles_summer_time(self):\n        \"\"\"Test conversion from UTC to America/Los_Angeles with daylight saving.\"\"\"\n        result = task_func('2022-06-01 12:00:00', 'UTC', 'America/Los_Angeles')\n        self.assertEqual(result, '2022-06-01 05:00:00')\n    def test_invalid_date_format(self):\n        \"\"\"Test handling of invalid date format.\"\"\"\n        with self.assertRaises(ValueError):\n            task_func('invalid-date', 'UTC', 'America/New_York')\n    def test_same_timezone_conversion(self):\n        \"\"\"Test conversion where from_tz and to_tz are the same.\"\"\"\n        result = task_func('2022-03-01 12:00:00', 'UTC', 'UTC')\n        self.assertEqual(result, '2022-03-01 12:00:00')\n    def test_utc_to_london_summer_time(self):\n        \"\"\"Test conversion from UTC to Europe/London during summer (BST).\"\"\"\n        result = task_func('2022-06-01 12:00:00', 'UTC', 'Europe/London')\n        self.assertEqual(result, '2022-06-01 13:00:00')",
+    "entry_point": "task_func",
+    "libs": [
+      "pytz",
+      "dateutil"
+    ],
+    "canonical_solution": "    from_tz = pytz.timezone(from_tz)\n    to_tz = pytz.timezone(to_tz)\n    date = parser.parse(date_str).replace(tzinfo=from_tz)\n    date = date.astimezone(to_tz)\n\n    return date.strftime('%Y-%m-%d %H:%M:%S')"
+  }
+}

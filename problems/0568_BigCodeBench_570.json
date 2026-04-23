@@ -1,0 +1,21 @@
+{
+  "task_id": "BigCodeBench/570",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260129143534_580b98d2",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import inspect\nimport types\nimport json\n\ndef task_func(f):\n    \"\"\"\n    Inspects the given function 'f' and returns its specifications as a JSON string. This includes\n    the function's name, arguments, default values, annotations in a string format, and a boolean\n    indicating if it's a lambda function.\n\n    Parameters:\n    f (function): The function to inspect.\n\n    Returns:\n    str: A JSON string containing the function's specifications with the following keys:\n        - 'function_name': The name of the function (str)\n        - 'args': List of argument names in order (list of str)\n        - 'defaults': The default values for arguments, or None if the function has no default values\n        - 'annotations': Dictionary mapping parameter/return names to their annotation as a string.\n          Type annotations should use the type's __name__ attribute (e.g., 'int' not \"<class 'int'>\").\n        - 'is_lambda': Boolean indicating if the function is a lambda\n\n    Requirements:\n    - inspect\n    - types\n    - json\n\n    Examples:\n    >>> def sample_function(x, y=2): return x + y\n    >>> 'sample_function' in task_func(sample_function)\n    True\n    >>> def sample_function2(x, y=2): return x * y\n    >>> 'sample_function2' in task_func(sample_function2)\n    True\n    \"\"\"\n",
+    "test": "import unittest\nimport json\nclass TestCases(unittest.TestCase):\n    def test_regular_function(self):\n        def sample_function(x, y, z=3): pass\n        result = json.loads(task_func(sample_function))\n        self.assertEqual(result['function_name'], 'sample_function')\n        self.assertIn('y', result['args'])\n    def test_lambda_function(self):\n        lambda_func = lambda x, y=2: x + y\n        result = json.loads(task_func(lambda_func))\n        self.assertTrue(result['is_lambda'])\n        self.assertEqual(result['function_name'], '<lambda>')\n    def test_no_arguments(self):\n        def no_arg_func(): pass\n        result = json.loads(task_func(no_arg_func))\n        self.assertEqual(len(result['args']), 0)\n    def test_function_with_no_defaults(self):\n        def func_no_defaults(x, y): pass\n        result = json.loads(task_func(func_no_defaults))\n        self.assertIsNone(result['defaults'])\n    def test_function_name(self):\n        def simple_function(): pass\n        result = json.loads(task_func(simple_function))\n        self.assertEqual(result['function_name'], 'simple_function')\n    \n    def test_function_annotations(self):\n        def annotated_function(x: int, y: str = 'hello') -> None: pass\n        result = json.loads(task_func(annotated_function))\n        self.assertDictEqual(result['annotations'], {'x': 'int', 'y': 'str', 'return': 'None'})",
+    "entry_point": "task_func",
+    "libs": [
+      "types",
+      "inspect",
+      "json"
+    ],
+    "instruct_prompt": "Inspects the given function 'f' and returns its specifications as a JSON string. This includes the function's name, arguments, default values, annotations in a string format, and a boolean indicating if it's a lambda function.\nThe function should output with:\n    str: A JSON string containing the function's specifications.\nYou should write self-contained code starting with:\n```\nimport inspect\nimport types\nimport json\ndef task_func(f):\n```",
+    "code_prompt": "import inspect\nimport types\nimport json\ndef task_func(f):",
+    "canonical_solution": "    spec = inspect.getfullargspec(f)\n    annotations = {k: v.__name__ if isinstance(v, type) else str(v) for k, v in spec.annotations.items()}\n\n    info = {\n        'function_name': f.__name__,\n        'args': spec.args,\n        'defaults': spec.defaults,\n        'annotations': annotations,\n        'is_lambda': isinstance(f, types.LambdaType)\n    }\n\n    return json.dumps(info)"
+  }
+}

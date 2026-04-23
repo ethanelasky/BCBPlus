@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/299",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import itertools\nimport math\nfrom pandas import Series\n\n\ndef task_func(elements, subset_size, top_n=2):\n    \"\"\"\n    Generate all subsets of a given size from a tuple and calculate the product of the sums of the subsets. Additionally, \n    return the top_n sums of the subsets. If the subset size is larger than the tuple length, return 1. If the subset size is 0,\n    return 1.\n\n    Parameters:\n    - elements (tuple): A tuple of elements to create subsets from.\n    - subset_size (int): The size of the subsets to be generated.\n    - top_n (int, Optional): The number of top subsets to return. Defaults to None.\n\n    Returns:\n    int: The product of the sums of the subsets.\n    list: The top_n sums of the subsets as a pandas Series.\n\n\n    Requirements:\n    - itertools\n    - math\n    \n    Example:\n    >>> prod, sums = task_func((1, 2, 3), 2)\n    >>> prod\n    60\n    >>> list(sums)\n    [5, 4]\n    \"\"\"\n",
+    "instruct_prompt": "Generate all subsets of a given size from a tuple and calculate the product of the sums of the subsets. Additionally, return the top_n sums of the subsets. If the subset size is larger than the tuple length, return 1. If the subset size is 0, return 1.\nThe function should output with:\n    int: The product of the sums of the subsets.\n    list: The top_n sums of the subsets as a pandas Series.\nYou should write self-contained code starting with:\n```\nimport itertools\nimport math\nfrom pandas import Series\ndef task_func(elements, subset_size, top_n=2):\n```",
+    "code_prompt": "import itertools\nimport math\nfrom pandas import Series\ndef task_func(elements, subset_size, top_n=2):\n",
+    "test": "import unittest\nimport doctest\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        # Default values\n        result, _ = task_func((1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 2)\n        expected = 2781259372192376861719959017613164544000000000\n        self.assertEqual(result, expected)\n    def test_case_2(self):\n        # Custom tuple and subset size\n        result, sums = task_func((1, 2, 3), 2)\n        expected = 60\n        self.assertEqual(result, expected)\n        # Test the top sums\n        self.assertEqual(list(sums), [5, 4])\n        # Test the type of the top sums\n        self.assertIsInstance(sums, Series)\n    def test_case_3(self):\n        # Larger subset size than tuple length\n        result, _ = task_func((1, 2, 3), 5)\n        expected = 1  # No subset of size 5 can be formed, so the product will be 1\n        self.assertEqual(result, expected)\n    def test_case_4(self):\n        # Subset size of 0\n        result, sums = task_func((1, 2, 3), 0)\n        expected = 1  # No subset of size 0 can be formed, so the product will be 1\n        self.assertEqual(result, expected)\n        self.assertEqual(list(sums), [])\n    def test_case_5(self):\n        # Larger tuple\n        result, _ = task_func((1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13), 4)\n        self.assertIsInstance(result, int)  # Ensure the result is an integer",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "pandas",
+      "itertools"
+    ],
+    "canonical_solution": "    if subset_size > len(elements) or subset_size <= 0:\n        return 1, []\n\n    combinations = list(itertools.combinations(elements, subset_size))\n    sums = [sum(combination) for combination in combinations if len(combination) != 0]\n    product = math.prod(sums)\n    top_sums = sorted(sums, reverse=True)[:top_n]\n    top_sums = Series(top_sums)\n    return product, top_sums"
+  }
+}

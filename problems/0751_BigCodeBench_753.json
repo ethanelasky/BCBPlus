@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/753",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import math\nimport random\nimport statistics\n\n# Constants\nRADIUS = 5\n\ndef task_func(n):\n    \"\"\"\n    Generate n random points within a circle of radius RADIUS (default value is 5) and return their average distance from the center.\n\n    Parameters:\n    - n (int): The number of points to be generated.\n\n    Returns:\n    - float: The average distance from the center of the circle.\n\n    Requirements:\n    - math\n    - random\n    - statistics\n\n    Example:\n    >>> random.seed(42)\n    >>> task_func(100)\n    3.2406\n    >>> task_func(50)\n    3.4443\n    \"\"\"\n",
+    "instruct_prompt": "Generate n random points within a circle of radius RADIUS (default value is 5) and return their average distance from the center.\nThe function should output with:\n    float: The average distance from the center of the circle.\nYou should write self-contained code starting with:\n```\nimport math\nimport random\nimport statistics\n# Constants\nRADIUS = 5\ndef task_func(n):\n```",
+    "code_prompt": "import math\nimport random\nimport statistics\n# Constants\nRADIUS = 5\ndef task_func(n):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_1(self):\n        avg_distance = task_func(1000)\n        self.assertTrue(3.1 <= avg_distance <= 3.5, f\"Expected average distance to be between 3.1 and 3.5, got {avg_distance}\")\n    def test_2(self):\n        avg_distance = task_func(500)\n        self.assertTrue(3.0 <= avg_distance <= 3.6, f\"Expected average distance to be between 3.2 and 3.5, got {avg_distance}\")\n    def test_3(self):\n        avg_distance = task_func(100)\n        self.assertTrue(2.8 <= avg_distance <= 3.7, f\"Expected average distance to be between 2.8 and 3.7, got {avg_distance}\")\n    def test_4(self):\n        avg_distance = task_func(50)\n        # Allowing a wider range due to higher variance with fewer points\n        self.assertTrue(2.4 <= avg_distance <= 4.1, f\"Expected average distance to be between 2.4 and 4.1, got {avg_distance}\")\n    def test_5(self):\n        avg_distance = task_func(10)\n        # Even wider range for very few points\n        self.assertTrue(1.4 <= avg_distance <= 4.6, f\"Expected average distance to be between 1.4 and 4.6, got {avg_distance}\")",
+    "entry_point": "task_func",
+    "libs": [
+      "statistics",
+      "math",
+      "random"
+    ],
+    "canonical_solution": "    distances = []\n\n    for _ in range(n):\n        theta = 2 * math.pi * random.random()\n        r = RADIUS * math.sqrt(random.random())\n        x = r * math.cos(theta)\n        y = r * math.sin(theta)\n        distance = math.sqrt(x**2 + y**2)\n        distances.append(distance)\n\n    return round(statistics.mean(distances), 4)"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "task_id": "BigCodeBench/674",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260413023023_b5415976",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import pandas as pd\nimport os\n\ndef task_func(filename):\n    \"\"\"\n    Read a CSV file of pandas, reverse the order of the lines and write the inverted lines back into the file.\n    The header should not be inverted and the file may be empty.\n\n    Parameters:\n    - filename (str): The name of the CSV file.\n\n    Returns:\n    - filename (str): The name of the CSV file.\n\n    Requirements:\n    - os\n    - pandas\n\n    Example:\n    >>> task_func('file.csv')\n    'file.csv'\n    \"\"\"",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def base(self, filename, contents, expected):\n        # Create file\n        with open(filename, 'w') as f:\n            f.write(contents)\n        # Run function\n        task_func(filename)\n        # Check file\n        with open(filename, 'r') as f:\n            self.assertEqual(f.read().strip(), expected.strip())\n        # Remove file\n        os.remove(filename)\n    def test_case_1(self):\n        self.base('file.csv', 'a,b,c\\n1,2,3\\n4,5,6\\n7,8,9', 'a,b,c\\n7,8,9\\n4,5,6\\n1,2,3')\n    def test_case_2(self):\n        self.base('file.csv', 'a,b,c\\n1,2,3\\n4,5,6', 'a,b,c\\n4,5,6\\n1,2,3')\n    def test_case_3(self):\n        self.base('file.csv', 'a,b,c\\n1,2,3', 'a,b,c\\n1,2,3')\n    def test_case_4(self):\n        self.base('file.csv', 'a,b,c', 'a,b,c')\n    def test_case_5(self):\n        self.base('file.csv', '', '')",
+    "entry_point": "task_func",
+    "libs": "['pandas', 'os']",
+    "instruct_prompt": "Read a CSV file of pandas, reverse the order of the lines and write the inverted lines back into the file. Then move the cursor back to the beginning of the file. The header should not be inverted and the file may be empty.\nThe function should output with:\n    filename (str): The name of the CSV file.\nYou should write self-contained code starting with:\n```\nimport pandas as pd\nimport os\ndef task_func(filename):\n```",
+    "code_prompt": "import pandas as pd\nimport os\ndef task_func(filename):",
+    "canonical_solution": "    if not os.path.exists(filename):\n        return filename\n\n    # Check if empty\n    with open(filename, 'r') as file:\n        if not file.read(1):\n            return filename\n\n    df = pd.read_csv(filename)\n    df = df.iloc[::-1]\n    df.to_csv(filename, index=False)\n\n    with open(filename, 'r+') as file:\n        file.seek(0)\n\n    return filename"
+  }
+}

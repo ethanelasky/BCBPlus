@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/675",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import os\nimport random\n\ndef task_func(directory, n_files):\n    \"\"\"\n    Create n random text files in a specific directory, write a random string to each file, and then reset the cursor to the beginning of each file.\n\n    Parameters:\n    - directory (str): The directory in which to generate the files.\n    - n_files (int): The number of files to generate.\n\n    Returns:\n    - directory (str): The directory in which the files were generated.\n\n    Requirements:\n    - os\n    - random\n\n    Example:\n    >>> task_func('/path/to/directory', 5)\n    '/path/to/directory'\n    \"\"\"\n",
+    "instruct_prompt": "Create n random text files in a specific directory, write a random string to each file, and then reset the cursor to the beginning of each file.\nThe function should output with:\n    directory (str): The directory in which the files were generated.\nYou should write self-contained code starting with:\n```\nimport os\nimport random\ndef task_func(directory, n_files):\n```",
+    "code_prompt": "import os\nimport random\ndef task_func(directory, n_files):\n",
+    "test": "import unittest\nimport shutil\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        random.seed(42)\n        \n    def tearDown(self):\n        shutil.rmtree('./source', ignore_errors=True)\n        shutil.rmtree('./src', ignore_errors=True)\n        shutil.rmtree('./s', ignore_errors=True)\n    \n    def test_case_1(self):\n        directory = task_func('./source', 10)\n        self.assertTrue(os.path.exists(directory))\n        self.assertEqual(len(os.listdir(directory)), 10)\n        for file in os.listdir(directory):\n            self.assertEqual(file.split('.')[-1], 'txt')\n        \n    def test_case_2(self):\n        directory = task_func('./src', 1)\n        self.assertTrue(os.path.exists(directory))\n        self.assertEqual(len(os.listdir(directory)), 1)\n        for file in os.listdir(directory):\n            self.assertEqual(file.split('.')[-1], 'txt')        \n        \n    def test_case_3(self):\n        directory = task_func('./s', 100)\n        self.assertTrue(os.path.exists(directory))\n        self.assertEqual(len(os.listdir(directory)), 100)\n        for file in os.listdir(directory):\n            self.assertEqual(file.split('.')[-1], 'txt')        \n        \n    def test_case_4(self):\n        directory = task_func('./s', 0)\n        self.assertTrue(os.path.exists(directory))\n        self.assertEqual(len(os.listdir(directory)), 0)\n        for file in os.listdir(directory):\n            self.assertEqual(file.split('.')[-1], 'txt')        \n        \n    def test_case_5(self):\n        directory = task_func('./source', 1)\n        self.assertTrue(os.path.exists(directory))\n        self.assertEqual(len(os.listdir(directory)), 1)\n        for file in os.listdir(directory):\n            self.assertEqual(file.split('.')[-1], 'txt')",
+    "entry_point": "task_func",
+    "libs": [
+      "random",
+      "os"
+    ],
+    "canonical_solution": "    if not os.path.exists(directory):\n        os.makedirs(directory)\n\n    for i in range(n_files):\n        filename = os.path.join(directory, f\"file_{i+1}.txt\")\n\n        with open(filename, 'w') as file:\n            file.write(str(random.randint(1, 100)))\n            file.seek(0)\n\n    return directory"
+  }
+}

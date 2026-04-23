@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/357",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import numpy as np\nfrom scipy.stats import norm\nimport matplotlib.pyplot as plt\n\ndef task_func(x):\n    \"\"\"\n    Draws a plot visualizing a complex distribution created from two Gaussian distributions.\n    The real part of the complex distribution is a Gaussian centered at 0 with a standard deviation of 1,\n    and the imaginary part is a Gaussian centered at 2 with a standard deviation of 2.\n\n    Parameters:\n        x (numpy.ndarray): The range of x values over which to plot the distribution.\n\n    Returns:\n        numpy.ndarray: The complex distribution created from the two Gaussian distributions.\n\n    Raises:\n        TypeError: If `x` is not a numpy.ndarray.\n    \n    Requirements:\n    - numpy\n    - scipy.stats.norm\n    - matplotlib.pyplot\n\n    Examples:\n    >>> X = np.linspace(-10, 10, 1000)\n    >>> result = task_func(X)\n    >>> result[0]\n    (7.69459862670642e-23+3.037941424911643e-09j)\n    \"\"\"\n",
+    "instruct_prompt": "Draws a plot visualizing a complex distribution created from two Gaussian distributions. The real part of the complex distribution is a Gaussian centered at 0 with a standard deviation of 1, and the imaginary part is a Gaussian centered at 2 with a standard deviation of 2.\nThe function should raise the exception for: TypeError: If `x` is not a numpy.ndarray.\nThe function should output with:\n    numpy.ndarray: The complex distribution created from the two Gaussian distributions.\nYou should write self-contained code starting with:\n```\nimport numpy as np\nfrom scipy.stats import norm\nimport matplotlib.pyplot as plt\ndef task_func(x):\n```",
+    "code_prompt": "import numpy as np\nfrom scipy.stats import norm\nimport matplotlib.pyplot as plt\ndef task_func(x):\n",
+    "test": "import unittest\nimport numpy as np\nclass TestCases(unittest.TestCase):\n    def test_return_type(self):\n        \"\"\" Test that the function returns None. \"\"\"\n        result = task_func(np.linspace(-10, 10, 1000))\n        self.assertAlmostEquals(result[0], 7.69459863e-23+3.03794142e-09j)\n        self.assertAlmostEquals(result[1], 9.398202102189114e-23+3.2258293600449145e-09j)\n    def test_input_type(self):\n        \"\"\" Test the function with non-numpy array inputs. \"\"\"\n        with self.assertRaises(TypeError):\n            task_func([1, 2, 3])\n    def test_empty_array(self):\n        \"\"\" Test function with empty numpy array. \"\"\"\n        result = task_func(np.array([]))\n        self.assertEqual(result.size, 0)\n    def test_array_length(self):\n        \"\"\" Test function with arrays of different lengths. \"\"\"\n        result = task_func(np.linspace(-5, 5, 500))\n        self.assertAlmostEquals(result[0], 1.4867195147342979e-06+0.0004363413475228801j)\n        self.assertAlmostEquals(result[-1], 1.4867195147342979e-06+0.06475879783294587j)\n    def test_special_values(self):\n        \"\"\" Test function with special values. \"\"\"\n        result = task_func(np.linspace(-np.inf, np.inf, 1000))\n        # nan+nanj, should not use assertEqual\n        self.assertTrue(np.isnan(result[0].real))\n        self.assertTrue(np.isnan(result[0].imag))",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib",
+      "scipy"
+    ],
+    "canonical_solution": "\n    # Type check for x and y\n    if not isinstance(x, np.ndarray):\n        raise TypeError(\"x must be numpy.ndarray\")\n\n    real_part = norm.pdf(x, 0, 1)\n    imag_part = norm.pdf(x, 2, 2)\n    complex_dist = real_part + 1j * imag_part\n\n    plt.plot(x, complex_dist.real, label='Real part')\n    plt.plot(x, complex_dist.imag, label='Imaginary part')\n    plt.legend()\n    plt.grid()\n    plt.show()\n    return complex_dist"
+  }
+}

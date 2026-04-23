@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/589",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\nfrom sklearn.cluster import KMeans\n# Constants for configuration\nRANGE = 100\nSIZE = 1000\nCLUSTERS = 5\n\n\ndef task_func():\n    \"\"\"\n    Generates a set of 2D random points within a specified range and size,\n    applies KMeans clustering to these points, and plots the results with\n    cluster centroids.\n\n    The function creates a scatter plot of the clustered points with each\n    cluster displayed in a different color and the centroids of these clusters\n    highlighted.\n\n    Requirements:\n        - numpy\n        - sklearn.cluster\n        - matplotlib.pyplot\n\n    Returns:\n        A tuple containing the numpy array of data points and the fitted KMeans model.\n\n    Example:\n    >>> data, kmeans = task_func()\n    >>> isinstance(data, np.ndarray)  # Check if data is a numpy array\n    True\n    >>> data.shape == (1000, 2)  # Verify the shape of the data array\n    True\n    >>> isinstance(kmeans, KMeans)  # Confirm kmeans is an instance of KMeans\n    True\n    >>> len(kmeans.cluster_centers_) == 5  # Check the number of clusters\n    True\n    \"\"\"\n",
+    "instruct_prompt": "Generates a set of 2D random points within a specified range and size, applies KMeans clustering to these points, and plots the results with cluster centroids. The function creates a scatter plot of the clustered points with each cluster displayed in a different color and the centroids of these clusters highlighted.\nThe function should output with:\n    A tuple containing the numpy array of data points and the fitted KMeans model.\nYou should write self-contained code starting with:\n```\nimport matplotlib.pyplot as plt\nimport numpy as np\nfrom sklearn.cluster import KMeans\n# Constants for configuration\nRANGE = 100\nSIZE = 1000\nCLUSTERS = 5\ndef task_func():\n```",
+    "code_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\nfrom sklearn.cluster import KMeans\n# Constants for configuration\nRANGE = 100\nSIZE = 1000\nCLUSTERS = 5\ndef task_func():\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def test_data_size(self):\n        \"\"\"Ensure the generated data has the correct size.\"\"\"\n        data, _ = task_func()\n        self.assertEqual(data.shape, (SIZE, 2))\n    def test_cluster_centers_shape(self):\n        \"\"\"Check the shape of the cluster centers array.\"\"\"\n        _, kmeans = task_func()\n        self.assertEqual(kmeans.cluster_centers_.shape, (CLUSTERS, 2))\n    def test_fitted_model(self):\n        \"\"\"Verify the model is a KMeans instance and is fitted.\"\"\"\n        _, kmeans = task_func()\n        self.assertIsInstance(kmeans, KMeans)\n        self.assertTrue(hasattr(kmeans, 'labels_'))\n    def test_data_range(self):\n        \"\"\"Ensure that generated data points fall within the specified range.\"\"\"\n        data, _ = task_func()\n        self.assertTrue((data >= 0).all() and (data <= RANGE).all())\n    def test_cluster_labels(self):\n        \"\"\"Verify that cluster labels are assigned to each data point.\"\"\"\n        _, kmeans = task_func()\n        self.assertEqual(len(kmeans.labels_), SIZE)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "matplotlib",
+      "sklearn"
+    ],
+    "canonical_solution": "    # Generate random 2D points\n    data = np.array([(np.random.randint(0, RANGE), np.random.randint(0, RANGE)) for _ in range(SIZE)])\n\n    # Apply KMeans clustering\n    kmeans = KMeans(n_clusters=CLUSTERS)\n    kmeans.fit(data)\n\n    # Plot the clustered data points\n    plt.scatter(data[:, 0], data[:, 1], c=kmeans.labels_, cmap='viridis', marker='.')\n    # Plot the cluster centroids\n    plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], s=300, c='red', marker='x')\n    plt.title(\"KMeans Clustering of Random 2D Points\")\n    plt.xlabel(\"X\")\n    plt.ylabel(\"Y\")\n    plt.show()\n\n    return data, kmeans"
+  }
+}

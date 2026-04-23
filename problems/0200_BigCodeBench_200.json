@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/200",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260123122356_89be3053",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import random\nimport bisect\nimport statistics\nimport matplotlib.pyplot as plt\n\n\ndef task_func(n, value):\n    \"\"\"\n    Generates 'n' random numbers between 0 and 1, finds those greater than their average,\n    and counts how many are greater than or equal to a specified value, then plots \n    the sorted numbers.\n\n    Parameters:\n        n (int): The number of random numbers to generate.\n        value (float): The value to compare against the random numbers.\n\n    Returns:\n        list: Numbers greater than the average of all generated numbers.\n        int: The count of numbers greater than or equal to the specified value.\n\n    Requirements:\n    - random\n    - bisect\n    - statistics\n    - matplotlib.pyplot\n\n    Examples:\n    >>> greater_avg, count = task_func(10, 0.5)\n    >>> isinstance(greater_avg, list) and isinstance(count, int)\n    True\n    >>> len(greater_avg) <= 10\n    True\n    \"\"\"",
+    "test": "import unittest\nfrom unittest.mock import MagicMock, patch\nclass TestCases(unittest.TestCase):\n    def setUp(self):\n        # Mock random.random to return a fixed sequence of numbers\n        self.random_sequence = [0.6, 0.4, 0.8, 0.2, 0.5]\n        self.random_mock = MagicMock(side_effect=self.random_sequence)\n    @patch('matplotlib.pyplot.show')\n    def test_plotting_mocked(self, mock_show):\n        \"\"\" Test that the function calls plt.show(). \"\"\"\n        with patch('random.random', self.random_mock):\n            _ = task_func(5, 0.5)\n            mock_show.assert_called_once()\n    def test_return_types(self):\n        \"\"\" Test that the function returns a list and an int. \"\"\"\n        greater_avg, count = task_func(10, 0.5)\n        self.assertIsInstance(greater_avg, list)\n        self.assertIsInstance(count, int)\n    def test_number_of_elements(self):\n        \"\"\"Check if the list contains only numbers greater than the average.\"\"\"\n        with patch('random.random', self.random_mock):\n            greater_avg, _ = task_func(5, 0.5)\n            self.assertEqual(len(greater_avg), 2)\n    def test_count_greater_than_or_equal_value(self):\n        \"\"\"Verify the count includes numbers greater than or equal to the value.\"\"\"\n        with patch('random.random', self.random_mock):\n            _, count = task_func(5, 0.5)\n            # From [0.6, 0.4, 0.8, 0.2, 0.5], numbers >= 0.5 are: 0.6, 0.8, 0.5 = 3 numbers\n            self.assertEqual(count, 3)\n    def test_empty_case(self):\n        \"\"\"Test the function's behavior with n=0.\"\"\"\n        greater_avg, count = task_func(0, 0.5)\n        self.assertEqual((greater_avg, count), ([], 0))",
+    "entry_point": "task_func",
+    "libs": [
+      "statistics",
+      "bisect",
+      "random",
+      "matplotlib"
+    ],
+    "instruct_prompt": "Generates 'n' random numbers between 0 and 1, finds those greater than their average, and counts how many are greater than or equal to a specified value, then plots the sorted numbers.\nThe function should output with:\n    list: Numbers greater than the average of all generated numbers.\n    int: The count of numbers greater than or equal to the specified value.\nYou should write self-contained code starting with:\n```\nimport random\nimport bisect\nimport statistics\nimport matplotlib.pyplot as plt\ndef task_func(n, value):\n```",
+    "code_prompt": "import random\nimport bisect\nimport statistics\nimport matplotlib.pyplot as plt\ndef task_func(n, value):",
+    "canonical_solution": "    if n < 1:  # Handle case where n is 0 or less\n        return [], 0\n\n    numbers = [random.random() for _ in range(n)]\n    avg = statistics.mean(numbers)\n    greater_avg = [x for x in numbers if x > avg]\n\n    numbers.sort()\n    bpoint = bisect.bisect_right(numbers, value)\n    num_greater_value = len(numbers) - bpoint\n\n    plt.plot(numbers)\n    plt.show()\n\n    return greater_avg, num_greater_value"
+  }
+}

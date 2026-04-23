@@ -1,0 +1,20 @@
+{
+  "task_id": "BigCodeBench/623",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from itertools import chain\nimport numpy as np\nfrom sklearn.cluster import KMeans\n\n\ndef task_func(L):\n    \"\"\"\n    Convert a list of lists into a list of integers, apply the KMeans clustering, \n    and return a scatter plot 'matplotlib.axes.Axes' with data points color-coded by their cluster.\n\n    Requirements:\n    - itertools.chain\n    - numpy\n    - sklearn.cluster\n\n    Parameters:\n    L (list of lists): A list of lists where each sublist contains integers.\n\n    Returns:\n    matplotlib.axes.Axes: An Axes object representing the scatter plot.\n\n    Example:\n    >>> ax = task_func([[1, 2, 3], [50, 60, 70], [100, 110, 120]])\n    \"\"\"\n",
+    "instruct_prompt": "Convert a list of lists into a list of integers, apply the KMeans clustering, and return a scatter plot 'matplotlib.axes.Axes' with data points color-coded by their cluster.\nThe function should output with:\n    matplotlib.axes.Axes: An Axes object representing the scatter plot.\nYou should write self-contained code starting with:\n```\nfrom itertools import chain\nimport numpy as np\nfrom sklearn.cluster import KMeans\ndef task_func(L):\n```",
+    "code_prompt": "from itertools import chain\nimport numpy as np\nfrom sklearn.cluster import KMeans\ndef task_func(L):\n",
+    "test": "import unittest\nimport matplotlib.pyplot as plt\nclass TestCases(unittest.TestCase):\n    def test_case_1(self):\n        ax = task_func([[1, 2, 3], [50, 60, 70], [100, 110, 120]])\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_2(self):\n        ax = task_func([[1, 5], [2, 6], [3, 7]])\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_3(self):\n        ax = task_func([[10, 20, 30, 40], [15, 25, 35, 45]])\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_4(self):\n        ax = task_func([[1000, 2000], [3000, 4000], [5000, 6000]])\n        self.assertIsInstance(ax, plt.Axes)\n    def test_case_5(self):\n        ax = task_func([[-1, -2, -3], [-50, -60, -70], [-100, -110, -120]])\n        self.assertIsInstance(ax, plt.Axes)",
+    "entry_point": "task_func",
+    "libs": [
+      "numpy",
+      "itertools",
+      "sklearn"
+    ],
+    "canonical_solution": "    # Constants\n    N_CLUSTERS = 3\n\n    data = list(chain(*L))\n    data = np.array(data).reshape(-1, 1)\n\n    kmeans = KMeans(n_clusters=N_CLUSTERS).fit(data)\n\n    fig, ax = plt.subplots()\n    ax.scatter(data, [0]*len(data), c=kmeans.labels_.astype(float))\n    \n    return ax"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "BigCodeBench/592",
+  "dataset": "bigcodebench",
+  "version": 1,
+  "version_id": "v1_20260122172056_f45eb8b5",
+  "status": "active",
+  "exclusion_reason": null,
+  "content": {
+    "complete_prompt": "import csv\nimport os\nfrom datetime import datetime\nfrom random import randint\n\n# Constants\nSENSORS = ['Temperature', 'Humidity', 'Pressure']\nOUTPUT_DIR = './output'\n\ndef task_func(hours, output_dir=OUTPUT_DIR):\n    \"\"\"\n    Create sensor data for the specified number of hours and save it in a CSV file\n    with columns 'Time', 'Temperature', 'Humidity' and 'Pressure'.\n    \n    Generate exactly one data row per hour (i.e., for hours=24, the file should \n    contain 24 data rows plus 1 header row = 25 total lines).\n\n    Parameters:\n    - hours (int): The number of hours for which sensor data is to be generated.\n    - output_dir (str, optional): The output file path\n\n    Returns:\n    - file_path (str): The path to the created CSV file.\n\n\n    Requirements:\n    - datetime\n    - os\n    - random\n    - csv\n\n    Example:\n    >>> file_path = task_func(1)  # Generate data for 1 hour\n    >>> os.path.exists(file_path)  # Check if the file was actually created\n    True\n    >>> isinstance(file_path, str)  # Validate that the return type is a string\n    True\n    >>> 'sensor_data.csv' in file_path  # Ensure the filename is correct\n    True\n    \"\"\"",
+    "test": "import unittest\nimport os\nimport shutil\nFILE_PATH = os.path.join(OUTPUT_DIR, 'sensor_data.csv')\nclass TestCases(unittest.TestCase):\n    def tearDown(self):\n        \"\"\"Clean up any files created during the tests.\"\"\"\n        # Check and remove the expected file if it exists\n        # if os.path.exists(FILE_PATH):\n        #     os.remove(FILE_PATH)\n        if os.path.exists(OUTPUT_DIR):\n            shutil.rmtree(OUTPUT_DIR)\n    def test_csv_file_creation(self):\n        \"\"\"Test if the CSV file is successfully created.\"\"\"\n        task_func(1)\n        self.assertTrue(os.path.exists(FILE_PATH))\n    def test_csv_file_rows(self):\n        \"\"\"Test if the CSV file contains the correct number of rows for 24 hours.\"\"\"\n        task_func(24)\n        with open(FILE_PATH, 'r') as f:\n            self.assertEqual(len(f.readlines()), 25)  # Including header\n    def test_csv_file_header(self):\n        \"\"\"Test if the CSV file header matches the expected sensors.\"\"\"\n        task_func(0)\n        with open(FILE_PATH, 'r') as f:\n            reader = csv.reader(f)\n            header = next(reader)\n            self.assertEqual(header, ['Time', 'Temperature', 'Humidity', 'Pressure'])\n    def test_file_path_return(self):\n        \"\"\"Test if the correct file path is returned.\"\"\"\n        file_path = task_func(1)\n        self.assertEqual(file_path, FILE_PATH)\n    def test_no_hours_data(self):\n        \"\"\"Test sensor data generation with 0 hours.\"\"\"\n        task_func(0)\n        with open(FILE_PATH, 'r') as f:\n            self.assertEqual(len(f.readlines()), 1)  # Only header row expected",
+    "entry_point": "task_func",
+    "libs": [
+      "csv",
+      "datetime",
+      "random",
+      "os"
+    ],
+    "instruct_prompt": "Create sensor data for the specified number of hours and save it in a CSV file with coloumns 'Time', 'Temperature', 'Humidity' and 'Pressure'.\nThe function should output with:\n    hours (int): Number of hours to generate data for.\nYou should write self-contained code starting with:\n```\nimport csv\nimport os\nfrom datetime import datetime\nfrom random import randint\n# Constants\nSENSORS = ['Temperature', 'Humidity', 'Pressure']\nOUTPUT_DIR = './output'\ndef task_func(hours, output_dir=OUTPUT_DIR):\n```",
+    "code_prompt": "import csv\nimport os\nfrom datetime import datetime\nfrom random import randint\n# Constants\nSENSORS = ['Temperature', 'Humidity', 'Pressure']\nOUTPUT_DIR = './output'\ndef task_func(hours, output_dir=OUTPUT_DIR):",
+    "canonical_solution": "    FILE_PATH = os.path.join(output_dir, 'sensor_data.csv')\n    if not os.path.exists(output_dir):\n        os.makedirs(output_dir)\n\n    data = [['Time'] + SENSORS]\n    for i in range(hours):\n        row = [datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')] + [randint(0, 100) for _ in SENSORS]\n        data.append(row)\n\n    with open(FILE_PATH, 'w', newline='') as f:\n        writer = csv.writer(f)\n        writer.writerows(data)\n\n    return FILE_PATH"
+  }
+}

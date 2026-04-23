@@ -1,0 +1,19 @@
+{
+  "task_id": "BigCodeBench/666",
+  "dataset": "bigcodebench",
+  "version": 0,
+  "version_id": "v0_original",
+  "status": "active",
+  "content": {
+    "complete_prompt": "from itertools import combinations\nimport math\n\ndef task_func(seq, letter_weight_dict):\n    \"\"\"\n    Find the subsequence in a string that has the maximum total weight based on the weights given for each character. \n    The weights are assigned randomly and a subsequence is a sequence that can be derived from another sequence by deleting some elements without changing the order of the remaining elements.\n\n    Parameters:\n    - seq (str): The input string.\n    - letter_weight_dict (dict): A dictionary with the weights for each character.\n\n    Returns:\n    - str: The subsequence with the highest weight.\n\n    Requirements:\n    - itertools\n    - math\n\n    Example:\n    >>> task_func('abc', {'a': 1, 'b': 2, 'c': 3})\n    'abc'\n    >>> task_func('aabc', {'a': 10, 'b': -5, 'c': 3})\n    'aac'\n    \"\"\"\n",
+    "instruct_prompt": "Find the subsequence in a string that has the maximum total weight based on the weights given for each character. The weights are assigned randomly and a subsequence is a sequence that can be derived from another sequence by deleting some elements without changing the order of the remaining elements.\nThe function should output with:\n    str: The subsequence with the highest weight.\nYou should write self-contained code starting with:\n```\nfrom itertools import combinations\nimport math\ndef task_func(seq, letter_weight_dict):\n```",
+    "code_prompt": "from itertools import combinations\nimport math\ndef task_func(seq, letter_weight_dict):\n",
+    "test": "import unittest\nclass TestCases(unittest.TestCase):\n    def base(self, seq, letter_weight_dict, correct_seq):\n        # Run function\n        result = task_func(seq, letter_weight_dict)\n        # Check result\n        self.assertTrue(isinstance(result, str))\n        self.assertEqual(result, correct_seq)\n    def test_case_1(self):\n        self.base('abc', {'a': 1, 'b': 2, 'c': 3}, 'abc')\n    \n    def test_case_2(self):\n        self.base('aabc', {'a': 10, 'b': -5, 'c': 3}, 'aac')\n    def test_case_3(self):\n        self.base('zx', {'x': 1, 'z': 2}, 'zx')\n    \n    def test_case_4(self):\n        self.base('lfhah', {'a': 1, 'f': 2, 'h': -1, 'l': 4}, 'lfa')\n    \n    def test_case_5(self):\n        self.base('a', {'a': 1}, 'a')",
+    "entry_point": "task_func",
+    "libs": [
+      "math",
+      "itertools"
+    ],
+    "canonical_solution": "    max_weight = -math.inf\n    max_subseq = ''\n\n    for r in range(1, len(seq) + 1):\n        for subseq in combinations(seq, r):\n            weight = sum(letter_weight_dict[c] for c in subseq)\n            if weight > max_weight:\n                max_weight = weight\n                max_subseq = ''.join(subseq)\n\n    return max_subseq"
+  }
+}
