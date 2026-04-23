@@ -12,10 +12,20 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+# Use the ai_debate uv venv if present (has pandas/numpy/scipy/sklearn/etc).
+# Override with BCB_PYTHON env var if needed.
+DEFAULT_PYTHON = os.environ.get(
+    "BCB_PYTHON",
+    "/Users/ethanelasky/ai-debate/ai_debate/.venv/bin/python"
+    if Path("/Users/ethanelasky/ai-debate/ai_debate/.venv/bin/python").exists()
+    else sys.executable,
+)
 
 
 def assemble_test_file(problem: dict) -> str:
@@ -44,7 +54,7 @@ def run_problem(problem_path: Path, timeout: int = 60) -> tuple[int, str, str]:
         tmp = Path(f.name)
     try:
         proc = subprocess.run(
-            [sys.executable, str(tmp)],
+            [DEFAULT_PYTHON, str(tmp)],
             capture_output=True, text=True, timeout=timeout,
         )
         return proc.returncode, proc.stdout, proc.stderr
