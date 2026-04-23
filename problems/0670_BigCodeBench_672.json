@@ -1,19 +1,17 @@
 {
   "task_id": "BigCodeBench/672",
   "dataset": "bigcodebench",
-  "version": 0,
-  "version_id": "v0_original",
+  "version": 1,
+  "version_id": "v1_20260422185141_8f1ba033",
   "status": "active",
+  "exclusion_reason": null,
   "content": {
-    "complete_prompt": "import csv\nimport sys\n\ndef task_func(filename):\n    \"\"\"\n    Read a CSV file, inverse the order of the lines and write the inverted lines back into the file. Then reset the cursor to the beginning of the file.\n\n    Parameters:\n    - filename (str): The name of the CSV file.\n\n    Returns:\n    - filename (str): The name of the CSV file.\n\n    Requirements:\n    - csv\n    - sys\n\n    Example:\n    >>> task_func('file.csv')\n    'file.csv'\n    \"\"\"\n",
-    "instruct_prompt": "Read a CSV file, inverse the order of the lines and write the inverted lines back into the file. Then reset the cursor to the beginning of the file.\nThe function should output with:\n    filename (str): The name of the CSV file.\nYou should write self-contained code starting with:\n```\nimport csv\nimport sys\ndef task_func(filename):\n```",
-    "code_prompt": "import csv\nimport sys\ndef task_func(filename):\n",
-    "test": "import unittest\nimport os\nclass TestCases(unittest.TestCase):\n    def base(self, filename, contents, expected):\n        # Create file\n        with open(filename, 'w') as file:\n            file.write(contents)\n        # Run function\n        task_func(filename)\n        # Check file\n        with open(filename, 'r') as file:\n            txt = file.read()\n            self.assertEqual(txt, expected)\n        # Remove file\n        os.remove(filename)\n    def test_case_1(self):\n        self.base('file.csv', \"a,b\\nc,d\\ne,f\\ng,h\\n\", \"g,h\\ne,f\\nc,d\\na,b\\n\")\n    \n    def test_case_2(self):\n        self.base('file.csv', \"a,b,c\\nd,e,f\\ng,h,i\\n\", \"g,h,i\\nd,e,f\\na,b,c\\n\")\n    def test_case_3(self):\n        self.base('file.csv', \"a,b,c,d\\ne,f,g,h\\ni,j,k,l\\n\", \"i,j,k,l\\ne,f,g,h\\na,b,c,d\\n\")\n    \n    def test_case_4(self):\n        self.base('file.csv', \"a,b,c,d,e\\nf,g,h,i,j\\nk,l,m,n,o\\n\", \"k,l,m,n,o\\nf,g,h,i,j\\na,b,c,d,e\\n\")\n    def test_case_5(self):\n        self.base('file.csv', \"a,b,c,d,e,f\\ng,h,i,j,k,l\\nm,n,o,p,q,r\\n\", \"m,n,o,p,q,r\\ng,h,i,j,k,l\\na,b,c,d,e,f\\n\")",
+    "complete_prompt": "import csv\nimport sys\n\ndef task_func(filename):\n    \"\"\"\n    Read a CSV file, inverse the order of the lines and write the inverted lines back into the file. Then reset the cursor to the beginning of the file.\n\n    Parameters:\n    - filename (str): The name of the CSV file.\n\n    Returns:\n    - filename (str): The name of the CSV file.\n\n    Requirements:\n    - csv\n    - sys\n\n    Example:\n    >>> task_func('file.csv')\n    'file.csv'\n    \"\"\"",
+    "test": "import unittest\nimport os\n\n\nclass TestCases(unittest.TestCase):\n    def base(self, filename, contents, expected):\n        # Create file\n        with open(filename, 'w') as file:\n            file.write(contents)\n        # Run function\n        task_func(filename)\n        # Check file\n        with open(filename, 'r') as file:\n            txt = file.read()\n            self.assertEqual(txt, expected)\n        # Remove file\n        os.remove(filename)\n\n    def test_case_1(self):\n        self.base('file.csv', \"a,b\\nc,d\\ne,f\\ng,h\\n\", \"g,h\\ne,f\\nc,d\\na,b\\n\")\n\n    def test_case_2(self):\n        self.base('file.csv', \"a,b,c\\nd,e,f\\ng,h,i\\n\", \"g,h,i\\nd,e,f\\na,b,c\\n\")\n\n    def test_case_3(self):\n        self.base('file.csv', \"a,b,c,d\\ne,f,g,h\\ni,j,k,l\\n\", \"i,j,k,l\\ne,f,g,h\\na,b,c,d\\n\")\n\n    def test_case_4(self):\n        self.base('file.csv', \"a,b,c,d,e\\nf,g,h,i,j\\nk,l,m,n,o\\n\", \"k,l,m,n,o\\nf,g,h,i,j\\na,b,c,d,e\\n\")\n\n    def test_case_5(self):\n        self.base('file.csv', \"a,b,c,d,e,f\\ng,h,i,j,k,l\\nm,n,o,p,q,r\\n\", \"m,n,o,p,q,r\\ng,h,i,j,k,l\\na,b,c,d,e,f\\n\")\n\n    def test_quoted_field_with_comma(self):\n        # A row containing a quoted field with an embedded comma must be\n        # preserved as a single logical row when reversed. Naive line-based\n        # reversal would mishandle this; using csv.reader/csv.writer handles\n        # it correctly.\n        self.base(\n            'file.csv',\n            '\"a,b\",c\\nd,e\\n',\n            'd,e\\n\"a,b\",c\\n',\n        )\n",
     "entry_point": "task_func",
-    "libs": [
-      "csv",
-      "sys"
-    ],
+    "libs": "['csv', 'sys']",
+    "instruct_prompt": "Read a CSV file, inverse the order of the lines and write the inverted lines back into the file. Then reset the cursor to the beginning of the file.\nThe function should output with:\n    filename (str): The name of the CSV file.\nYou should write self-contained code starting with:\n```\nimport csv\nimport sys\ndef task_func(filename):\n```",
+    "code_prompt": "import csv\nimport sys\ndef task_func(filename):",
     "canonical_solution": "    try:\n        with open(filename, 'r+') as file:\n            reader = csv.reader(file)\n            rows = list(reader)\n            file.seek(0)\n            file.truncate()\n\n            writer = csv.writer(file)\n            writer.writerows(reversed(rows))\n\n            file.seek(0)\n    except Exception as e:\n        print(f\"An error occurred: {e}\", file=sys.stderr)\n\n    return filename"
   }
 }
