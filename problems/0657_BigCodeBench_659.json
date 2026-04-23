@@ -16,6 +16,6 @@
     ],
     "instruct_prompt": "Draw normal distributions for multiple 'x' and 'y' arrays with labels. Each pair (x, y) represents a different chemical compound in the 'labels' list.\nThe function should output with:\n    fig: Matplotlib figure object.\nYou should write self-contained code starting with:\n```\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport scipy.stats as stats\ndef task_func(x, y, labels):\n```",
     "code_prompt": "import matplotlib.pyplot as plt\nimport numpy as np\nimport scipy.stats as stats\ndef task_func(x, y, labels):",
-    "canonical_solution": "    fig, ax = plt.subplots()\n\n    for i in range(len(x)):\n        mu = np.mean(y[i])\n        sigma = np.std(y[i])\n        pdf = stats.norm.pdf(x[i], mu, sigma)\n        ax.plot(x[i], pdf, label=labels[i])\n    \n    ax.legend()\n    \n    return fig"
+    "canonical_solution": "    fig, ax = plt.subplots()\n\n    for i in range(len(x)):\n        xi = np.asarray(x[i], dtype=float)\n        wi = np.asarray(y[i], dtype=float)\n        w_sum = np.sum(wi)\n        mu = np.sum(xi * wi) / w_sum\n        sigma = np.sqrt(np.sum(wi * (xi - mu) ** 2) / w_sum)\n        xs = np.linspace(np.min(xi), np.max(xi), 100)\n        pdf = stats.norm.pdf(xs, mu, sigma)\n        ax.plot(xs, pdf, label=labels[i])\n\n    ax.legend()\n\n    return fig"
   }
 }
